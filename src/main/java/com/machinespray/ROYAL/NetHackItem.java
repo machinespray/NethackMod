@@ -28,15 +28,7 @@ public class NetHackItem extends Item {
 
 	@SideOnly(Side.CLIENT)
 	public void registerClient() {
-		Minecraft
-				.getMinecraft()
-				.getRenderItem()
-				.getItemModelMesher()
-				.register(
-						this,
-						0,
-						new ModelResourceLocation(getRegistryName(),
-								"inventory"));
+		ModelLoader.setCustomModelResourceLocation(this,0,new ModelResourceLocation(this.getRegistryName(), "inventory"));
 	}
 
 	@Override

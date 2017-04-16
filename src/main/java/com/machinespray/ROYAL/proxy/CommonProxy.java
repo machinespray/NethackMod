@@ -5,16 +5,19 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import com.machinespray.ROYAL.RoyalItems;
+import com.machinespray.ROYAL.rings.RingActions;
 
 public class CommonProxy {
 	
-	public void preinit(){}
+	public void preinit(){
+		RoyalItems.initItems();
+		RoyalItems.registerItems();
+	}
 	public  void init(){
-	RoyalItems.initItems();
-	GameRegistry.addShapelessRecipe(new ItemStack(RoyalItems.test), Items.PAPER);
+		GameRegistry.addShapelessRecipe(new ItemStack(RoyalItems.scrolls.get(0)), Items.PAPER);
+		RingActions.initActions();
 	}
 	public void postinit(){
-	RoyalItems.registerItems();
 	}
 
 }
