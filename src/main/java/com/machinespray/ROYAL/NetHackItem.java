@@ -53,8 +53,24 @@ public class NetHackItem extends Item {
 	}
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced){
-		if(stack.getTagCompound()!=null)
-		if(stack.getTagCompound().getString("BUC")!=null)
+		if(((NetHackItem)stack.getItem()).getUse()!=null)
+			tooltip.add(((NetHackItem)stack.getItem()).getUse());
+		if(stack.getTagCompound()!=null){
+		if(stack.getTagCompound().getString("BUC")!=null){
+			if(stack.getTagCompound().getBoolean("BUCI"))
 		tooltip.add(stack.getTagCompound().getString("BUC"));
+		}else{
+			NBTTagCompound nbt = new NBTTagCompound();
+			nbt.setString("BUC","uncursed");
+			stack.setTagCompound(nbt);
+		}
+		}else{
+			NBTTagCompound nbt = new NBTTagCompound();
+			nbt.setString("BUC","uncursed");
+			stack.setTagCompound(nbt);
+		}
 	}
-}
+	public String getUse(){
+		return null;
+	}
+	}

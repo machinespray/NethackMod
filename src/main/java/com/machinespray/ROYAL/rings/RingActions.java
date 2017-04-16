@@ -176,8 +176,7 @@ public class RingActions implements Constants {
 
 	public static RingAction getAction(String name) {
 		int id = 0;
-		name=name.split(".");
-		System.out.println(name);
+		name=name.split("R|\\.")[1];
 		for (int i = 0; i < ringNames.length; i++) {
 			if (ringNames[i].equals(name))
 				id = i;

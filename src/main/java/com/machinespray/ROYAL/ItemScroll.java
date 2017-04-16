@@ -42,8 +42,7 @@ public class ItemScroll extends NetHackItem implements Constants {
 	@Override
     public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn)
     {
-		worldIn.getWorldInfo().getSeed();
-        return super.onItemRightClick(worldIn, playerIn, handIn);
+		 return super.onItemRightClick(worldIn, playerIn, handIn);
     }
 
 }

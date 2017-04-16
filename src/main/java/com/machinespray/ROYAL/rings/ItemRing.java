@@ -21,7 +21,7 @@ public class ItemRing extends NetHackItem implements Constants, IBauble {
 	public static void initNames() {
 		for (String s : ringNames) {
 			s = s.replace(" ", "_");
-			RoyalItems.rings.add(new ItemRing(s));
+			RoyalItems.rings.add(new ItemRing(s+"R"));
 
 		}
 	}
@@ -46,4 +46,12 @@ public class ItemRing extends NetHackItem implements Constants, IBauble {
 						.equals("cursed");
 		return true;
 	}
-}
+	public boolean hasUse(){
+		return (RingActions.getAction(getUnlocalizedName()) != null);
+	}
+	@Override
+	public String getUse(){
+		if(hasUse())
+			return RingActions.getAction(getUnlocalizedName()).name;
+		return null;
+	}}
