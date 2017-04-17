@@ -1,6 +1,7 @@
 package com.machinespray.ROYAL.rings;
 
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import baubles.api.BaubleType;
 import baubles.api.IBauble;
@@ -43,7 +44,7 @@ public class ItemRing extends NetHackItem implements Constants, IBauble {
 		if (itemstack.getTagCompound() != null)
 			if (itemstack.getTagCompound().getString("BUC") != null)
 				return !itemstack.getTagCompound().getString("BUC")
-						.equals("cursed");
+						.equals(CURSED)||((EntityPlayer)player).isCreative();
 		return true;
 	}
 	public boolean hasUse(){

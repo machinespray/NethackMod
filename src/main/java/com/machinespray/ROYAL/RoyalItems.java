@@ -13,11 +13,6 @@ import com.machinespray.ROYAL.rings.ItemRing;
 public class RoyalItems {
 	public static ArrayList<ItemScroll> scrolls = new ArrayList<ItemScroll>();
 	public static NetHackItem base;
-	public static NetHackItem ringOC;
-	public static NetHackItem ringOT;
-	public static NetHackItem ringOL;
-	public static NetHackItem ringOAM;
-	public static NetHackItem ringOSI;
 	public static ArrayList<ItemRing> rings = new ArrayList<ItemRing>();
 	
 	public static void initItems(){

@@ -2,6 +2,7 @@ package com.machinespray.ROYAL;
 
 import java.util.ArrayList;
 
+import net.minecraft.util.text.TextFormatting;
 import scala.actors.threadpool.Arrays;
 
 public interface Constants {
@@ -21,4 +22,7 @@ public interface Constants {
 			"gold", "wooden", "granite", "opal", "clay", "coral", "black onyx",
 			"moonstone", "tiger eye", "jade", "agate", "topaz", "sapphire",
 			"ruby", "diamond", "ivory", "emerald" };
+	public final String BLESSED = TextFormatting.GREEN.toString()+"blessed";
+	public final String UNCURSED = TextFormatting.AQUA.toString()+"uncursed";
+	public final String CURSED = TextFormatting.RED.toString()+"cursed";
 }
