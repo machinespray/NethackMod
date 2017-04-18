@@ -1,7 +1,13 @@
-package com.machinespray.ROYAL;
+package com.machinespray.ROYAL.scrolls;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.machinespray.ROYAL.Constants;
+import com.machinespray.ROYAL.Main;
+import com.machinespray.ROYAL.NetHackItem;
+import com.machinespray.ROYAL.RoyalItems;
+import com.machinespray.ROYAL.rings.RingActions;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -42,7 +48,24 @@ public class ItemScroll extends NetHackItem implements Constants {
 	@Override
     public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn)
     {
+		if (ScrollActions.getAction(getUnlocalizedName()) != null)
+			ScrollActions.getAction(getUnlocalizedName()).onItemRightClick(worldIn, playerIn, handIn);
 		 return super.onItemRightClick(worldIn, playerIn, handIn);
     }
+	
+	public boolean hasUse(){
+		return (ScrollActions.getAction(getUnlocalizedName()) != null);
+	}
+	@Override
+	public String getUse(){
+		if(hasUse())
+			return ScrollActions.getAction(getUnlocalizedName()).name;
+		return null;
+	}
+
+	@Override
+	public String type() {
+		return "scroll";
+	}
 
 }

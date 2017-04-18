@@ -7,10 +7,10 @@ import baubles.api.BaubleType;
 import baubles.api.IBauble;
 
 import com.machinespray.ROYAL.Constants;
-import com.machinespray.ROYAL.ItemScroll;
 import com.machinespray.ROYAL.Main;
 import com.machinespray.ROYAL.NetHackItem;
 import com.machinespray.ROYAL.RoyalItems;
+import com.machinespray.ROYAL.scrolls.ItemScroll;
 
 public class ItemRing extends NetHackItem implements Constants, IBauble {
 
@@ -55,4 +55,9 @@ public class ItemRing extends NetHackItem implements Constants, IBauble {
 		if(hasUse())
 			return RingActions.getAction(getUnlocalizedName()).name;
 		return null;
+	}
+
+	@Override
+	public String type() {
+		return "ring";
 	}}

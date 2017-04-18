@@ -168,6 +168,7 @@ public class RingActions implements Constants {
 			}
 		});
 		actions.add(new RingAction("protection") {
+			//also has hit sound effect
 			@Override
 			public void onWornTick(ItemStack itemstack, EntityLivingBase player) {
 				player.addPotionEffect(new PotionEffect(Potion
@@ -189,6 +190,7 @@ public class RingActions implements Constants {
 			}
 		});
 		actions.add(new RingAction("strength") {
+			//Also has instant mine
 			@Override
 			public void onWornTick(ItemStack itemstack, EntityLivingBase player) {
 				player.addPotionEffect(new PotionEffect(
@@ -244,7 +246,8 @@ public class RingActions implements Constants {
 
 	public static RingAction getAction(String name) {
 		int id = 100;
-		name = name.split("R|\\.")[1].replace("_", "");
+		name = name.split("\\.")[1].replace("_", " ");
+		name =name.substring(0, name.length()-1);
 		for (int i = 0; i < ringNames.length; i++) {
 			if (ringNames[i].equals(name))
 				id = i;

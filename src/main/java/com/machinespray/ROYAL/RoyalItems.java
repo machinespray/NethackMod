@@ -9,6 +9,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.logging.log4j.core.config.plugins.ResolverUtil.Test;
 
 import com.machinespray.ROYAL.rings.ItemRing;
+import com.machinespray.ROYAL.scrolls.ItemScroll;
 
 public class RoyalItems {
 	public static ArrayList<ItemScroll> scrolls = new ArrayList<ItemScroll>();

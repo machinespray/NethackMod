@@ -53,8 +53,9 @@ public class NetHackItem extends Item implements Constants {
 	}
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced){
-		if(((NetHackItem)stack.getItem()).getUse()!=null&&(playerIn.isCreative()))
+		if(((NetHackItem)stack.getItem()).getUse()!=null&&(playerIn.isCreative()||Main.getHandler(playerIn).hasKnowledge(((NetHackItem)stack.getItem()).getUse())))
 			tooltip.add(((NetHackItem)stack.getItem()).getUse());
+		
 		if(stack.getTagCompound()!=null){
 		if(stack.getTagCompound().getString("BUC")!=null){
 			if(stack.getTagCompound().getBoolean("BUCI")||playerIn.isCreative())
@@ -84,4 +85,7 @@ public class NetHackItem extends Item implements Constants {
 		}
 		return null;
 	}
+	public String type(){
+		return null;
+	};
 	}
