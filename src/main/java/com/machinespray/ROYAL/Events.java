@@ -3,6 +3,7 @@ package com.machinespray.ROYAL;
 import java.util.ArrayList;
 
 import scala.Array;
+import scala.util.Random;
 import baubles.api.BaublesApi;
 
 import com.machinespray.ROYAL.knowledge.IKnowledgeHandler;
@@ -37,6 +38,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
+import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
@@ -49,9 +51,13 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class Events implements Constants {
+	private static EntityPlayer player;
+	private static String[] gods = { "Athena.Hermes.Poseidon",
+			"Mercury.Venus.Mars", "Tyr.Odin.Loki", "Ptah.Thoth.Set" };
+
 	@SubscribeEvent
 	public void onLoad(WorldEvent.Load e) {
-		if(!e.getWorld().isRemote){
+		if (!e.getWorld().isRemote) {
 			RingActions.match(e.getWorld().getSeed());
 			ScrollActions.match(e.getWorld().getSeed());
 		}
@@ -109,20 +115,18 @@ public class Events implements Constants {
 					e.setCanceled(true);
 				}
 			}
-		if(e.getTarget() instanceof EntityTameable){
+		if (e.getTarget() instanceof EntityTameable) {
 			EntityTameable target = (EntityTameable) e.getTarget();
-					String BUC = (NetHackItem.id(e.getEntityPlayer()
-							.getHeldItemMainhand(), 0));
-					if (BUC.equals(CURSED))
-						e.getEntityPlayer().sendMessage(
-								new TextComponentString(TextFormatting.RED
-										.toString()
-										+ "The animal's eyes grow wide with fear."));
-					if (BUC.equals(UNCURSED)||BUC.equals(BLESSED))
-						e.getEntityPlayer().sendMessage(
-								new TextComponentString(TextFormatting.AQUA
-										.toString()
-										+ "The animal doesn't react."));
+			String BUC = (NetHackItem.id(e.getEntityPlayer()
+					.getHeldItemMainhand(), 0));
+			if (BUC.equals(CURSED))
+				e.getEntityPlayer().sendMessage(
+						new TextComponentString(TextFormatting.RED.toString()
+								+ "The animal's eyes grow wide with fear."));
+			if (BUC.equals(UNCURSED) || BUC.equals(BLESSED))
+				e.getEntityPlayer().sendMessage(
+						new TextComponentString(TextFormatting.AQUA.toString()
+								+ "The animal doesn't react."));
 		}
 	}
 
@@ -187,14 +191,21 @@ public class Events implements Constants {
 			event.addCapability(new ResourceLocation("royal", "knowledge"),
 					new Provider());
 	}
+
 	@SideOnly(Side.CLIENT)
 	@SubscribeEvent
 	public void joinWorld(EntityJoinWorldEvent e) {
-		if (e.getEntity() instanceof EntityPlayerSP){
+		if (e.getEntity() instanceof EntityPlayerSP) {
 			RingActions.initActions();
 			Main.rings = new String[ringNames.length];
 			Main.scrolls = new String[scrollNames.length];
 			Main.INSTANCE.sendToServer(new MessageRequestKnowledge());
+			e.getEntity()
+					.sendMessage(
+							new TextComponentString(
+									"Thank you for using ROYAL "
+											+ Main.VERSION
+											+ ".\n In order to offer to a god, type\"#offer\", with at least 9 gold nuggets in hand."));
 		}
 	}
 
@@ -204,6 +215,45 @@ public class Events implements Constants {
 		final IKnowledgeHandler original = Main.getHandler(event.getOriginal());
 		final IKnowledgeHandler clone = Main.getHandler(event.getEntity());
 		clone.setKnowledge(original.getKnowledge());
+	}
+
+	@SubscribeEvent
+	public void onChat(ServerChatEvent e) {
+		Random random = new Random();
+		random.setSeed(e.getPlayer().world.getSeed());
+		String gods[] = new String[3];
+		gods[0] = this.gods[random.nextInt(this.gods.length)];
+		gods[2] = gods[0].split("\\.")[2];
+		gods[1] = gods[0].split("\\.")[1];
+		gods[0] = gods[0].split("\\.")[0];
+		if (e.getMessage().equals("#offer") && e.getPlayer() != player) {
+			e.getPlayer().sendMessage(
+					new TextComponentString("Offer To Whom?\na). " + gods[0]
+							+ " (Lawful)\nb). " + gods[1] + " (Neutral)\nc). "
+							+ gods[2] + " (Chaotic)"));
+			if (player != null)
+				player.sendMessage(new TextComponentString(
+						"The gods have are now listening to someone else."));
+			player = e.getPlayer();
+			e.setCanceled(true);
+		} else if (e.getPlayer().equals(player)) {
+			e.setCanceled(true);
+			if (e.getMessage().equals("a") || e.getMessage().equals("b")
+					|| e.getMessage().equals("c")) {
+				int to = Character
+						.getNumericValue(e.getMessage().charAt(0)-49);
+				if (Main.random.nextInt(3) != 0) {
+
+				}
+				player.sendMessage(new TextComponentString(gods[to]
+						+ " hears your prayer!"));
+
+			} else {
+				player.sendMessage(new TextComponentString(
+						"The gods do not wish to hear from you now."));
+			}
+			player = null;
+		}
 	}
 
 }

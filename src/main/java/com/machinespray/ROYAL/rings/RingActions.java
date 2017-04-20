@@ -234,7 +234,6 @@ public class RingActions implements Constants {
 			}
 			I.id = id;
 			ids.add(id);
-			System.out.println("Set:"+I.name+","+I.id);
 			
 		}
 	}

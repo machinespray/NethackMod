@@ -1,5 +1,6 @@
 package com.machinespray.ROYAL.scrolls;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -9,6 +10,7 @@ import com.machinespray.ROYAL.Main;
 import com.machinespray.ROYAL.NetHackItem;
 import com.machinespray.ROYAL.knowledge.IKnowledgeHandler;
 
+import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.EntityAreaEffectCloud;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -18,6 +20,7 @@ import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityDragonFireball;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.Enchantments;
 import net.minecraft.init.MobEffects;
 import net.minecraft.init.PotionTypes;
 import net.minecraft.init.SoundEvents;
@@ -127,6 +130,68 @@ public class ScrollActions implements Constants {
 									playerIn.posZ + Main.random.nextInt(5) - 2);
 							playerIn.world.spawnEntity(entity);
 						}
+				}
+			}
+		});
+		actions.add(new ScrollAction("enchant weapon") {
+			@Override
+			public void onItemRightClick(World worldIn, EntityPlayer playerIn,
+					EnumHand handIn) {
+				IKnowledgeHandler knowledge = Main.getHandler(playerIn);
+				if (!playerIn.world.isRemote) {
+					World world = playerIn.world;
+					if (!playerIn.isCreative())
+						playerIn.inventory.decrStackSize(
+								playerIn.inventory.currentItem, 1);
+					String buc = playerIn.getHeldItemMainhand()
+							.getTagCompound().getString("BUC");
+					if (playerIn.getHeldItemOffhand() != null) {
+						if (playerIn.getHeldItemOffhand().isItemEnchantable()) {
+							Field[] enchantments = Enchantments.class
+									.getDeclaredFields();
+							Enchantment enchantment = null;
+							if (buc.equals(UNCURSED) || buc.equals(BLESSED))
+								try {
+									enchantment = (Enchantment) enchantments[Main.random
+											.nextInt(enchantments.length)]
+											.get(enchantment);
+									while (!enchantment.canApply(playerIn
+											.getHeldItemOffhand()))
+										enchantment = (Enchantment) enchantments[Main.random
+												.nextInt(enchantments.length)]
+												.get(enchantment);
+									playerIn.getHeldItemOffhand()
+											.addEnchantment(
+													enchantment,
+													buc.equals(BLESSED) ? enchantment
+															.getMaxLevel()
+															: enchantment
+																	.getMinLevel()
+																	+ Main.random
+																			.nextInt(enchantment
+																					.getMaxLevel()
+																					+ 1
+																					- enchantment
+																							.getMinLevel()));
+									if (!knowledge
+											.hasKnowledge("enchant weapon")) {
+										if (!worldIn.isRemote)
+											playerIn.sendMessage(new TextComponentString(
+													"You discover this is a scroll of enchant weapon!"));
+										knowledge
+												.addKnowledge("enchant weapon");
+									}
+								} catch (IllegalArgumentException e) {
+								} catch (IllegalAccessException e) {
+								}
+							if (buc.equals(CURSED))
+								playerIn.getHeldItemOffhand().addEnchantment(
+										Enchantments.VANISHING_CURSE, 1);
+						}
+					} else {
+						playerIn.sendMessage(new TextComponentString(
+								"Your offhand glows for a second..."));
+					}
 				}
 			}
 		});

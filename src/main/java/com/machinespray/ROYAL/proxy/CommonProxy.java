@@ -9,6 +9,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import com.machinespray.ROYAL.Constants;
 import com.machinespray.ROYAL.Main;
 import com.machinespray.ROYAL.RoyalItems;
+import com.machinespray.ROYAL.altars.RoyalBlocks;
 import com.machinespray.ROYAL.knowledge.DefaultKnowledgeHandler;
 import com.machinespray.ROYAL.knowledge.IKnowledgeHandler;
 import com.machinespray.ROYAL.knowledge.Storage;
@@ -26,6 +27,8 @@ public class CommonProxy implements Constants {
 	public void preinit(){
 		RoyalItems.initItems();
 		RoyalItems.registerItems();
+		RoyalBlocks.initBlocks();
+		RoyalBlocks.registerBlocks();
 		CapabilityManager.INSTANCE.register(IKnowledgeHandler.class, new Storage(), DefaultKnowledgeHandler.class);
 	}
 	public void init(){
