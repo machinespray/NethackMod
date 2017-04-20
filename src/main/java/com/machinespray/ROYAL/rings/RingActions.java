@@ -24,14 +24,15 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.client.event.GuiScreenEvent.PotionShiftEvent;
 
 public class RingActions implements Constants {
-	static ArrayList<RingAction> actions = new ArrayList<RingAction>();
-	private static Random random = new Random();
+	public static ArrayList<RingAction> actions = new ArrayList<RingAction>();
 	private static ArrayList<Integer> ids = new ArrayList<Integer>();
+	private static Random random = new Random();
 	private static SoundEvent[] sounds = {
 			SoundEvents.ITEM_CHORUS_FRUIT_TELEPORT,
 			SoundEvents.ENTITY_BLAZE_DEATH, SoundEvents.ENTITY_CREEPER_PRIMED };
 
 	public static void initActions() {
+		actions.clear();
 		actions.add(new RingAction("aggrivate monster") {
 			@Override
 			public void onWornTick(ItemStack itemstack, EntityLivingBase player) {
@@ -58,17 +59,12 @@ public class RingActions implements Constants {
 								player.posZ + 5));
 				for (EntityLiving e : list) {
 					if (e.getAttackTarget() == null) {
-						e.setAttackTarget(list.get(Main.random.nextInt(list
-								.size())));
+						EntityLiving entity = list.get(Main.random.nextInt(list
+								.size()));
+						if(!entity.equals(e))
+						e.setAttackTarget(entity);
 					}
-					if (e.getAttackTarget() instanceof EntityPlayer) {
-						e.setAttackTarget(list.get(Main.random.nextInt(list
-								.size())));
-					}
-					if (e.getAttackTarget().equals(e)) {
-						e.setAttackTarget(list.get(Main.random.nextInt(list
-								.size())));
-					}
+
 				}
 
 			}
@@ -80,15 +76,11 @@ public class RingActions implements Constants {
 						.getPotionById(25), 20, -1, false, false));
 				player.addPotionEffect(new PotionEffect(
 						Potion.getPotionById(1), 20, 255, false, false));
-				if (player.world.getBlockState(new BlockPos(player.posX,
-						player.posY - 2, player.posZ)) == Blocks.AIR
-						.getStateFromMeta(0)
-						&& player.world.getBlockState(new BlockPos(player.posX,
-								player.posY - 2, player.posZ)) == Blocks.AIR
-								.getStateFromMeta(0)) {
+				
+				
 					player.setPosition(player.posX, player.posY - 0.1,
 							player.posZ);
-				}
+				
 				if (player.world.getBlockState(new BlockPos(player.posX,
 						player.posY - 1, player.posZ)) != Blocks.AIR
 						.getStateFromMeta(0)
@@ -179,7 +171,7 @@ public class RingActions implements Constants {
 			@Override
 			public void onWornTick(ItemStack itemstack, EntityLivingBase player) {
 				player.addPotionEffect(new PotionEffect(Potion
-						.getPotionById(11), 10, 0, false, false));
+						.getPotionById(10), 10, 0, false, false));
 			}
 		});
 		actions.add(new RingAction("fire resistance") {
@@ -231,16 +223,19 @@ public class RingActions implements Constants {
 	}
 
 	public static void match(long seed) {
+		initActions();
 		ids.clear();
 		random.setSeed(seed);
 		for (int i = 0; i < actions.size(); i++) {
 			RingAction I = actions.get(i);
 			int id = random.nextInt(Constants.ringNames.length);
 			while (ids.contains(id)) {
-				id = random.nextInt(Constants.ringNames.length);
+			id = random.nextInt(Constants.ringNames.length);
 			}
 			I.id = id;
 			ids.add(id);
+			System.out.println("Set:"+I.name+","+I.id);
+			
 		}
 	}
 
@@ -254,8 +249,9 @@ public class RingActions implements Constants {
 		}
 		for (int i = 0; i < actions.size(); i++) {
 			RingAction I = actions.get(i);
-			if (id == I.id)
+			if (id == I.id){
 				return I;
+			}
 		}
 		return null;
 	}

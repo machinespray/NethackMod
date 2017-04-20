@@ -7,8 +7,6 @@ import com.machinespray.ROYAL.Constants;
 import com.machinespray.ROYAL.Main;
 import com.machinespray.ROYAL.NetHackItem;
 import com.machinespray.ROYAL.RoyalItems;
-import com.machinespray.ROYAL.rings.RingActions;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.player.EntityPlayer;
@@ -52,15 +50,24 @@ public class ItemScroll extends NetHackItem implements Constants {
 			ScrollActions.getAction(getUnlocalizedName()).onItemRightClick(worldIn, playerIn, handIn);
 		 return super.onItemRightClick(worldIn, playerIn, handIn);
     }
-	
+	@Override
 	public boolean hasUse(){
-		return (ScrollActions.getAction(getUnlocalizedName()) != null);
+		return Main.proxy.getScrollUse(this)!=null;
 	}
 	@Override
 	public String getUse(){
-		if(hasUse())
-			return ScrollActions.getAction(getUnlocalizedName()).name;
-		return null;
+		return Main.proxy.getScrollUse(this);
+	}
+
+	@Override
+	public int getID(){
+		for(int i=0;i<scrollNames.length;i++){
+			String temp = getUnlocalizedName().split("\\.")[1].replace("_", " ");
+			if(scrollNames[i].equals(temp))
+				return i;
+		}
+		return super.getID();
+		
 	}
 
 	@Override

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 public class DefaultKnowledgeHandler implements IKnowledgeHandler {
 	private ArrayList<String> knowledge = new ArrayList<String>();
+
 	@Override
 	public void addKnowledge(String ul) {
 		knowledge.add(ul);
@@ -18,9 +19,10 @@ public class DefaultKnowledgeHandler implements IKnowledgeHandler {
 	public ArrayList<String> getKnowledge() {
 		return knowledge;
 	}
+
 	@Override
 	public void setKnowledge(ArrayList<String> knowledge) {
-		this.knowledge=knowledge;
+		this.knowledge = knowledge;
 	}
 
 }

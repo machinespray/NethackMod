@@ -3,6 +3,8 @@ package com.machinespray.ROYAL;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.machinespray.ROYAL.knowledge.IKnowledgeHandler;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.EntityLivingBase;
@@ -35,27 +37,12 @@ public class NetHackItem extends Item implements Constants {
 	}
 
 	@Override
-	public void onCreated(ItemStack stack, World worldIn, EntityPlayer playerIn) {
-		NBTTagCompound nbt = new NBTTagCompound();
-		if (stack.getTagCompound() != null)
-			nbt = stack.getTagCompound();
-		switch (Main.random.nextInt(10)) {
-		case 8:
-			nbt.setString("BUC", BLESSED);
-			break;
-		case 9:
-			nbt.setString("BUC", CURSED);
-			break;
-		default:
-			nbt.setString("BUC", UNCURSED);
-		}
-		stack.setTagCompound(nbt);
-	}
-	@Override
 	public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced){
-		if(((NetHackItem)stack.getItem()).getUse()!=null&&(playerIn.isCreative()||Main.getHandler(playerIn).hasKnowledge(((NetHackItem)stack.getItem()).getUse())))
-			tooltip.add(((NetHackItem)stack.getItem()).getUse());
-		
+		IKnowledgeHandler kh = Main.getHandler(playerIn);
+		NetHackItem nhi = ((NetHackItem)stack.getItem());
+		if(nhi.hasUse())
+		if(playerIn.isCreative()||kh.hasKnowledge(nhi.getUse()))
+			tooltip.add(nhi.getUse());
 		if(stack.getTagCompound()!=null){
 		if(stack.getTagCompound().getString("BUC")!=null){
 			if(stack.getTagCompound().getBoolean("BUCI")||playerIn.isCreative())
@@ -73,6 +60,12 @@ public class NetHackItem extends Item implements Constants {
 	}
 	public String getUse(){
 		return null;
+	}
+	public boolean hasUse(){
+		return false;
+	}
+	public int getID(){
+		return -2;
 	}
 
 	public static String id(ItemStack stack, int i) {

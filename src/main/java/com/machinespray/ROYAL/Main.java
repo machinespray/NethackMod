@@ -1,9 +1,11 @@
 package com.machinespray.ROYAL;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 import com.machinespray.ROYAL.knowledge.IKnowledgeHandler;
 import com.machinespray.ROYAL.proxy.CommonProxy;
+import com.machinespray.ROYAL.rings.RingAction;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
@@ -32,6 +34,9 @@ public class Main
     @SidedProxy(modId=MODID,clientSide="com.machinespray.ROYAL.proxy.ClientProxy",serverSide="com.machinespray.ROYAL.proxy.CommonProxy")
     public static CommonProxy proxy;
 	public static final SimpleNetworkWrapper INSTANCE = NetworkRegistry.INSTANCE.newSimpleChannel(MODID);
+	public static String[] rings;
+	public static String[] scrolls;
+	
     public static final CreativeTabs royalTab = new CreativeTabs("royal"){
 
 		@Override

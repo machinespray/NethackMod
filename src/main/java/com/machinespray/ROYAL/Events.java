@@ -1,5 +1,8 @@
 package com.machinespray.ROYAL;
 
+import java.util.ArrayList;
+
+import scala.Array;
 import baubles.api.BaublesApi;
 
 import com.machinespray.ROYAL.knowledge.IKnowledgeHandler;
@@ -7,14 +10,17 @@ import com.machinespray.ROYAL.knowledge.Provider;
 import com.machinespray.ROYAL.rings.ItemRing;
 import com.machinespray.ROYAL.rings.RingActions;
 import com.machinespray.ROYAL.scrolls.ScrollActions;
+import com.machinespray.ROYAL.sync.MessageRequestKnowledge;
 import com.machinespray.ROYAL.sync.MessageSendKnowledge;
 
 import net.minecraft.block.Block;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.model.ModelCreeper;
 import net.minecraft.client.model.ModelSquid;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.monster.EntityCreeper;
+import net.minecraft.entity.passive.EntityTameable;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -38,14 +44,17 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.EntityInteract;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class Events implements Constants {
 	@SubscribeEvent
 	public void onLoad(WorldEvent.Load e) {
-		RingActions.match(e.getWorld().getSeed());
-		ScrollActions.match(e.getWorld().getSeed());
+		if(!e.getWorld().isRemote){
+			RingActions.match(e.getWorld().getSeed());
+			ScrollActions.match(e.getWorld().getSeed());
+		}
 	}
 
 	@SubscribeEvent
@@ -100,6 +109,21 @@ public class Events implements Constants {
 					e.setCanceled(true);
 				}
 			}
+		if(e.getTarget() instanceof EntityTameable){
+			EntityTameable target = (EntityTameable) e.getTarget();
+					String BUC = (NetHackItem.id(e.getEntityPlayer()
+							.getHeldItemMainhand(), 0));
+					if (BUC.equals(CURSED))
+						e.getEntityPlayer().sendMessage(
+								new TextComponentString(TextFormatting.RED
+										.toString()
+										+ "The animal's eyes grow wide with fear."));
+					if (BUC.equals(UNCURSED)||BUC.equals(BLESSED))
+						e.getEntityPlayer().sendMessage(
+								new TextComponentString(TextFormatting.AQUA
+										.toString()
+										+ "The animal doesn't react."));
+		}
 	}
 
 	@SubscribeEvent
@@ -110,12 +134,14 @@ public class Events implements Constants {
 				.getBlock()
 				.getBlockHardness(
 						e.getEntityPlayer().world.getBlockState(e.getPos()),
-						e.getEntityPlayer().world, e.getPos()) < .7&&e.getEntityPlayer().world
+						e.getEntityPlayer().world, e.getPos()) < .7
+				&& e.getEntityPlayer().world
 						.getBlockState(e.getPos())
 						.getBlock()
 						.getBlockHardness(
-								e.getEntityPlayer().world.getBlockState(e.getPos()),
-								e.getEntityPlayer().world, e.getPos()) > 0)
+								e.getEntityPlayer().world.getBlockState(e
+										.getPos()), e.getEntityPlayer().world,
+								e.getPos()) > 0)
 			if (!world.isRemote)
 				for (int i = 0; i < BaublesApi.getBaublesHandler(
 						e.getEntityPlayer()).getSlots(); i++) {
@@ -153,26 +179,31 @@ public class Events implements Constants {
 	 * ResourceLocation("textures/entity/squid.png"));
 	 * e.getRenderer().addLayer(layer); }
 	 */
-	 @SubscribeEvent
-	    public void attachCapabilities(AttachCapabilitiesEvent<Entity> event) {
-	        
-	        if (event.getObject() instanceof EntityPlayer)
-	            event.addCapability(new ResourceLocation("royal", "knowledge"), new Provider());
-	    }
-	 @SubscribeEvent
-	 public void joinWorld(EntityJoinWorldEvent e){
-		 if(e.getEntity() instanceof EntityPlayerMP){
-			 EntityPlayerMP player = (EntityPlayerMP) e.getEntity();
-			 if(Main.getHandler(player)!=null)
-			 System.out.println(Main.getHandler(player).toString());
-		 }
-	 }
-	    @SubscribeEvent
-	    public void clonePlayer(PlayerEvent.Clone event) {
-	        
-	        final IKnowledgeHandler original = Main.getHandler(event.getOriginal());
-	        final IKnowledgeHandler clone = Main.getHandler(event.getEntity());
-	        clone.setKnowledge(original.getKnowledge());
-	    }
+
+	@SubscribeEvent
+	public void attachCapabilities(AttachCapabilitiesEvent<Entity> event) {
+
+		if (event.getObject() instanceof EntityPlayer)
+			event.addCapability(new ResourceLocation("royal", "knowledge"),
+					new Provider());
+	}
+	@SideOnly(Side.CLIENT)
+	@SubscribeEvent
+	public void joinWorld(EntityJoinWorldEvent e) {
+		if (e.getEntity() instanceof EntityPlayerSP){
+			RingActions.initActions();
+			Main.rings = new String[ringNames.length];
+			Main.scrolls = new String[scrollNames.length];
+			Main.INSTANCE.sendToServer(new MessageRequestKnowledge());
+		}
+	}
+
+	@SubscribeEvent
+	public void clonePlayer(PlayerEvent.Clone event) {
+
+		final IKnowledgeHandler original = Main.getHandler(event.getOriginal());
+		final IKnowledgeHandler clone = Main.getHandler(event.getEntity());
+		clone.setKnowledge(original.getKnowledge());
+	}
 
 }
