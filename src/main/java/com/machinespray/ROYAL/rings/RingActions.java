@@ -183,11 +183,11 @@ public class RingActions implements Constants {
 				player.addPotionEffect(new PotionEffect(Potion
 						.getPotionById(11), 21, 0, false, false));
 				IKnowledgeHandler knowledge = Main.getHandler(player);
-				if (!knowledge.hasKnowledge("identify")) {
+				if (!knowledge.hasKnowledge("protection")) {
 					if (!player.world.isRemote)
 						player.sendMessage(new TextComponentString(
-								"You discover this is a ring of strength!"));
-					knowledge.addKnowledge("strength");
+								"You discover this is a ring of protection!"));
+					knowledge.addKnowledge("protection");
 				}
 			}
 		});
