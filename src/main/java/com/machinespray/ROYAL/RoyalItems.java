@@ -16,30 +16,31 @@ public class RoyalItems {
 	public static NetHackItem base;
 	public static ArrayList<ItemRing> rings = new ArrayList<ItemRing>();
 	public static NetHackItem AmuletUndying;
-	
-	public static void initItems(){
+
+	public static void initItems() {
 		ItemScroll.initNames();
 		ItemRing.initNames();
 		base = new NetHackItem("base");
-		AmuletUndying = new NetHackItem("amuletOfUndying");
+		//AmuletUndying = new NetHackItem("amuletOfUndying");
 	}
 
 	public static void registerItems() {
-		for(ItemScroll i : scrolls)
-		i.register();
-		for(ItemRing i : rings)
-		i.register();
+		for (ItemScroll i : scrolls)
+			i.register();
+		for (ItemRing i : rings)
+			i.register();
 		base.register();
-		AmuletUndying.register();
+		//AmuletUndying.register();
 
 	}
+
 	@SideOnly(Side.CLIENT)
-	public static void registerClient(){
-		for(ItemScroll i : scrolls)
-		i.registerClient();
-		for(ItemRing i : rings)
-		i.registerClient();
+	public static void registerClient() {
+		for (ItemScroll i : scrolls)
+			i.registerClient();
+		for (ItemRing i : rings)
+			i.registerClient();
 		base.registerClient();
-		AmuletUndying.registerClient();
+		//AmuletUndying.registerClient();
 	}
 }

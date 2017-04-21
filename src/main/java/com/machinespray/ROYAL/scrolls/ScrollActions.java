@@ -9,6 +9,7 @@ import com.machinespray.ROYAL.Constants;
 import com.machinespray.ROYAL.Main;
 import com.machinespray.ROYAL.NetHackItem;
 import com.machinespray.ROYAL.knowledge.IKnowledgeHandler;
+import com.machinespray.ROYAL.rings.RingAction;
 
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.EntityAreaEffectCloud;
@@ -17,6 +18,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntityBlaze;
 import net.minecraft.entity.monster.EntitySilverfish;
 import net.minecraft.entity.monster.EntityZombie;
+import net.minecraft.entity.passive.EntityTameable;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityDragonFireball;
 import net.minecraft.init.Blocks;
@@ -187,6 +189,96 @@ public class ScrollActions implements Constants {
 							if (buc.equals(CURSED))
 								playerIn.getHeldItemOffhand().addEnchantment(
 										Enchantments.VANISHING_CURSE, 1);
+						}
+					} else {
+						playerIn.sendMessage(new TextComponentString(
+								"Your offhand glows for a second..."));
+					}
+				}
+			}
+		});
+		actions.add(new ScrollAction("teleport") {
+			@Override
+			public void onItemRightClick(World worldIn, EntityPlayer player,
+					EnumHand handIn) {
+				if (!player.world.isRemote) {
+					double d0 = player.posX;
+					double d1 = player.posY;
+					double d2 = player.posZ;
+
+					for (int i = 0; i < 16; i++) {
+						double d3 = player.posX
+								+ (player.getRNG().nextDouble() - 0.5D) * 16.0D;
+						double d4 = MathHelper.clamp(player.posY
+								+ (double) (player.getRNG().nextInt(16) - 8),
+								0.0D,
+								(double) (player.world.getActualHeight() - 1));
+						double d5 = player.posZ
+								+ (player.getRNG().nextDouble() - 0.5D) * 16.0D;
+
+						if (player.isRiding()) {
+							player.dismountRidingEntity();
+						}
+
+						if (player.attemptTeleport(d3, d4, d5)) {
+							player.world.playSound((EntityPlayer) null, d0, d1,
+									d2, SoundEvents.ITEM_CHORUS_FRUIT_TELEPORT,
+									SoundCategory.PLAYERS, 1.0F, 1.0F);
+							player.playSound(
+									SoundEvents.ITEM_CHORUS_FRUIT_TELEPORT,
+									1.0F, 1.0F);
+							IKnowledgeHandler knowledge = Main
+									.getHandler(player);
+							if (!knowledge.hasKnowledge("teleport")) {
+								if (!player.world.isRemote)
+									player.sendMessage(new TextComponentString(
+											"You discover this is a scroll of teleport!"));
+								knowledge.addKnowledge("teleport");
+							}
+						}
+						break;
+					}
+				}
+			}
+
+		});
+		/*
+		 * actions.add(new ScrollAction("taming") {
+		 * 
+		 * @Override public void onItemRightClick(World worldIn, EntityPlayer
+		 * player, EnumHand handIn) { ItemStack itemstack =
+		 * player.getHeldItemMainhand(); String buc =
+		 * itemstack.getTagCompound().getString("BUC"); AxisAlignedBB box = new
+		 * AxisAlignedBB(player.posX - 5, player.posY - 5, player.posZ - 5,
+		 * player.posX + 5, player.posY + 5, player.posZ + 5); if
+		 * (buc.equals(CURSED)) box.expandXyz(.5); if (buc.equals(BLESSED))
+		 * box.expandXyz(2); List<EntityTameable> list =
+		 * player.world.getEntitiesWithinAABB( EntityTameable.class, box); for
+		 * (EntityTameable e : list) { if (e.getOwner() == null) {
+		 * e.setOwnerId(player.getUniqueID()); }
+		 * 
+		 * } } });
+		 */
+		actions.add(new ScrollAction("destroy weapon") {
+			@Override
+			public void onItemRightClick(World worldIn, EntityPlayer playerIn,
+					EnumHand handIn) {
+				IKnowledgeHandler knowledge = Main.getHandler(playerIn);
+				if (!playerIn.world.isRemote) {
+					World world = playerIn.world;
+					if (!playerIn.isCreative())
+						playerIn.inventory.decrStackSize(
+								playerIn.inventory.currentItem, 1);
+					String buc = playerIn.getHeldItemMainhand()
+							.getTagCompound().getString("BUC");
+					if (playerIn.getHeldItemOffhand() != null) {
+						playerIn.getHeldItemOffhand().setCount(
+								playerIn.getHeldItemOffhand().getCount() - 1);
+						if (!knowledge.hasKnowledge("destroy weapon")) {
+							if (!playerIn.world.isRemote)
+								playerIn.sendMessage(new TextComponentString(
+										"You discover this is a scroll of destroy weapon!"));
+							knowledge.addKnowledge("destroy weapon");
 						}
 					} else {
 						playerIn.sendMessage(new TextComponentString(

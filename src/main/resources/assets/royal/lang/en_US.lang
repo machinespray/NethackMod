@@ -69,8 +69,8 @@ item.diamondR.name=A Diamond Ring
 item.ivoryR.name=An Ivory Ring
 item.emeraldR.name=An Emerald Ring
 item.amuletOfUndying.name=The Seventh Immortal Pharoh's Amulet Of Undying
-tile.neutral.name=Neutral Altar
-tile.lawful.name=Lawful Altar
-tile.chaotic.name=Chaotic Altar
+tile.Neutral.name=Neutral Altar
+tile.Lawful.name=Lawful Altar
+tile.Chaotic.name=Chaotic Altar
 
 

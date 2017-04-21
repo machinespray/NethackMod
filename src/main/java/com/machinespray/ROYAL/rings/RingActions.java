@@ -6,6 +6,7 @@ import java.util.Random;
 
 import com.machinespray.ROYAL.Constants;
 import com.machinespray.ROYAL.Main;
+import com.machinespray.ROYAL.knowledge.IKnowledgeHandler;
 
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -21,6 +22,7 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.client.event.GuiScreenEvent.PotionShiftEvent;
 
 public class RingActions implements Constants {
@@ -36,11 +38,16 @@ public class RingActions implements Constants {
 		actions.add(new RingAction("aggrivate monster") {
 			@Override
 			public void onWornTick(ItemStack itemstack, EntityLivingBase player) {
+				String buc = itemstack.getTagCompound().getString("BUC");
+				AxisAlignedBB box = new AxisAlignedBB(player.posX - 5,
+						player.posY - 5, player.posZ - 5, player.posX + 5,
+						player.posY + 5, player.posZ + 5);
+				if(buc.equals(CURSED))
+					box.expandXyz(2);
+				if(buc.equals(BLESSED))
+					box.expandXyz(.5);
 				List<EntityLiving> list = player.world.getEntitiesWithinAABB(
-						EntityLiving.class, new AxisAlignedBB(player.posX - 5,
-								player.posY - 5, player.posZ - 5,
-								player.posX + 5, player.posY + 5,
-								player.posZ + 5));
+						EntityLiving.class, box);
 				for (EntityLiving e : list) {
 					if (e.getAttackTarget() == null
 							|| e.getAttackTarget() != player) {
@@ -52,17 +59,22 @@ public class RingActions implements Constants {
 		actions.add(new RingAction("conflict") {
 			@Override
 			public void onWornTick(ItemStack itemstack, EntityLivingBase player) {
+				String buc = itemstack.getTagCompound().getString("BUC");
+				AxisAlignedBB box = new AxisAlignedBB(player.posX - 5,
+						player.posY - 5, player.posZ - 5, player.posX + 5,
+						player.posY + 5, player.posZ + 5);
+				if(buc.equals(CURSED))
+					box.expandXyz(.5);
+				if(buc.equals(BLESSED))
+					box.expandXyz(2);
 				List<EntityLiving> list = player.world.getEntitiesWithinAABB(
-						EntityLiving.class, new AxisAlignedBB(player.posX - 5,
-								player.posY - 5, player.posZ - 5,
-								player.posX + 5, player.posY + 5,
-								player.posZ + 5));
+						EntityLiving.class,box);
 				for (EntityLiving e : list) {
 					if (e.getAttackTarget() == null) {
 						EntityLiving entity = list.get(Main.random.nextInt(list
 								.size()));
-						if(!entity.equals(e))
-						e.setAttackTarget(entity);
+						if (!entity.equals(e))
+							e.setAttackTarget(entity);
 					}
 
 				}
@@ -76,22 +88,12 @@ public class RingActions implements Constants {
 						.getPotionById(25), 20, -1, false, false));
 				player.addPotionEffect(new PotionEffect(
 						Potion.getPotionById(1), 20, 255, false, false));
-				
-				
-					player.setPosition(player.posX, player.posY - 0.1,
-							player.posZ);
-				
-				if (player.world.getBlockState(new BlockPos(player.posX,
-						player.posY - 1, player.posZ)) != Blocks.AIR
-						.getStateFromMeta(0)
-						&& !(player.world.getBlockState(new BlockPos(
-								player.posX, player.posY - 1, player.posZ))
-								.isTranslucent())
-						&& (player.world.getBlockState(new BlockPos(
-								player.posX, player.posY - 1, player.posZ))
-								.causesSuffocation())) {
-					player.setPosition(player.posX, player.posY + .2,
-							player.posZ);
+				IKnowledgeHandler knowledge = Main.getHandler(player);
+				if (!knowledge.hasKnowledge("levitation")) {
+					if (!player.world.isRemote)
+						player.sendMessage(new TextComponentString(
+								"You discover this is a ring of levitation!"));
+					knowledge.addKnowledge("levitation");
 				}
 			}
 		});
@@ -119,7 +121,7 @@ public class RingActions implements Constants {
 						double d1 = player.posY;
 						double d2 = player.posZ;
 
-						for (int i = 0; i < 16; ++i) {
+						for (int i = 0; i < 16; i++) {
 							double d3 = player.posX
 									+ (player.getRNG().nextDouble() - 0.5D)
 									* 16.0D;
@@ -145,26 +147,48 @@ public class RingActions implements Constants {
 								player.playSound(
 										SoundEvents.ITEM_CHORUS_FRUIT_TELEPORT,
 										1.0F, 1.0F);
-								break;
+								IKnowledgeHandler knowledge = Main
+										.getHandler(player);
+								if (!knowledge.hasKnowledge("teleportation")) {
+									if (!player.world.isRemote)
+										player.sendMessage(new TextComponentString(
+												"You discover this is a ring of teleportation!"));
+									knowledge.addKnowledge("teleportation");
+								}
 							}
+							break;
 						}
 					}
-
 			}
+
 		});
 		actions.add(new RingAction("hunger") {
 			@Override
 			public void onWornTick(ItemStack itemstack, EntityLivingBase player) {
 				player.addPotionEffect(new PotionEffect(Potion
 						.getPotionById(17), 21, 0, false, false));
+				IKnowledgeHandler knowledge = Main.getHandler(player);
+				if (!knowledge.hasKnowledge("hunger")) {
+					if (!player.world.isRemote)
+						player.sendMessage(new TextComponentString(
+								"You discover this is a ring of hunger!"));
+					knowledge.addKnowledge("hunger");
+				}
 			}
 		});
 		actions.add(new RingAction("protection") {
-			//also has hit sound effect
+			// also has hit sound effect
 			@Override
 			public void onWornTick(ItemStack itemstack, EntityLivingBase player) {
 				player.addPotionEffect(new PotionEffect(Potion
 						.getPotionById(11), 21, 0, false, false));
+				IKnowledgeHandler knowledge = Main.getHandler(player);
+				if (!knowledge.hasKnowledge("identify")) {
+					if (!player.world.isRemote)
+						player.sendMessage(new TextComponentString(
+								"You discover this is a ring of strength!"));
+					knowledge.addKnowledge("strength");
+				}
 			}
 		});
 		actions.add(new RingAction("regenaration") {
@@ -172,6 +196,13 @@ public class RingActions implements Constants {
 			public void onWornTick(ItemStack itemstack, EntityLivingBase player) {
 				player.addPotionEffect(new PotionEffect(Potion
 						.getPotionById(10), 10, 0, false, false));
+				IKnowledgeHandler knowledge = Main.getHandler(player);
+				if (!knowledge.hasKnowledge("regenaration")) {
+					if (!player.world.isRemote)
+						player.sendMessage(new TextComponentString(
+								"You discover this is a ring of regenaration!"));
+					knowledge.addKnowledge("regenaration");
+				}
 			}
 		});
 		actions.add(new RingAction("fire resistance") {
@@ -179,14 +210,28 @@ public class RingActions implements Constants {
 			public void onWornTick(ItemStack itemstack, EntityLivingBase player) {
 				player.addPotionEffect(new PotionEffect(Potion
 						.getPotionById(12), 10, 0, false, false));
+				IKnowledgeHandler knowledge = Main.getHandler(player);
+				if (!knowledge.hasKnowledge("fire resistance")) {
+					if (!player.world.isRemote)
+						player.sendMessage(new TextComponentString(
+								"You discover this is a ring of fire resistance!"));
+					knowledge.addKnowledge("fire resistance");
+				}
 			}
 		});
 		actions.add(new RingAction("strength") {
-			//Also has instant mine
+			// Also has instant mine
 			@Override
 			public void onWornTick(ItemStack itemstack, EntityLivingBase player) {
 				player.addPotionEffect(new PotionEffect(
 						Potion.getPotionById(5), 10, 0, false, false));
+				IKnowledgeHandler knowledge = Main.getHandler(player);
+				if (!knowledge.hasKnowledge("strength")) {
+					if (!player.world.isRemote)
+						player.sendMessage(new TextComponentString(
+								"You discover this is a ring of strength!"));
+					knowledge.addKnowledge("strength");
+				}
 			}
 		});
 		actions.add(new RingAction("paranoia") {
@@ -202,17 +247,19 @@ public class RingActions implements Constants {
 						try {
 							Object j = null;
 							j = SoundEvents.class.getDeclaredFields()[i].get(j);
-							player.world.playSound((EntityPlayer) null, d0,
-									d1, d2,
-									(SoundEvent) j,
-									SoundCategory.PLAYERS, 1.0F, 1.0F);
+							player.world.playSound((EntityPlayer) null, d0, d1,
+									d2, (SoundEvent) j, SoundCategory.PLAYERS,
+									1.0F, 1.0F);
 							player.playSound((SoundEvent) j, 1.0F, 1.0F);
 						} catch (IllegalArgumentException e) {
-							player.playSound(SoundEvents.ENTITY_CREEPER_PRIMED, 1.0F, 1.0F);
+							player.playSound(SoundEvents.ENTITY_CREEPER_PRIMED,
+									1.0F, 1.0F);
 						} catch (IllegalAccessException e) {
-							player.playSound(SoundEvents.ENTITY_ZOMBIE_AMBIENT, 1.0F, 1.0F);
+							player.playSound(SoundEvents.ENTITY_ZOMBIE_AMBIENT,
+									1.0F, 1.0F);
 						} catch (SecurityException e) {
-							player.playSound(SoundEvents.ENTITY_PLAYER_HURT, 1.0F, 1.0F);
+							player.playSound(SoundEvents.ENTITY_PLAYER_HURT,
+									1.0F, 1.0F);
 						}
 
 					}
@@ -230,25 +277,25 @@ public class RingActions implements Constants {
 			RingAction I = actions.get(i);
 			int id = random.nextInt(Constants.ringNames.length);
 			while (ids.contains(id)) {
-			id = random.nextInt(Constants.ringNames.length);
+				id = random.nextInt(Constants.ringNames.length);
 			}
 			I.id = id;
 			ids.add(id);
-			
+
 		}
 	}
 
 	public static RingAction getAction(String name) {
 		int id = 100;
 		name = name.split("\\.")[1].replace("_", " ");
-		name =name.substring(0, name.length()-1);
+		name = name.substring(0, name.length() - 1);
 		for (int i = 0; i < ringNames.length; i++) {
 			if (ringNames[i].equals(name))
 				id = i;
 		}
 		for (int i = 0; i < actions.size(); i++) {
 			RingAction I = actions.get(i);
-			if (id == I.id){
+			if (id == I.id) {
 				return I;
 			}
 		}

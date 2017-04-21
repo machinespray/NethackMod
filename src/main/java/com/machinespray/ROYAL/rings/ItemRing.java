@@ -2,7 +2,9 @@ package com.machinespray.ROYAL.rings;
 
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import baubles.api.BaubleType;
@@ -74,4 +76,5 @@ public class ItemRing extends NetHackItem implements Constants, IBauble {
 		return super.getID();
 		
 	}
+
 	}

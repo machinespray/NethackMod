@@ -6,6 +6,7 @@ import scala.Array;
 import scala.util.Random;
 import baubles.api.BaublesApi;
 
+import com.machinespray.ROYAL.altars.RoyalBlocks;
 import com.machinespray.ROYAL.knowledge.IKnowledgeHandler;
 import com.machinespray.ROYAL.knowledge.Provider;
 import com.machinespray.ROYAL.rings.ItemRing;
@@ -26,7 +27,11 @@ import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemPotion;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
@@ -46,6 +51,7 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.EntityInteract;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent.ItemCraftedEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -65,8 +71,17 @@ public class Events implements Constants {
 
 	@SubscribeEvent
 	public void onDrop(LivingDropsEvent e) {
-		if (Main.random.nextInt(50) < 48) {
-			ItemStack stack = new ItemStack(RoyalItems.rings.get(10));
+		if (Main.random.nextInt(15) > 13) {
+			ItemStack stack = null;
+			if(Main.random.nextInt(2)==0){
+			stack = new ItemStack(RoyalItems.rings.get(Main.random.nextInt(RoyalItems.rings.size())));
+			while(!((NetHackItem)stack.getItem()).hasUse())
+				stack = new ItemStack(RoyalItems.rings.get(Main.random.nextInt(RoyalItems.rings.size())));
+			}else{
+			stack = new ItemStack(RoyalItems.scrolls.get(Main.random.nextInt(RoyalItems.scrolls.size())));
+			while(!((NetHackItem)stack.getItem()).hasUse())
+				stack = new ItemStack(RoyalItems.scrolls.get(Main.random.nextInt(RoyalItems.scrolls.size())));
+			}
 			NBTTagCompound nbt = new NBTTagCompound();
 			if (stack.getTagCompound() != null)
 				nbt = stack.getTagCompound();
@@ -116,17 +131,22 @@ public class Events implements Constants {
 				}
 			}
 		if (e.getTarget() instanceof EntityTameable) {
-			EntityTameable target = (EntityTameable) e.getTarget();
-			String BUC = (NetHackItem.id(e.getEntityPlayer()
-					.getHeldItemMainhand(), 0));
-			if (BUC.equals(CURSED))
-				e.getEntityPlayer().sendMessage(
-						new TextComponentString(TextFormatting.RED.toString()
-								+ "The animal's eyes grow wide with fear."));
-			if (BUC.equals(UNCURSED) || BUC.equals(BLESSED))
-				e.getEntityPlayer().sendMessage(
-						new TextComponentString(TextFormatting.AQUA.toString()
-								+ "The animal doesn't react."));
+			if(e.getEntityPlayer().getHeldItemMainhand()!=null)
+			if (e.getEntityPlayer().getHeldItemMainhand().getItem() instanceof NetHackItem) {
+				EntityTameable target = (EntityTameable) e.getTarget();
+				String BUC = (NetHackItem.id(e.getEntityPlayer()
+						.getHeldItemMainhand(), 0));
+				if (BUC.equals(CURSED))
+					e.getEntityPlayer()
+							.sendMessage(
+									new TextComponentString(
+											TextFormatting.RED.toString()
+													+ "The animal's eyes grow wide with fear."));
+				if (BUC.equals(UNCURSED) || BUC.equals(BLESSED))
+					e.getEntityPlayer().sendMessage(
+							new TextComponentString(TextFormatting.AQUA
+									.toString() + "The animal doesn't react."));
+			}
 		}
 	}
 
@@ -226,27 +246,41 @@ public class Events implements Constants {
 		gods[2] = gods[0].split("\\.")[2];
 		gods[1] = gods[0].split("\\.")[1];
 		gods[0] = gods[0].split("\\.")[0];
-		if (e.getMessage().equals("#offer") && e.getPlayer() != player) {
-			e.getPlayer().sendMessage(
-					new TextComponentString("Offer To Whom?\na). " + gods[0]
-							+ " (Lawful)\nb). " + gods[1] + " (Neutral)\nc). "
-							+ gods[2] + " (Chaotic)"));
-			if (player != null)
-				player.sendMessage(new TextComponentString(
-						"The gods have are now listening to someone else."));
-			player = e.getPlayer();
-			e.setCanceled(true);
-		} else if (e.getPlayer().equals(player)) {
+		if (e.getMessage().equals("#offer") && e.getPlayer() != player
+				&& e.getPlayer().getHeldItemMainhand() != null)
+			if (e.getPlayer().getHeldItemMainhand().getItem()
+					.equals(Items.GOLD_NUGGET)
+					&& e.getPlayer().getHeldItemMainhand().getCount() > 8) {
+				e.getPlayer()
+						.getHeldItemMainhand()
+						.setCount(
+								e.getPlayer().getHeldItemMainhand().getCount() - 9);
+				e.getPlayer().sendMessage(
+						new TextComponentString("Offer To Whom?\na). "
+								+ gods[0] + " (Lawful)\nb). " + gods[1]
+								+ " (Neutral)\nc). " + gods[2] + " (Chaotic)"));
+				if (player != null)
+					player.sendMessage(new TextComponentString(
+							"The gods have are now listening to someone else."));
+				player = e.getPlayer();
+				e.setCanceled(true);
+			}
+		if (e.getPlayer().equals(player) && !e.getMessage().equals("#offer")) {
 			e.setCanceled(true);
 			if (e.getMessage().equals("a") || e.getMessage().equals("b")
 					|| e.getMessage().equals("c")) {
 				int to = Character
-						.getNumericValue(e.getMessage().charAt(0)-49);
-				if (Main.random.nextInt(3) != 0) {
-
-				}
+						.getNumericValue(e.getMessage().charAt(0) - 49);
 				player.sendMessage(new TextComponentString(gods[to]
 						+ " hears your prayer!"));
+				if (Main.random.nextInt(4) == 0) {
+					ItemStack stack = new ItemStack(RoyalBlocks.altars.get(to));
+					if (player.inventory.addItemStackToInventory(stack))
+						player.sendMessage(new TextComponentString(
+								gods[to]
+										+ " grants you an altar of their allignment. Sacrificing gold bars at it can grant you rewards!"));
+
+				}
 
 			} else {
 				player.sendMessage(new TextComponentString(
@@ -254,6 +288,56 @@ public class Events implements Constants {
 			}
 			player = null;
 		}
-	}
+		if (e.getMessage().equals("#dip")) {
+			e.setCanceled(true);
+			if (e.getPlayer().getHeldItemOffhand().getItem() instanceof ItemPotion) {
+				if (e.getPlayer().getHeldItemMainhand().getItem() instanceof NetHackItem) {
+					String buc = UNCURSED;
+					try {
+						buc = e.getPlayer().getHeldItemOffhand()
+								.getTagCompound().getString("BUC");
+					} catch (Exception er) {
+					}
+					String myBuc = e.getPlayer().getHeldItemMainhand()
+							.getTagCompound().getString("BUC");
+					String setBUC = myBuc;
+					if (buc.equals(UNCURSED)) {
 
+					} else if (buc.equals(BLESSED)) {
+						if (myBuc.equals(UNCURSED))
+							setBUC = BLESSED;
+						if (myBuc.equals(CURSED))
+							setBUC = UNCURSED;
+
+					} else if (buc.equals(CURSED)) {
+						if (myBuc.equals(UNCURSED))
+							setBUC = CURSED;
+						if (myBuc.equals(BLESSED))
+							setBUC = UNCURSED;
+					}
+					if (!myBuc.equals(setBUC)) {
+						NBTTagCompound nbt = e.getPlayer()
+								.getHeldItemMainhand().getTagCompound();
+						nbt.setString("BUC", setBUC);
+						nbt.setBoolean("BUCI", true);
+						e.getPlayer().getHeldItemMainhand().setTagCompound(nbt);
+						e.getPlayer().getHeldItemOffhand().setCount(0);
+						e.getPlayer().inventory
+								.addItemStackToInventory(new ItemStack(
+										Items.GLASS_BOTTLE));
+					}
+				} else {
+					e.getPlayer()
+							.sendMessage(
+									new TextComponentString(
+											"The item in your main hand is not applicable for dipping!"));
+				}
+			} else {
+				e.getPlayer()
+						.sendMessage(
+								new TextComponentString(
+										"The item in your offhand is not applicable for dipping into!"));
+			}
+		}
+	}
 }
