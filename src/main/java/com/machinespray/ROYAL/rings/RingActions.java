@@ -35,7 +35,7 @@ public class RingActions implements Constants {
 
 	public static void initActions() {
 		actions.clear();
-		actions.add(new RingAction("aggrivate monster") {
+		actions.add(new RingAction("aggravate monster") {
 			@Override
 			public void onWornTick(ItemStack itemstack, EntityLivingBase player) {
 				String buc = itemstack.getTagCompound().getString("BUC");
@@ -191,17 +191,17 @@ public class RingActions implements Constants {
 				}
 			}
 		});
-		actions.add(new RingAction("regenaration") {
+		actions.add(new RingAction("regeneration") {
 			@Override
 			public void onWornTick(ItemStack itemstack, EntityLivingBase player) {
 				player.addPotionEffect(new PotionEffect(Potion
-						.getPotionById(10), 10, 0, false, false));
+						.getPotionById(10), 80, 0, false, false));
 				IKnowledgeHandler knowledge = Main.getHandler(player);
 				if (!knowledge.hasKnowledge("regenaration")) {
 					if (!player.world.isRemote)
 						player.sendMessage(new TextComponentString(
-								"You discover this is a ring of regenaration!"));
-					knowledge.addKnowledge("regenaration");
+								"You discover this is a ring of regeneration!"));
+					knowledge.addKnowledge("regeneration");
 				}
 			}
 		});

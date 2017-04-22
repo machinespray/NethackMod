@@ -57,6 +57,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class Events implements Constants {
+	private static boolean message=true;
 	private static EntityPlayer player;
 	private static String[] gods = { "Athena.Hermes.Poseidon",
 			"Mercury.Venus.Mars", "Tyr.Odin.Loki", "Ptah.Thoth.Set" };
@@ -71,34 +72,41 @@ public class Events implements Constants {
 
 	@SubscribeEvent
 	public void onDrop(LivingDropsEvent e) {
-		if (Main.random.nextInt(15) > 13) {
-			ItemStack stack = null;
-			if(Main.random.nextInt(2)==0){
-			stack = new ItemStack(RoyalItems.rings.get(Main.random.nextInt(RoyalItems.rings.size())));
-			while(!((NetHackItem)stack.getItem()).hasUse())
-				stack = new ItemStack(RoyalItems.rings.get(Main.random.nextInt(RoyalItems.rings.size())));
-			}else{
-			stack = new ItemStack(RoyalItems.scrolls.get(Main.random.nextInt(RoyalItems.scrolls.size())));
-			while(!((NetHackItem)stack.getItem()).hasUse())
-				stack = new ItemStack(RoyalItems.scrolls.get(Main.random.nextInt(RoyalItems.scrolls.size())));
+		if (!e.getEntity().world.isRemote) {
+			if (Main.random.nextInt(15) > 13) {
+				ItemStack stack = null;
+				if (Main.random.nextInt(2) == 0) {
+					stack = new ItemStack(RoyalItems.rings.get(Main.random
+							.nextInt(RoyalItems.rings.size())));
+					while (!((NetHackItem) stack.getItem()).hasUse())
+						stack = new ItemStack(RoyalItems.rings.get(Main.random
+								.nextInt(RoyalItems.rings.size())));
+				} else {
+					stack = new ItemStack(RoyalItems.scrolls.get(Main.random
+							.nextInt(RoyalItems.scrolls.size())));
+					while (!((NetHackItem) stack.getItem()).hasUse())
+						stack = new ItemStack(
+								RoyalItems.scrolls.get(Main.random
+										.nextInt(RoyalItems.scrolls.size())));
+				}
+				NBTTagCompound nbt = new NBTTagCompound();
+				if (stack.getTagCompound() != null)
+					nbt = stack.getTagCompound();
+				switch (Main.random.nextInt(10)) {
+				case 8:
+					nbt.setString("BUC", BLESSED);
+					break;
+				case 9:
+					nbt.setString("BUC", CURSED);
+					break;
+				default:
+					nbt.setString("BUC", UNCURSED);
+				}
+				stack.setTagCompound(nbt);
+				e.getDrops().add(
+						new EntityItem(e.getEntity().world, e.getEntity().posX,
+								e.getEntity().posY, e.getEntity().posZ, stack));
 			}
-			NBTTagCompound nbt = new NBTTagCompound();
-			if (stack.getTagCompound() != null)
-				nbt = stack.getTagCompound();
-			switch (Main.random.nextInt(10)) {
-			case 8:
-				nbt.setString("BUC", BLESSED);
-				break;
-			case 9:
-				nbt.setString("BUC", CURSED);
-				break;
-			default:
-				nbt.setString("BUC", UNCURSED);
-			}
-			stack.setTagCompound(nbt);
-			e.getDrops().add(
-					new EntityItem(e.getEntity().world, e.getEntity().posX, e
-							.getEntity().posY, e.getEntity().posZ, stack));
 		}
 	}
 
@@ -131,22 +139,23 @@ public class Events implements Constants {
 				}
 			}
 		if (e.getTarget() instanceof EntityTameable) {
-			if(e.getEntityPlayer().getHeldItemMainhand()!=null)
-			if (e.getEntityPlayer().getHeldItemMainhand().getItem() instanceof NetHackItem) {
-				EntityTameable target = (EntityTameable) e.getTarget();
-				String BUC = (NetHackItem.id(e.getEntityPlayer()
-						.getHeldItemMainhand(), 0));
-				if (BUC.equals(CURSED))
-					e.getEntityPlayer()
-							.sendMessage(
-									new TextComponentString(
-											TextFormatting.RED.toString()
-													+ "The animal's eyes grow wide with fear."));
-				if (BUC.equals(UNCURSED) || BUC.equals(BLESSED))
-					e.getEntityPlayer().sendMessage(
-							new TextComponentString(TextFormatting.AQUA
-									.toString() + "The animal doesn't react."));
-			}
+			if (e.getEntityPlayer().getHeldItemMainhand() != null)
+				if (e.getEntityPlayer().getHeldItemMainhand().getItem() instanceof NetHackItem) {
+					EntityTameable target = (EntityTameable) e.getTarget();
+					String BUC = (NetHackItem.id(e.getEntityPlayer()
+							.getHeldItemMainhand(), 0));
+					if (BUC.equals(CURSED))
+						e.getEntityPlayer()
+								.sendMessage(
+										new TextComponentString(
+												TextFormatting.RED.toString()
+														+ "The animal's eyes grow wide with fear."));
+					if (BUC.equals(UNCURSED) || BUC.equals(BLESSED))
+						e.getEntityPlayer().sendMessage(
+								new TextComponentString(TextFormatting.AQUA
+										.toString()
+										+ "The animal doesn't react."));
+				}
 		}
 	}
 
@@ -215,7 +224,8 @@ public class Events implements Constants {
 	@SideOnly(Side.CLIENT)
 	@SubscribeEvent
 	public void joinWorld(EntityJoinWorldEvent e) {
-		if (e.getEntity() instanceof EntityPlayerSP) {
+		if (e.getEntity() instanceof EntityPlayerSP&&message) {
+			message = false;
 			RingActions.initActions();
 			Main.rings = new String[ringNames.length];
 			Main.scrolls = new String[scrollNames.length];

@@ -43,7 +43,11 @@ public class CommonProxy implements Constants {
 		return RingActions.getAction(ring.getUnlocalizedName()).name;
 	}
 	public String getScrollUse(ItemScroll scroll) {
+		try{
 		return ScrollActions.getAction(scroll.getUnlocalizedName()).name;
+		}catch(Exception e){
+			return null;
+		}
 	}
 
 }
