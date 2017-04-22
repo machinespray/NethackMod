@@ -72,7 +72,7 @@ public class Events implements Constants {
 
 	@SubscribeEvent
 	public void onDrop(LivingDropsEvent e) {
-		if (!e.getEntity().world.isRemote) {
+		if (!e.getEntity().world.isRemote&&!(e.getEntity() instanceof EntityPlayer)) {
 			if (Main.random.nextInt(15) > 13) {
 				ItemStack stack = null;
 				if (Main.random.nextInt(2) == 0) {
