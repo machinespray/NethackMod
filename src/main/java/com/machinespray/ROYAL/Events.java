@@ -59,7 +59,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class Events implements Constants {
 	private static boolean message=true;
 	private static EntityPlayer player;
-	private static String[] gods = { "Athena.Hermes.Poseidon",
+	public static String[] gods = { "Athena.Hermes.Poseidon",
 			"Mercury.Venus.Mars", "Tyr.Odin.Loki", "Ptah.Thoth.Set" };
 
 	@SubscribeEvent
@@ -69,7 +69,16 @@ public class Events implements Constants {
 			ScrollActions.match(e.getWorld().getSeed());
 		}
 	}
-
+public static String[] getGods(long seed,String[] godsList){
+	Random random = new Random();
+	random.setSeed(seed);
+	String gods[] = new String[3];
+	gods[0] = godsList[random.nextInt(godsList.length)];
+	gods[2] = gods[0].split("\\.")[2];
+	gods[1] = gods[0].split("\\.")[1];
+	gods[0] = gods[0].split("\\.")[0];
+	return gods;
+}
 	@SubscribeEvent
 	public void onDrop(LivingDropsEvent e) {
 		if (!e.getEntity().world.isRemote&&!(e.getEntity() instanceof EntityPlayer)) {
@@ -249,13 +258,7 @@ public class Events implements Constants {
 
 	@SubscribeEvent
 	public void onChat(ServerChatEvent e) {
-		Random random = new Random();
-		random.setSeed(e.getPlayer().world.getSeed());
-		String gods[] = new String[3];
-		gods[0] = this.gods[random.nextInt(this.gods.length)];
-		gods[2] = gods[0].split("\\.")[2];
-		gods[1] = gods[0].split("\\.")[1];
-		gods[0] = gods[0].split("\\.")[0];
+		String[] gods = getGods(e.getPlayer().world.getSeed(),this.gods);
 		if (e.getMessage().equals("#offer") && e.getPlayer() != player
 				&& e.getPlayer().getHeldItemMainhand() != null)
 			if (e.getPlayer().getHeldItemMainhand().getItem()

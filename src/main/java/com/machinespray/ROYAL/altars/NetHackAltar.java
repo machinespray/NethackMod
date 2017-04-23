@@ -3,6 +3,7 @@ package com.machinespray.ROYAL.altars;
 import java.util.List;
 
 import com.machinespray.ROYAL.Constants;
+import com.machinespray.ROYAL.Events;
 import com.machinespray.ROYAL.Main;
 import com.machinespray.ROYAL.NetHackItem;
 import com.machinespray.ROYAL.RoyalItems;
@@ -18,6 +19,7 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
@@ -28,8 +30,10 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityBrewingStand;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.common.registry.GameRegistry;
@@ -90,14 +94,20 @@ public class NetHackAltar extends Block implements Constants {
 	public boolean onBlockActivated(World worldIn, BlockPos pos,
 			IBlockState state, EntityPlayer playerIn, EnumHand hand,
 			EnumFacing facing, float hitX, float hitY, float hitZ) {
-		if (!worldIn.isRemote)
+		if(worldIn.isRemote){
+			for(int i=0;i<3;i++)
+		worldIn.spawnParticle(EnumParticleTypes.CRIT_MAGIC, pos.getX()+Main.random.nextDouble(),pos.getY()+1+Main.random.nextDouble(), pos.getZ()+Main.random.nextDouble(), 0, 0.2, 0, 0);
+		playerIn.playSound(SoundEvents.ITEM_TOTEM_USE, 0.2f, 2);
+		}
+			if (!worldIn.isRemote)
 			if (playerIn.getHeldItemMainhand().getItem()
 					.equals(Items.GOLD_INGOT)) {
 				playerIn.getHeldItemMainhand().setCount(
 						playerIn.getHeldItemMainhand().getCount() - 1);
-				EntityLightningBolt lightning = new EntityLightningBolt(
-						worldIn, pos.getX(), pos.getY() + 1, pos.getZ(), true);
-				worldIn.addWeatherEffect(lightning);
+				playerIn.sendMessage(new TextComponentString(Events.getGods(worldIn.getSeed(), Events.gods)[type]+" accepts your gift!"));
+				//EntityLightningBolt lightning = new EntityLightningBolt(
+						//worldIn, pos.getX(), pos.getY() + 1, pos.getZ(), true);
+				//worldIn.addWeatherEffect(lightning);
 				if (this.type != 1) {
 					IBlockState brew = worldIn.getBlockState(pos.add(0, 1, 0));
 					if (brew.getBlock() instanceof BlockBrewingStand) {
