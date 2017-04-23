@@ -40,7 +40,11 @@ public class CommonProxy implements Constants {
 	public void postinit(){
 	}
 	public String getRingUse(ItemRing ring) {
+		try{
 		return RingActions.getAction(ring.getUnlocalizedName()).name;
+		}catch(Exception e){
+			return null;
+		}
 	}
 	public String getScrollUse(ItemScroll scroll) {
 		try{

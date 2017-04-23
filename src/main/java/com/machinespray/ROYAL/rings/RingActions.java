@@ -194,6 +194,7 @@ public class RingActions implements Constants {
 		actions.add(new RingAction("regeneration") {
 			@Override
 			public void onWornTick(ItemStack itemstack, EntityLivingBase player) {
+				if(player.getActivePotionEffect(Potion.getPotionById(10))==null)
 				player.addPotionEffect(new PotionEffect(Potion
 						.getPotionById(10), 80, 0, false, false));
 				IKnowledgeHandler knowledge = Main.getHandler(player);
