@@ -1,9 +1,8 @@
 package com.machinespray.ROYAL.proxy;
 
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
+import com.machinespray.ROYAL.rings.RingAction;
+import com.machinespray.ROYAL.scrolls.ScrollAction;
 import net.minecraftforge.common.capabilities.CapabilityManager;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 
 import com.machinespray.ROYAL.Constants;
@@ -14,9 +13,7 @@ import com.machinespray.ROYAL.knowledge.DefaultKnowledgeHandler;
 import com.machinespray.ROYAL.knowledge.IKnowledgeHandler;
 import com.machinespray.ROYAL.knowledge.Storage;
 import com.machinespray.ROYAL.rings.ItemRing;
-import com.machinespray.ROYAL.rings.RingActions;
 import com.machinespray.ROYAL.scrolls.ItemScroll;
-import com.machinespray.ROYAL.scrolls.ScrollActions;
 import com.machinespray.ROYAL.sync.KnowledgeMessageHandler;
 import com.machinespray.ROYAL.sync.KnowledgeRequestHandler;
 import com.machinespray.ROYAL.sync.MessageRequestKnowledge;
@@ -34,21 +31,19 @@ public class CommonProxy implements Constants {
 	public void init(){
 		Main.INSTANCE.registerMessage(KnowledgeMessageHandler.class, MessageSendKnowledge.class, 0, Side.CLIENT); 
 		Main.INSTANCE.registerMessage(KnowledgeRequestHandler.class, MessageRequestKnowledge.class, 1, Side.SERVER);
-		RingActions.initActions();
-		ScrollActions.initActions();
 	}
 	public void postinit(){
 	}
 	public String getRingUse(ItemRing ring) {
 		try{
-		return RingActions.getAction(ring.getUnlocalizedName()).name;
+		return RingAction.getAction(ring.getUnlocalizedName()).getKnowledgeName();
 		}catch(Exception e){
 			return null;
 		}
 	}
 	public String getScrollUse(ItemScroll scroll) {
 		try{
-		return ScrollActions.getAction(scroll.getUnlocalizedName()).name;
+		return ScrollAction.getAction(scroll.getUnlocalizedName()).getKnowledgeName();
 		}catch(Exception e){
 			return null;
 		}

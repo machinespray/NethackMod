@@ -24,55 +24,56 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ItemScroll extends NetHackItem implements Constants {
 
-	public ItemScroll(String unlocalizedName) {
-		super(unlocalizedName);
-		this.setCreativeTab(Main.royalTab);
-	}
-
-	public static void initNames() {
-		for (String s : scrollNames) {
-			s=s.replace(" ", "_");
-			RoyalItems.scrolls.add(new ItemScroll(s));
-			
-		}
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void registerClient() {
-		ModelLoader.setCustomModelResourceLocation(this,0,new ModelResourceLocation(RoyalItems.base.getRegistryName(), "inventory"));
-	}
-	
-	@Override
-    public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn)
-    {
-		if (ScrollActions.getAction(getUnlocalizedName()) != null)
-			ScrollActions.getAction(getUnlocalizedName()).onItemRightClick(worldIn, playerIn, handIn);
-		 return super.onItemRightClick(worldIn, playerIn, handIn);
+    public ItemScroll(String unlocalizedName) {
+        super(unlocalizedName);
+        this.setCreativeTab(Main.royalTab);
     }
-	@Override
-	public boolean hasUse(){
-		return Main.proxy.getScrollUse(this)!=null;
-	}
-	@Override
-	public String getUse(){
-		return Main.proxy.getScrollUse(this);
-	}
 
-	@Override
-	public int getID(){
-		for(int i=0;i<scrollNames.length;i++){
-			String temp = getUnlocalizedName().split("\\.")[1].replace("_", " ");
-			if(scrollNames[i].equals(temp))
-				return i;
-		}
-		return super.getID();
-		
-	}
+    public static void initNames() {
+        for (String s : scrollNames) {
+            s = s.replace(" ", "_");
+            RoyalItems.scrolls.add(new ItemScroll(s));
 
-	@Override
-	public String type() {
-		return "scroll";
-	}
+        }
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void registerClient() {
+        ModelLoader.setCustomModelResourceLocation(this, 0, new ModelResourceLocation(RoyalItems.base.getRegistryName(), "inventory"));
+    }
+
+    @Override
+    public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn) {
+        if (ScrollAction.getAction(getUnlocalizedName()) != null)
+            ScrollAction.getAction(getUnlocalizedName()).onItemRightClick(worldIn, playerIn, handIn);
+        return super.onItemRightClick(worldIn, playerIn, handIn);
+    }
+
+    @Override
+    public boolean hasUse() {
+        return Main.proxy.getScrollUse(this) != null;
+    }
+
+    @Override
+    public String getUse() {
+        return Main.proxy.getScrollUse(this);
+    }
+
+    @Override
+    public int getID() {
+        for (int i = 0; i < scrollNames.length; i++) {
+            String temp = getUnlocalizedName().split("\\.")[1].replace("_", " ");
+            if (scrollNames[i].equals(temp))
+                return i;
+        }
+        return super.getID();
+
+    }
+
+    @Override
+    public String type() {
+        return "scroll";
+    }
 
 }

@@ -39,8 +39,8 @@ public class ItemRing extends NetHackItem implements Constants, IBauble {
 	@Override
 	public void onWornTick(ItemStack itemstack, EntityLivingBase player) {
 		if(!player.world.isRemote)
-		if (RingActions.getAction(getUnlocalizedName()) != null)
-			RingActions.getAction(getUnlocalizedName()).onWornTick(itemstack,
+		if (RingAction.getAction(getUnlocalizedName()) != null)
+			RingAction.getAction(getUnlocalizedName()).onWornTick(itemstack,
 					player);
 	}
 

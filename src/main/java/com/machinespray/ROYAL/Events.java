@@ -1,8 +1,7 @@
 package com.machinespray.ROYAL;
 
-import java.util.ArrayList;
-
-import scala.Array;
+import com.machinespray.ROYAL.rings.RingAction;
+import com.machinespray.ROYAL.scrolls.ScrollAction;
 import scala.util.Random;
 import baubles.api.BaublesApi;
 
@@ -10,49 +9,31 @@ import com.machinespray.ROYAL.altars.RoyalBlocks;
 import com.machinespray.ROYAL.knowledge.IKnowledgeHandler;
 import com.machinespray.ROYAL.knowledge.Provider;
 import com.machinespray.ROYAL.rings.ItemRing;
-import com.machinespray.ROYAL.rings.RingActions;
-import com.machinespray.ROYAL.scrolls.ScrollActions;
 import com.machinespray.ROYAL.sync.MessageRequestKnowledge;
-import com.machinespray.ROYAL.sync.MessageSendKnowledge;
 
-import net.minecraft.block.Block;
 import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.client.model.ModelCreeper;
-import net.minecraft.client.model.ModelSquid;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.passive.EntityTameable;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
-import net.minecraft.init.SoundEvents;
-import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemPotion;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
-import net.minecraftforge.client.event.GuiOpenEvent;
-import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
-import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.EntityInteract;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.PlayerEvent.ItemCraftedEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -65,8 +46,8 @@ public class Events implements Constants {
 	@SubscribeEvent
 	public void onLoad(WorldEvent.Load e) {
 		if (!e.getWorld().isRemote) {
-			RingActions.match(e.getWorld().getSeed());
-			ScrollActions.match(e.getWorld().getSeed());
+			RingAction.match(e.getWorld().getSeed());
+			ScrollAction.match(e.getWorld().getSeed());
 		}
 	}
 public static String[] getGods(long seed,String[] godsList){
@@ -189,10 +170,10 @@ public static String[] getGods(long seed,String[] godsList){
 						e.getEntityPlayer()).getSlots(); i++) {
 					if (BaublesApi.getBaublesHandler(e.getEntityPlayer())
 							.getStackInSlot(i).getItem() instanceof ItemRing)
-						if (RingActions.getAction((BaublesApi
+						if (RingAction.getAction((BaublesApi
 								.getBaublesHandler(e.getEntityPlayer())
 								.getStackInSlot(i).getItem()
-								.getUnlocalizedName())).name == "strength") {
+								.getUnlocalizedName())).getKnowledgeName() == "strength") {
 							if (e.getEntityPlayer().inventory
 									.addItemStackToInventory(e
 											.getEntityPlayer().world
@@ -235,7 +216,6 @@ public static String[] getGods(long seed,String[] godsList){
 	public void joinWorld(EntityJoinWorldEvent e) {
 		if (e.getEntity() instanceof EntityPlayerSP&&message) {
 			message = false;
-			RingActions.initActions();
 			Main.rings = new String[ringNames.length];
 			Main.scrolls = new String[scrollNames.length];
 			Main.INSTANCE.sendToServer(new MessageRequestKnowledge());
