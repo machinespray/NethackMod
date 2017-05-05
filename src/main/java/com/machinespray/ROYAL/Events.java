@@ -84,13 +84,13 @@ public static String[] getGods(long seed,String[] godsList){
 					nbt = stack.getTagCompound();
 				switch (Main.random.nextInt(10)) {
 				case 8:
-					nbt.setString("BUC", BLESSED);
+					nbt.setString(BUC, BLESSED);
 					break;
 				case 9:
-					nbt.setString("BUC", CURSED);
+					nbt.setString(BUC, CURSED);
 					break;
 				default:
-					nbt.setString("BUC", UNCURSED);
+					nbt.setString(BUC, UNCURSED);
 				}
 				stack.setTagCompound(nbt);
 				e.getDrops().add(
@@ -107,7 +107,7 @@ public static String[] getGods(long seed,String[] godsList){
 				&& !e.getWorld().isRemote)
 			if (((EntityVillager) e.getTarget()).getProfession() == 2) {
 				if (!e.getEntityPlayer().getHeldItemMainhand().getTagCompound()
-						.getBoolean("BUCI")) {
+						.getBoolean(BUCI)) {
 					String BUC = (NetHackItem.id(e.getEntityPlayer()
 							.getHeldItemMainhand(), 0));
 					if (BUC.equals(CURSED))
@@ -288,11 +288,11 @@ public static String[] getGods(long seed,String[] godsList){
 					String buc = UNCURSED;
 					try {
 						buc = e.getPlayer().getHeldItemOffhand()
-								.getTagCompound().getString("BUC");
+								.getTagCompound().getString(BUC);
 					} catch (Exception er) {
 					}
 					String myBuc = e.getPlayer().getHeldItemMainhand()
-							.getTagCompound().getString("BUC");
+							.getTagCompound().getString(BUC);
 					String setBUC = myBuc;
 					if (buc.equals(UNCURSED)) {
 
@@ -311,8 +311,8 @@ public static String[] getGods(long seed,String[] godsList){
 					if (!myBuc.equals(setBUC)) {
 						NBTTagCompound nbt = e.getPlayer()
 								.getHeldItemMainhand().getTagCompound();
-						nbt.setString("BUC", setBUC);
-						nbt.setBoolean("BUCI", true);
+						nbt.setString(BUC, setBUC);
+						nbt.setBoolean(BUCI, true);
 						e.getPlayer().getHeldItemMainhand().setTagCompound(nbt);
 						e.getPlayer().getHeldItemOffhand().setCount(0);
 						e.getPlayer().inventory

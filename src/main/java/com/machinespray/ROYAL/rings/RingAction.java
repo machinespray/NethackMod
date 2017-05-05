@@ -75,7 +75,7 @@ public enum RingAction implements Constants {
     }
 
     public void onWornTick(ItemStack itemstack, EntityLivingBase player) {
-        String buc = itemstack.getTagCompound().getString("BUC");
+        String buc = itemstack.getTagCompound().getString(BUC);
         if (this.equals(AGGRAVATE_MONSTER)) {
             AxisAlignedBB box = new AxisAlignedBB(player.posX - 5,
                     player.posY - 5, player.posZ - 5, player.posX + 5,

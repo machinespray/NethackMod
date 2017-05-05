@@ -65,7 +65,7 @@ public enum ScrollAction implements Constants {
                 }
                 NBTTagCompound nbt = playerIn.getHeldItemOffhand()
                         .getTagCompound();
-                nbt.setBoolean("BUCI", true);
+                nbt.setBoolean(BUCI, true);
                 playerIn.getHeldItemOffhand().setTagCompound(nbt);
             }
         } else if (this.equals(CREATE_MONSTER)) {
@@ -76,7 +76,7 @@ public enum ScrollAction implements Constants {
                     playerIn.inventory.decrStackSize(
                             playerIn.inventory.currentItem, 1);
                 String buc = playerIn.getHeldItemMainhand()
-                        .getTagCompound().getString("BUC");
+                        .getTagCompound().getString(BUC);
                 EntityLiving entity;
                 if (buc.equals(BLESSED)) {
                     for (int i = 0; i < Main.random.nextInt(21) + 5; i++) {
@@ -116,7 +116,7 @@ public enum ScrollAction implements Constants {
                     playerIn.inventory.decrStackSize(
                             playerIn.inventory.currentItem, 1);
                 String buc = playerIn.getHeldItemMainhand()
-                        .getTagCompound().getString("BUC");
+                        .getTagCompound().getString(BUC);
                 if (playerIn.getHeldItemOffhand() != null) {
                     if (playerIn.getHeldItemOffhand().isItemEnchantable()) {
                         Field[] enchantments = Enchantments.class
@@ -202,7 +202,7 @@ public enum ScrollAction implements Constants {
                     playerIn.inventory.decrStackSize(
                             playerIn.inventory.currentItem, 1);
                 String buc = playerIn.getHeldItemMainhand()
-                        .getTagCompound().getString("BUC");
+                        .getTagCompound().getString(BUC);
                 if (playerIn.getHeldItemOffhand() != null)
                     if (playerIn.getHeldItemOffhand().isItemEnchantable()) {
                         playerIn.getHeldItemOffhand().setCount(

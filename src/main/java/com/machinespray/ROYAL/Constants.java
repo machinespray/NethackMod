@@ -6,7 +6,8 @@ import net.minecraft.util.text.TextFormatting;
 import scala.actors.threadpool.Arrays;
 
 public interface Constants {
-	public String[] scrollNames = { "ZELGO MER", "JUYED AWK YACC", "NR 9",
+	//Item/Block Names
+	String[] scrollNames = { "ZELGO MER", "JUYED AWK YACC", "NR 9",
 			"XIXAXA XOXAXA XUXAXA", "PRATYAVAYAH", "DAIYEN FOOELS",
 			"LEP GEX VEN ZEA", "PRIRUTSENIE", "ELBIB YLOH", "VERR YED HORRE",
 			"VENZAR BORGAVVE", "THARR", "YUM YUM", "KERNOD WEL", "ELAM EBOW",
@@ -17,12 +18,19 @@ public interface Constants {
 			"MAPIRO MAHAMA DIROMAT", "GNIK SISI VLE", "HAPAX LEGOMENON",
 			"EIRIS SAZUN IDISI", "PHOL ENDE WODAN", "GHOTI", "ZLORFIK",
 			"VAS CORP BET MANI", "STRC PRST SKRZ KRK", "XOR OTA" };
-	public String[] ringNames = { "pearl", "iron", "twisted", "steel", "wire",
+	String[] ringNames = { "pearl", "iron", "twisted", "steel", "wire",
 			"engagement", "shiny", "bronze", "brass", "copper", "silver",
 			"gold", "wooden", "granite", "opal", "clay", "coral", "black onyx",
 			"moonstone", "tiger eye", "jade", "agate", "topaz", "sapphire",
 			"ruby", "diamond", "ivory", "emerald" };
-	public final String BLESSED = TextFormatting.GREEN.toString()+"blessed";
-	public final String UNCURSED = TextFormatting.AQUA.toString()+"uncursed";
-	public final String CURSED = TextFormatting.RED.toString()+"cursed";
+	String BLESSED = TextFormatting.GREEN.toString()+"blessed";
+	String UNCURSED = TextFormatting.AQUA.toString()+"uncursed";
+	String CURSED = TextFormatting.RED.toString()+"cursed";
+	String LAWFUL = "Lawful";
+	String NEUTRAL = "Neutral";
+	String CHAOTIC = "Chaotic";
+	String ALTAR = "Altar";
+	//Data related Strings
+	String BUC = "BUC";
+	String BUCI = "BUCI";
 }
