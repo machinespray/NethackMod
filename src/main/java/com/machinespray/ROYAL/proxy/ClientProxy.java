@@ -1,10 +1,10 @@
 package com.machinespray.ROYAL.proxy;
 
 import com.machinespray.ROYAL.Main;
-import com.machinespray.ROYAL.RoyalItems;
-import com.machinespray.ROYAL.altars.RoyalBlocks;
-import com.machinespray.ROYAL.rings.ItemRing;
-import com.machinespray.ROYAL.scrolls.ItemScroll;
+import com.machinespray.ROYAL.items.RoyalItems;
+import com.machinespray.ROYAL.blocks.RoyalBlocks;
+import com.machinespray.ROYAL.items.rings.ItemRing;
+import com.machinespray.ROYAL.items.scrolls.ItemScroll;
 
 public class ClientProxy extends CommonProxy {
 	@Override

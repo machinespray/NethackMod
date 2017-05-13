@@ -1,9 +1,9 @@
-package com.machinespray.ROYAL.scrolls;
+package com.machinespray.ROYAL.items.scrolls;
 
 import com.machinespray.ROYAL.Constants;
 import com.machinespray.ROYAL.Main;
-import com.machinespray.ROYAL.NetHackItem;
-import com.machinespray.ROYAL.knowledge.IKnowledgeHandler;
+import com.machinespray.ROYAL.items.NetHackItem;
+import com.machinespray.ROYAL.sync.knowledge.IKnowledgeHandler;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
@@ -13,9 +13,7 @@ import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Enchantments;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.MathHelper;

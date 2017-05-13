@@ -3,9 +3,9 @@ package com.machinespray.ROYAL.sync;
 import java.util.ArrayList;
 
 import com.machinespray.ROYAL.Main;
-import com.machinespray.ROYAL.rings.RingAction;
+import com.machinespray.ROYAL.items.rings.RingAction;
 
-import com.machinespray.ROYAL.scrolls.ScrollAction;
+import com.machinespray.ROYAL.items.scrolls.ScrollAction;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;

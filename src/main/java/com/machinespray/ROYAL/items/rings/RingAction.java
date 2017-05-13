@@ -1,8 +1,8 @@
-package com.machinespray.ROYAL.rings;
+package com.machinespray.ROYAL.items.rings;
 
 import com.machinespray.ROYAL.Constants;
 import com.machinespray.ROYAL.Main;
-import com.machinespray.ROYAL.knowledge.IKnowledgeHandler;
+import com.machinespray.ROYAL.sync.knowledge.IKnowledgeHandler;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;

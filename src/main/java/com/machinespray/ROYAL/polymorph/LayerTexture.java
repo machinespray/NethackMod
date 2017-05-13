@@ -1,4 +1,4 @@
-package com.machinespray.ROYAL;
+package com.machinespray.ROYAL.polymorph;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;

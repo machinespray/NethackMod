@@ -1,4 +1,4 @@
-package com.machinespray.ROYAL.knowledge;
+package com.machinespray.ROYAL.sync.knowledge;
 
 import java.util.ArrayList;
 

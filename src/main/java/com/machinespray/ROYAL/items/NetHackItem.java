@@ -1,20 +1,17 @@
-package com.machinespray.ROYAL;
+package com.machinespray.ROYAL.items;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import com.machinespray.ROYAL.knowledge.IKnowledgeHandler;
+import com.machinespray.ROYAL.Constants;
+import com.machinespray.ROYAL.Main;
+import com.machinespray.ROYAL.sync.knowledge.IKnowledgeHandler;
 
-import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityOtherPlayerMP;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumHand;
-import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
@@ -82,9 +79,7 @@ public class NetHackItem extends Item implements Constants {
         return null;
     }
 
-    public String type() {
+    public String type(){
         return null;
-    }
-
-    ;
+    };
 }

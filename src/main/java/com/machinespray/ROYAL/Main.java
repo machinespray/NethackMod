@@ -1,15 +1,13 @@
 package com.machinespray.ROYAL;
 
-import java.util.ArrayList;
 import java.util.Random;
 
-import com.machinespray.ROYAL.knowledge.IKnowledgeHandler;
+import com.machinespray.ROYAL.items.RoyalItems;
+import com.machinespray.ROYAL.sync.knowledge.IKnowledgeHandler;
 import com.machinespray.ROYAL.proxy.CommonProxy;
-import com.machinespray.ROYAL.rings.RingAction;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.MinecraftForge;
