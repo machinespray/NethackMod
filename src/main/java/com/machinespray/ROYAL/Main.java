@@ -3,6 +3,7 @@ package com.machinespray.ROYAL;
 import java.util.Random;
 
 import com.machinespray.ROYAL.items.RoyalItems;
+import com.machinespray.ROYAL.render.RenderGUIEvent;
 import com.machinespray.ROYAL.sync.knowledge.IKnowledgeHandler;
 import com.machinespray.ROYAL.proxy.CommonProxy;
 
@@ -22,34 +23,45 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 
 @Mod(modid = Main.MODID, version = Main.VERSION)
-public class Main
-{
-	@CapabilityInject(IKnowledgeHandler.class)
+public class Main {
+    @CapabilityInject(IKnowledgeHandler.class)
     public static final Capability<IKnowledgeHandler> CAPABILITY_KNOWLEDGE = null;
     public static final String MODID = "royal";
     public static final String VERSION = "0.24";
     public static final Random random = new Random();
-    @SidedProxy(modId=MODID,clientSide="com.machinespray.ROYAL.proxy.ClientProxy",serverSide="com.machinespray.ROYAL.proxy.CommonProxy")
+    @SidedProxy(modId = MODID, clientSide = "com.machinespray.ROYAL.proxy.ClientProxy", serverSide = "com.machinespray.ROYAL.proxy.CommonProxy")
     public static CommonProxy proxy;
-	public static final SimpleNetworkWrapper INSTANCE = NetworkRegistry.INSTANCE.newSimpleChannel(MODID);
-	public static String[] rings;
-	public static String[] scrolls;
-	
-    public static final CreativeTabs royalTab = new CreativeTabs("royal"){
+    public static final SimpleNetworkWrapper WRAPPER_INSTANCE = NetworkRegistry.INSTANCE.newSimpleChannel(MODID);
+    public static String[] rings;
+    public static String[] scrolls;
+    @Mod.Instance
+    public static Main instance = new Main();
 
-		@Override
-		public ItemStack getTabIconItem() {
-			return new ItemStack(RoyalItems.base);
-		}
-    	
+    public static final CreativeTabs royalTab = new CreativeTabs("royal") {
+
+        @Override
+        public ItemStack getTabIconItem() {
+            return new ItemStack(RoyalItems.base);
+        }
+
     }.setNoTitle();
+
     @EventHandler
-    public void preinit(FMLPreInitializationEvent event){proxy.preinit();}
+    public void preinit(FMLPreInitializationEvent event) {
+        proxy.preinit();
+    }
+
     @EventHandler
-    public void init(FMLInitializationEvent event){proxy.init();MinecraftForge.EVENT_BUS.register(new Events());}
+    public void init(FMLInitializationEvent event) {
+        proxy.init();
+        MinecraftForge.EVENT_BUS.register(new Events());
+    }
+
     @EventHandler
-    public void postinit(FMLInitializationEvent event){proxy.postinit();}
-    
+    public void postinit(FMLInitializationEvent event) {
+        proxy.postinit();
+    }
+
     public static IKnowledgeHandler getHandler(Entity entity) {
         if (entity.hasCapability(CAPABILITY_KNOWLEDGE, EnumFacing.DOWN))
             return entity.getCapability(CAPABILITY_KNOWLEDGE, EnumFacing.DOWN);

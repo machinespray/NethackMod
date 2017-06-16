@@ -20,33 +20,40 @@ import com.machinespray.ROYAL.sync.MessageRequestKnowledge;
 import com.machinespray.ROYAL.sync.MessageSendKnowledge;
 
 public class CommonProxy implements Constants {
-	
-	public void preinit(){
-		RoyalItems.initItems();
-		RoyalItems.registerItems();
-		RoyalBlocks.initBlocks();
-		RoyalBlocks.registerBlocks();
-		CapabilityManager.INSTANCE.register(IKnowledgeHandler.class, new Storage(), DefaultKnowledgeHandler.class);
-	}
-	public void init(){
-		Main.INSTANCE.registerMessage(KnowledgeMessageHandler.class, MessageSendKnowledge.class, 0, Side.CLIENT); 
-		Main.INSTANCE.registerMessage(KnowledgeRequestHandler.class, MessageRequestKnowledge.class, 1, Side.SERVER);
-	}
-	public void postinit(){
-	}
-	public String getRingUse(ItemRing ring) {
-		try{
-		return RingAction.getAction(ring.getUnlocalizedName()).getKnowledgeName();
-		}catch(Exception e){
-			return null;
-		}
-	}
-	public String getScrollUse(ItemScroll scroll) {
-		try{
-		return ScrollAction.getAction(scroll.getUnlocalizedName()).getKnowledgeName();
-		}catch(Exception e){
-			return null;
-		}
-	}
+
+    public void preinit() {
+        RoyalItems.initItems();
+        RoyalItems.registerItems();
+        RoyalBlocks.initBlocks();
+        RoyalBlocks.registerBlocks();
+        CapabilityManager.INSTANCE.register(IKnowledgeHandler.class, new Storage(), DefaultKnowledgeHandler.class);
+    }
+
+    public void init() {
+        Main.WRAPPER_INSTANCE.registerMessage(KnowledgeMessageHandler.class, MessageSendKnowledge.class, 0, Side.CLIENT);
+        Main.WRAPPER_INSTANCE.registerMessage(KnowledgeRequestHandler.class, MessageRequestKnowledge.class, 1, Side.SERVER);
+    }
+
+    public void postinit() {
+    }
+
+    public String getRingUse(ItemRing ring) {
+        try {
+            return RingAction.getAction(ring.getUnlocalizedName()).getKnowledgeName();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+    public boolean isRemote(){
+        return false;
+    }
+
+    public String getScrollUse(ItemScroll scroll) {
+        try {
+            return ScrollAction.getAction(scroll.getUnlocalizedName()).getKnowledgeName();
+        } catch (Exception e) {
+            return null;
+        }
+    }
 
 }

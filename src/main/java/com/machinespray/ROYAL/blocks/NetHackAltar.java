@@ -1,4 +1,4 @@
-package com.machinespray.ROYAL.blocks.altars;
+package com.machinespray.ROYAL.blocks;
 
 import java.util.*;
 

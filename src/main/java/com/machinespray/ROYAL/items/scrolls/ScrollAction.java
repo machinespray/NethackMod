@@ -53,16 +53,17 @@ public enum ScrollAction implements Constants {
             if (playerIn.getHeldItemOffhand().getItem() instanceof NetHackItem) {
                 NetHackItem nhi = (NetHackItem) playerIn
                         .getHeldItemOffhand().getItem();
-                if (!knowledge.hasKnowledge(nhi.getUse())) {
-                    if (!worldIn.isRemote)
-                        playerIn.sendMessage(new TextComponentString(
-                                "You discover the item in your offhand is a "
-                                        + nhi.type() + " of "
-                                        + nhi.getUse() + "!"));
-                    knowledge.addKnowledge(nhi.getUse());
-                }
+                if (nhi.hasUse())
+                    if (!knowledge.hasKnowledge(nhi.getUse())) {
+                        if (!worldIn.isRemote)
+                            playerIn.sendMessage(new TextComponentString(
+                                    "You discover the item in your offhand is a "
+                                            + nhi.type() + " of "
+                                            + nhi.getUse() + "!"));
+                        knowledge.addKnowledge(nhi.getUse());
+                    }
                 NBTTagCompound nbt = playerIn.getHeldItemOffhand()
-                        .getTagCompound();
+                        .getTagCompound() != null ? playerIn.getHeldItemOffhand().getTagCompound() : new NBTTagCompound();
                 nbt.setBoolean(BUCI, true);
                 playerIn.getHeldItemOffhand().setTagCompound(nbt);
             }
@@ -231,6 +232,7 @@ public enum ScrollAction implements Constants {
             ids.add(id);
         }
     }
+
     public static ScrollAction getAction(String name) {
         int id = -1;
         name = name.split("\\.")[1].replace("_", " ");

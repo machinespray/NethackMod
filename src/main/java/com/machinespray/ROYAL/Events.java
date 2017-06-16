@@ -1,43 +1,37 @@
 package com.machinespray.ROYAL;
 
+import baubles.api.BaublesApi;
 import com.machinespray.ROYAL.items.NetHackItem;
-import com.machinespray.ROYAL.items.RoyalItems;
+import com.machinespray.ROYAL.items.rings.ItemRing;
 import com.machinespray.ROYAL.items.rings.RingAction;
 import com.machinespray.ROYAL.items.scrolls.ScrollAction;
-import scala.util.Random;
-import baubles.api.BaublesApi;
-
-import com.machinespray.ROYAL.blocks.RoyalBlocks;
+import com.machinespray.ROYAL.sync.KnowledgeRequestHandler;
+import com.machinespray.ROYAL.sync.MessageRequestKnowledge;
 import com.machinespray.ROYAL.sync.knowledge.IKnowledgeHandler;
 import com.machinespray.ROYAL.sync.knowledge.Provider;
-import com.machinespray.ROYAL.items.rings.ItemRing;
-import com.machinespray.ROYAL.sync.MessageRequestKnowledge;
-
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.passive.EntityTameable;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemPotion;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
+import net.minecraft.world.storage.loot.*;
+import net.minecraft.world.storage.loot.conditions.LootCondition;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
-import net.minecraftforge.event.ServerChatEvent;
+import net.minecraftforge.event.LootTableLoadEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
-import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.EntityInteract;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
 
 public class Events implements Constants {
     @SideOnly(Side.CLIENT)
@@ -144,15 +138,16 @@ public class Events implements Constants {
                 }
     }
 
-	/*
-     * @SideOnly(Side.CLIENT)
-	 * 
-	 * @SubscribeEvent public void onRender(RenderPlayerEvent.Pre e){
-	 * e.getEntity().setInvisible(true); LayerTexture layer = new
-	 * LayerTexture(e.getRenderer(), new ModelSquid(),new
-	 * ResourceLocation("textures/entity/squid.png"));
-	 * e.getRenderer().addLayer(layer); }
-	 */
+
+    /*@SideOnly(Side.CLIENT)
+    @SubscribeEvent
+    public void onRender(RenderPlayerEvent.Pre e) {
+        e.getEntity().setInvisible(true);
+        LayerTexture layer = new
+                LayerTexture(e.getRenderer(), new ModelSilverfish(), new
+                ResourceLocation("textures/entity/silverfish.png"));
+        e.getRenderer().addLayer(layer);
+    }*/
 
     @SubscribeEvent
     public void attachCapabilities(AttachCapabilitiesEvent<Entity> event) {
@@ -169,8 +164,13 @@ public class Events implements Constants {
             message = false;
             Main.rings = new String[ringNames.length];
             Main.scrolls = new String[scrollNames.length];
-            Main.INSTANCE.sendToServer(new MessageRequestKnowledge());
+            Main.WRAPPER_INSTANCE.sendToServer(new MessageRequestKnowledge());
         }
+    }
+
+    @SubscribeEvent
+    public void respawn(net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerRespawnEvent e) {
+        KnowledgeRequestHandler.sendKnowledge((EntityPlayerMP) e.player);
     }
 
     @SubscribeEvent
@@ -179,5 +179,6 @@ public class Events implements Constants {
         final IKnowledgeHandler clone = Main.getHandler(event.getEntity());
         clone.setKnowledge(original.getKnowledge());
     }
+
 
 }

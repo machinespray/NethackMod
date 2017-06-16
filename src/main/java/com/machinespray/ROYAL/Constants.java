@@ -1,9 +1,6 @@
 package com.machinespray.ROYAL;
 
-import java.util.ArrayList;
-
 import net.minecraft.util.text.TextFormatting;
-import scala.actors.threadpool.Arrays;
 
 public interface Constants {
     //Item/Block Names
@@ -35,7 +32,7 @@ public interface Constants {
     String BUCI = "BUCI";
 
     enum Type {
-        RING, SCROLL, UNICORN_HORN;
+        RING, SCROLL;
 
         public String toString() {
             return this.name().toLowerCase().replace("_", " ");

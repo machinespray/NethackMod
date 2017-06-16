@@ -42,7 +42,7 @@ public class FireBrand extends ArtifactBase {
 
     @Override
     public boolean hitEntity(ItemStack stack, EntityLivingBase target, EntityLivingBase attacker) {
-        double temp = 1;
+        double temp = 0;
         temp += damageBase;
         if (target instanceof EntityAnimal) {
             temp *= 2;

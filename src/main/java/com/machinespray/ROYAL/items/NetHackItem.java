@@ -6,8 +6,10 @@ import com.machinespray.ROYAL.Constants;
 import com.machinespray.ROYAL.Main;
 import com.machinespray.ROYAL.sync.knowledge.IKnowledgeHandler;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityOtherPlayerMP;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -18,10 +20,30 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class NetHackItem extends Item implements Constants {
+    public NetHackItem() {
+    }
 
     public NetHackItem(String unlocalizedName) {
         this.setUnlocalizedName(unlocalizedName);
         this.setRegistryName("royal", unlocalizedName);
+    }
+
+    @SideOnly(Side.CLIENT)
+    @Override
+    public String getItemStackDisplayName(ItemStack stack) {
+        EntityPlayer player = Minecraft.getMinecraft().player;
+        if (player != null)
+            if (Main.getHandler(player) != null) {
+                NetHackItem item = (NetHackItem) stack.getItem();
+                if (item.hasUse())
+                    if (Main.getHandler(player).hasKnowledge(item.getUse()) || player.isCreative())
+                        return uppercase(item.type()) + " of " + uppercase(item.getUse());
+            }
+        return super.getItemStackDisplayName(stack);
+    }
+
+    private String uppercase(String s) {
+        return s.toUpperCase().substring(0, 1) + s.substring(1).toLowerCase();
     }
 
     public void register() {
@@ -39,9 +61,9 @@ public class NetHackItem extends Item implements Constants {
         NetHackItem nhi = ((NetHackItem) stack.getItem());
         if (nhi.hasUse())
             if (playerIn.isCreative() || kh.hasKnowledge(nhi.getUse()))
-                tooltip.add(nhi.getUse());
+                tooltip.add(super.getItemStackDisplayName(stack));
         if (stack.getTagCompound() != null) {
-            if (stack.getTagCompound().getString(BUC) != null) {
+            if (stack.getTagCompound().getString(BUC) != "") {
                 if (stack.getTagCompound().getBoolean(BUCI) || playerIn.isCreative())
                     tooltip.add(stack.getTagCompound().getString(BUC));
             } else {
@@ -79,7 +101,7 @@ public class NetHackItem extends Item implements Constants {
         return null;
     }
 
-    public String type(){
+    public String type() {
         return null;
-    };
+    }
 }

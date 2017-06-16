@@ -1,33 +1,37 @@
 package com.machinespray.ROYAL.items;
 
-import java.util.ArrayList;
-
 import com.machinespray.ROYAL.Constants;
-import com.machinespray.ROYAL.items.artifact.ArtifactBase;
-import com.machinespray.ROYAL.items.artifact.FireBrand;
-import com.machinespray.ROYAL.items.artifact.FrostBrand;
-import com.machinespray.ROYAL.items.artifact.Grayswandir;
+import com.machinespray.ROYAL.items.artifact.*;
+import com.machinespray.ROYAL.items.potion.PotionBase;
+import com.machinespray.ROYAL.items.potion.PotionEnlightenment;
+import com.machinespray.ROYAL.items.potion.PotionPolymorph;
+import com.machinespray.ROYAL.items.rings.ItemRing;
+import com.machinespray.ROYAL.items.scrolls.ItemScroll;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import com.machinespray.ROYAL.items.rings.ItemRing;
-import com.machinespray.ROYAL.items.scrolls.ItemScroll;
+import java.util.ArrayList;
 
 public class RoyalItems implements Constants {
     public static ArrayList<ItemScroll> scrolls = new ArrayList<ItemScroll>();
     public static NetHackItem base;
+    public static NetHackItem runicBook;
     public static ArrayList<ItemRing> rings = new ArrayList<ItemRing>();
-    public static NetHackItem unicornHorn;
+    public static PotionBase potionPolymorph;
+    public static PotionBase potionEnlightenment;
     //public static NetHackItem AmuletUndying;
 
     public static void initItems() {
         ItemScroll.initNames();
         ItemRing.initNames();
         base = new NetHackItem("base");
-        unicornHorn = new UnicornHorn();
+        runicBook = new NetHackItem("runic_book");
+        potionPolymorph = new PotionPolymorph();
+        potionEnlightenment = new PotionEnlightenment();
         new Grayswandir();
         new FireBrand();
         new FrostBrand();
+        new KingBlade();
         //AmuletUndying = new NetHackItem("amuletOfUndying");
     }
 
@@ -37,7 +41,9 @@ public class RoyalItems implements Constants {
         for (ItemRing i : rings)
             i.register();
         base.register();
-        unicornHorn.register();
+        potionPolymorph.register();
+        potionEnlightenment.register();
+        runicBook.register();
         for (ArtifactBase i : ArtifactBase.artifacts)
             i.register();
         //AmuletUndying.register();
@@ -51,7 +57,9 @@ public class RoyalItems implements Constants {
         for (ItemRing i : rings)
             i.registerClient();
         base.registerClient();
-        unicornHorn.registerClient();
+        runicBook.registerClient();
+        potionPolymorph.registerClient();
+        potionEnlightenment.registerClient();
         for (ArtifactBase i : ArtifactBase.artifacts)
             i.registerClient();
         //AmuletUndying.registerClient();

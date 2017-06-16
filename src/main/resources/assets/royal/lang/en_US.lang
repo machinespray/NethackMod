@@ -74,4 +74,6 @@ tile.LawfulAltar.name=Lawful Altar
 tile.ChaoticAltar.name=Chaotic Altar
 item.unicornHorn.name=Unicorn Horn
 item.grayswandir.name=Grayswandir
-
+item.firebrand.name=Fire Brand
+item.frostbrand.name=Frost Brand
+item.potion_enlightenment.name=Glowing Potion
