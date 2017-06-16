@@ -1,32 +1,22 @@
 package com.machinespray.ROYAL.altars;
 
-import java.util.List;
-
-import com.machinespray.ROYAL.Constants;
-import com.machinespray.ROYAL.Events;
-import com.machinespray.ROYAL.Main;
-import com.machinespray.ROYAL.NetHackItem;
-import com.machinespray.ROYAL.RoyalItems;
-
+import com.machinespray.ROYAL.*;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBrewingStand;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.entity.effect.EntityLightningBolt;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityBrewingStand;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -39,7 +29,9 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.openal.AL;
+
+import javax.annotation.Nullable;
+import java.util.List;
 
 public class NetHackAltar extends Block implements Constants {
     private ItemBlock item;
@@ -67,8 +59,8 @@ public class NetHackAltar extends Block implements Constants {
         GameRegistry.register(this);
         item = new ItemBlock(this) {
             @Override
-            public void addInformation(ItemStack stack, EntityPlayer playerIn,
-                                       List<String> tooltip, boolean advanced) {
+            public void addInformation(ItemStack stack, @Nullable World worldIn,
+                                       List<String> tooltip, ITooltipFlag advanced) {
                 if (type != 1) {
                     tooltip.add("Place a Brewing Stand with Water Bottles in it above this altar for a chance to receive gifts upon sacrificing.");
                 } else {

@@ -2,12 +2,8 @@ package com.machinespray.ROYAL;
 
 import java.util.ArrayList;
 
-import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
-import org.apache.logging.log4j.core.config.plugins.ResolverUtil.Test;
-
 import com.machinespray.ROYAL.rings.ItemRing;
 import com.machinespray.ROYAL.scrolls.ItemScroll;
 
