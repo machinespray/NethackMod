@@ -1,10 +1,5 @@
 package com.machinespray.ROYAL.proxy;
 
-import com.machinespray.ROYAL.rings.RingAction;
-import com.machinespray.ROYAL.scrolls.ScrollAction;
-import net.minecraftforge.common.capabilities.CapabilityManager;
-import net.minecraftforge.fml.relauncher.Side;
-
 import com.machinespray.ROYAL.Constants;
 import com.machinespray.ROYAL.Main;
 import com.machinespray.ROYAL.RoyalItems;
@@ -13,11 +8,15 @@ import com.machinespray.ROYAL.knowledge.DefaultKnowledgeHandler;
 import com.machinespray.ROYAL.knowledge.IKnowledgeHandler;
 import com.machinespray.ROYAL.knowledge.Storage;
 import com.machinespray.ROYAL.rings.ItemRing;
+import com.machinespray.ROYAL.rings.RingAction;
 import com.machinespray.ROYAL.scrolls.ItemScroll;
+import com.machinespray.ROYAL.scrolls.ScrollAction;
 import com.machinespray.ROYAL.sync.KnowledgeMessageHandler;
 import com.machinespray.ROYAL.sync.KnowledgeRequestHandler;
 import com.machinespray.ROYAL.sync.MessageRequestKnowledge;
 import com.machinespray.ROYAL.sync.MessageSendKnowledge;
+import net.minecraftforge.common.capabilities.CapabilityManager;
+import net.minecraftforge.fml.relauncher.Side;
 
 public class CommonProxy implements Constants {
 	

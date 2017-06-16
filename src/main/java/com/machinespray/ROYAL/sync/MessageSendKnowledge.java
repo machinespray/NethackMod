@@ -1,7 +1,5 @@
 package com.machinespray.ROYAL.sync;
 
-import java.util.ArrayList;
-
 import io.netty.buffer.ByteBuf;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 

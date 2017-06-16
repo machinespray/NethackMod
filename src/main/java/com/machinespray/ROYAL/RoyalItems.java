@@ -1,11 +1,11 @@
 package com.machinespray.ROYAL;
 
-import java.util.ArrayList;
-
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import com.machinespray.ROYAL.rings.ItemRing;
 import com.machinespray.ROYAL.scrolls.ItemScroll;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.util.ArrayList;
 
 public class RoyalItems {
 	public static ArrayList<ItemScroll> scrolls = new ArrayList<ItemScroll>();

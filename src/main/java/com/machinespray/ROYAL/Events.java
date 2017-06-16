@@ -1,16 +1,13 @@
 package com.machinespray.ROYAL;
 
-import com.machinespray.ROYAL.rings.RingAction;
-import com.machinespray.ROYAL.scrolls.ScrollAction;
-import scala.util.Random;
 import baubles.api.BaublesApi;
-
 import com.machinespray.ROYAL.altars.RoyalBlocks;
 import com.machinespray.ROYAL.knowledge.IKnowledgeHandler;
 import com.machinespray.ROYAL.knowledge.Provider;
 import com.machinespray.ROYAL.rings.ItemRing;
+import com.machinespray.ROYAL.rings.RingAction;
+import com.machinespray.ROYAL.scrolls.ScrollAction;
 import com.machinespray.ROYAL.sync.MessageRequestKnowledge;
-
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
@@ -36,6 +33,7 @@ import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import scala.util.Random;
 
 public class Events implements Constants {
 	private static boolean message=true;

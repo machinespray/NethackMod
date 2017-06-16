@@ -1,15 +1,9 @@
 package com.machinespray.ROYAL;
 
-import java.util.ArrayList;
-import java.util.Random;
-
 import com.machinespray.ROYAL.knowledge.IKnowledgeHandler;
 import com.machinespray.ROYAL.proxy.CommonProxy;
-import com.machinespray.ROYAL.rings.RingAction;
-
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.MinecraftForge;
@@ -22,6 +16,8 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
+
+import java.util.Random;
 
 @Mod(modid = Main.MODID, version = Main.VERSION)
 public class Main

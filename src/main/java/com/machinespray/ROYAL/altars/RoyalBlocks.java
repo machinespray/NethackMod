@@ -1,11 +1,9 @@
 package com.machinespray.ROYAL.altars;
 
-import java.util.ArrayList;
-
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import com.machinespray.ROYAL.scrolls.ItemScroll;
+import java.util.ArrayList;
 
 public class RoyalBlocks {
 	public static ArrayList<NetHackAltar> altars = new ArrayList<NetHackAltar>();

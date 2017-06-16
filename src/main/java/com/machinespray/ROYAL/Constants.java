@@ -1,9 +1,6 @@
 package com.machinespray.ROYAL;
 
-import java.util.ArrayList;
-
 import net.minecraft.util.text.TextFormatting;
-import scala.actors.threadpool.Arrays;
 
 public interface Constants {
 	//Item/Block Names
