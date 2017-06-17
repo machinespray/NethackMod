@@ -1,23 +1,22 @@
 package com.machinespray.ROYAL.proxy;
 
-import com.machinespray.ROYAL.items.rings.RingAction;
-import com.machinespray.ROYAL.items.scrolls.ScrollAction;
-import net.minecraftforge.common.capabilities.CapabilityManager;
-import net.minecraftforge.fml.relauncher.Side;
-
 import com.machinespray.ROYAL.Constants;
 import com.machinespray.ROYAL.Main;
-import com.machinespray.ROYAL.items.RoyalItems;
 import com.machinespray.ROYAL.blocks.RoyalBlocks;
-import com.machinespray.ROYAL.sync.knowledge.DefaultKnowledgeHandler;
-import com.machinespray.ROYAL.sync.knowledge.IKnowledgeHandler;
-import com.machinespray.ROYAL.sync.knowledge.Storage;
+import com.machinespray.ROYAL.items.RoyalItems;
 import com.machinespray.ROYAL.items.rings.ItemRing;
+import com.machinespray.ROYAL.items.rings.RingAction;
 import com.machinespray.ROYAL.items.scrolls.ItemScroll;
+import com.machinespray.ROYAL.items.scrolls.ScrollAction;
 import com.machinespray.ROYAL.sync.KnowledgeMessageHandler;
 import com.machinespray.ROYAL.sync.KnowledgeRequestHandler;
 import com.machinespray.ROYAL.sync.MessageRequestKnowledge;
 import com.machinespray.ROYAL.sync.MessageSendKnowledge;
+import com.machinespray.ROYAL.sync.knowledge.DefaultKnowledgeHandler;
+import com.machinespray.ROYAL.sync.knowledge.IKnowledgeHandler;
+import com.machinespray.ROYAL.sync.knowledge.Storage;
+import net.minecraftforge.common.capabilities.CapabilityManager;
+import net.minecraftforge.fml.relauncher.Side;
 
 public class CommonProxy implements Constants {
 
@@ -44,7 +43,8 @@ public class CommonProxy implements Constants {
             return null;
         }
     }
-    public boolean isRemote(){
+
+    public boolean isRemote() {
         return false;
     }
 

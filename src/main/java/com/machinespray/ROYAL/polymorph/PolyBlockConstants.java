@@ -1,14 +1,11 @@
 package com.machinespray.ROYAL.polymorph;
 
-import com.machinespray.ROYAL.Main;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
-import scala.Int;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public enum PolyBlockConstants {
     BLOCK_SOFT(Blocks.GRASS, 0, Blocks.DIRT, 0, Blocks.SAND, 0, Blocks.GRAVEL, 0, Blocks.CLAY, 0),

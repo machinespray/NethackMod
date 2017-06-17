@@ -30,12 +30,6 @@ public class RenderGUIEvent extends Gui {
                 double width = resolution.getScaledWidth();
                 double height = resolution.getScaledHeight();
                 if (event.getType() == RenderGameOverlayEvent.ElementType.CROSSHAIRS) {
-                    Tessellator tessellator = Tessellator.getInstance();
-                    VertexBuffer vertexbuffer = tessellator.getBuffer();
-                    GlStateManager.disableBlend();
-                    GlStateManager.enableTexture2D();
-                    minecraft.getTextureManager().bindTexture(new ResourceLocation("textures/gui/achievement/achievement_background.png"));
-                    vertexbuffer.begin(7, DefaultVertexFormats.POSITION_TEX);
                     double left;
                     double right;
                     double top;
@@ -51,17 +45,47 @@ public class RenderGUIEvent extends Gui {
                         right = width * (13.0 / 16.0);
                         bottom = height - ((left - right) / 4);
                     }
-                    //GlStateManager.alphaFunc();
-                    vertexbuffer.pos(left, bottom, 0.0D).tex(1, .79).endVertex();
-                    vertexbuffer.pos(right, bottom, 0.0D).tex(.37, .79).endVertex();
-                    vertexbuffer.pos(right, top, 0.0D).tex(.37, .91).endVertex();
-                    vertexbuffer.pos(left, top, 0.0D).tex(1, .91).endVertex();
-                    tessellator.draw();
-                    GlStateManager.pushMatrix();
-                    GlStateManager.scale(.5, .5, 1);
-                    GlStateManager.translate(width - Minecraft.getMinecraft().fontRendererObj.getStringWidth(buffer.get(0)) / 2, height - Minecraft.getMinecraft().fontRendererObj.FONT_HEIGHT / 2, 0);
-                    Minecraft.getMinecraft().fontRendererObj.drawString(buffer.get(0), (int) Math.floor(right), (int) Math.floor(bottom), 0xC1C1C1);
-                    GlStateManager.popMatrix();
+                    double boxheight = top - bottom;
+                    double percent;
+                    boolean temp = true;
+                    if (time < 120) {
+                        percent = boxheight * (time / 120D);
+                    } else if (time < 840) {
+                        percent = boxheight;
+                    } else if (time < 960) {
+                        percent = boxheight * (1 - ((time - 840) / 120D));
+                    } else {
+                        percent = 0;
+                        time = 0;
+                        temp = false;
+                    }
+                    if (temp) {
+                        Tessellator tessellator = Tessellator.getInstance();
+                        VertexBuffer vertexbuffer = tessellator.getBuffer();
+                        GlStateManager.disableBlend();
+                        GlStateManager.enableTexture2D();
+                        minecraft.getTextureManager().bindTexture(new ResourceLocation("textures/gui/achievement/achievement_background.png"));
+                        vertexbuffer.begin(7, DefaultVertexFormats.POSITION_TEX);
+                        vertexbuffer.pos(left, bottom, 0.0D).tex(1, .79).endVertex();
+                        vertexbuffer.pos(right, bottom, 0.0D).tex(.37, .79).endVertex();
+                        vertexbuffer.pos(right, top, 0.0D).tex(.37, .91).endVertex();
+                        vertexbuffer.pos(left, top, 0.0D).tex(1, .91).endVertex();
+                        GlStateManager.pushMatrix();
+                        GlStateManager.translate(0D, boxheight - percent, 0F);
+                        tessellator.draw();
+                        GlStateManager.popMatrix();
+                        GlStateManager.pushMatrix();
+                        GlStateManager.scale(.5, .5, 1);
+                        String[] phrases = buffer.get(0).split("\n");
+                        GlStateManager.translate(width, (1.0025 * height) - ((Minecraft.getMinecraft().fontRendererObj.FONT_HEIGHT * phrases.length) / 2), 0);
+                        GlStateManager.translate(0D, (boxheight - percent) * 2, 0F);
+                        for (int i = 0; i < phrases.length; i++) {
+                            Minecraft.getMinecraft().fontRendererObj.drawString(phrases[i], (int) Math.floor(right) - Minecraft.getMinecraft().fontRendererObj.getStringWidth(phrases[0]) / 2, (int) Math.floor(bottom) + (i * (Minecraft.getMinecraft().fontRendererObj.FONT_HEIGHT)), 0xC1C1C1);
+                        }
+                        GlStateManager.popMatrix();
+                    } else {
+                        buffer.remove(0);
+                    }
                 }
             }
         }

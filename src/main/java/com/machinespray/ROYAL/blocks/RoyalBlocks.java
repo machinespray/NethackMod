@@ -1,13 +1,13 @@
 package com.machinespray.ROYAL.blocks;
 
-import java.util.ArrayList;
-
 import com.machinespray.ROYAL.Main;
 import com.machinespray.ROYAL.entity.TileFountain;
 import net.minecraft.item.ItemBlock;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.util.ArrayList;
 
 public class RoyalBlocks {
     public static ArrayList<NetHackAltar> altars = new ArrayList<NetHackAltar>();

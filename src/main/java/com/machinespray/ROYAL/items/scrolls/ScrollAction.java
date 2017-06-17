@@ -26,7 +26,39 @@ import java.util.Random;
 
 public enum ScrollAction implements Constants {
     IDENTIFY, CREATE_MONSTER, ENCHANT_WEAPON, TELEPORT, DESTROY_WEAPON;
+    private static Random random = new Random();
+    private static ArrayList<Integer> ids = new ArrayList<Integer>();
     public int id;
+
+    public static void match(long seed) {
+        ids.clear();
+        random.setSeed(seed);
+        for (int i = 0; i < values().length; i++) {
+            ScrollAction I = values()[i];
+            int id = random.nextInt(Constants.scrollNames.length);
+            while (ids.contains(id)) {
+                id = random.nextInt(Constants.scrollNames.length);
+            }
+            I.id = id;
+            ids.add(id);
+        }
+    }
+
+    public static ScrollAction getAction(String name) {
+        int id = -1;
+        name = name.split("\\.")[1].replace("_", " ");
+        for (int i = 0; i < scrollNames.length; i++) {
+            if (scrollNames[i].equals(name))
+                id = i;
+        }
+        for (int i = 0; i < values().length; i++) {
+            ScrollAction I = values()[i];
+            if (id == I.id) {
+                return I;
+            }
+        }
+        return null;
+    }
 
     public String getKnowledgeName() {
         return this.name().replace("_", " ").toLowerCase();
@@ -213,40 +245,6 @@ public enum ScrollAction implements Constants {
                         "Your offhand glows for a second..."));
             }
         }
-    }
-
-
-    private static Random random = new Random();
-    private static ArrayList<Integer> ids = new ArrayList<Integer>();
-
-    public static void match(long seed) {
-        ids.clear();
-        random.setSeed(seed);
-        for (int i = 0; i < values().length; i++) {
-            ScrollAction I = values()[i];
-            int id = random.nextInt(Constants.scrollNames.length);
-            while (ids.contains(id)) {
-                id = random.nextInt(Constants.scrollNames.length);
-            }
-            I.id = id;
-            ids.add(id);
-        }
-    }
-
-    public static ScrollAction getAction(String name) {
-        int id = -1;
-        name = name.split("\\.")[1].replace("_", " ");
-        for (int i = 0; i < scrollNames.length; i++) {
-            if (scrollNames[i].equals(name))
-                id = i;
-        }
-        for (int i = 0; i < values().length; i++) {
-            ScrollAction I = values()[i];
-            if (id == I.id) {
-                return I;
-            }
-        }
-        return null;
     }
 
 }

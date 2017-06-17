@@ -8,7 +8,6 @@ import net.minecraft.entity.passive.EntityCow;
 import net.minecraft.entity.passive.EntityPig;
 import net.minecraft.entity.passive.EntitySheep;
 
-
 import java.util.ArrayList;
 
 public enum PolyEntityConstants {

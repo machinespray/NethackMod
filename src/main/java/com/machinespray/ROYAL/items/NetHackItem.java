@@ -1,15 +1,10 @@
 package com.machinespray.ROYAL.items;
 
-import java.util.List;
-
 import com.machinespray.ROYAL.Constants;
 import com.machinespray.ROYAL.Main;
 import com.machinespray.ROYAL.sync.knowledge.IKnowledgeHandler;
-
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityOtherPlayerMP;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -19,6 +14,8 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.util.List;
+
 public class NetHackItem extends Item implements Constants {
     public NetHackItem() {
     }
@@ -26,6 +23,17 @@ public class NetHackItem extends Item implements Constants {
     public NetHackItem(String unlocalizedName) {
         this.setUnlocalizedName(unlocalizedName);
         this.setRegistryName("royal", unlocalizedName);
+    }
+
+    public static String id(ItemStack stack, int i) {
+        NBTTagCompound nbt = stack.getTagCompound();
+        switch (i) {
+            case 0:
+                nbt.setBoolean(BUCI, true);
+                stack.setTagCompound(nbt);
+                return nbt.getString(BUC);
+        }
+        return null;
     }
 
     @SideOnly(Side.CLIENT)
@@ -88,17 +96,6 @@ public class NetHackItem extends Item implements Constants {
 
     public int getID() {
         return -2;
-    }
-
-    public static String id(ItemStack stack, int i) {
-        NBTTagCompound nbt = stack.getTagCompound();
-        switch (i) {
-            case 0:
-                nbt.setBoolean(BUCI, true);
-                stack.setTagCompound(nbt);
-                return nbt.getString(BUC);
-        }
-        return null;
     }
 
     public String type() {

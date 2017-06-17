@@ -23,20 +23,10 @@ import java.util.Random;
 
 public enum RingAction implements Constants {
     AGGRAVATE_MONSTER, CONFLICT, LEVITATION, SEE_INVISIBLE, TELEPORTATION, HUNGER, PROTECTION, REGENERATION, FIRE_RESISTANCE, STRENGTH, PARANOIA;
-    public int id;
-
-    private void discover(Entity player) {
-        IKnowledgeHandler knowledge = Main.getHandler(player);
-        if (!knowledge.hasKnowledge(getKnowledgeName())) {
-            if (!player.world.isRemote)
-                player.sendMessage(new TextComponentString(
-                        "You discover this is a ring of " + getKnowledgeName() + "!"));
-            knowledge.addKnowledge(getKnowledgeName());
-        }
-    }
     //Moved from RingActions.java
     private static ArrayList<Integer> ids = new ArrayList<Integer>();
     private static Random random = new Random();
+    public int id;
 
     public static void match(long seed) {
         ids.clear();
@@ -68,6 +58,16 @@ public enum RingAction implements Constants {
             }
         }
         return null;
+    }
+
+    private void discover(Entity player) {
+        IKnowledgeHandler knowledge = Main.getHandler(player);
+        if (!knowledge.hasKnowledge(getKnowledgeName())) {
+            if (!player.world.isRemote)
+                player.sendMessage(new TextComponentString(
+                        "You discover this is a ring of " + getKnowledgeName() + "!"));
+            knowledge.addKnowledge(getKnowledgeName());
+        }
     }
 
     public String getKnowledgeName() {

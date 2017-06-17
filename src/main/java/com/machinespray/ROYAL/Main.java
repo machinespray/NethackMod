@@ -1,12 +1,8 @@
 package com.machinespray.ROYAL;
 
-import java.util.Random;
-
 import com.machinespray.ROYAL.items.RoyalItems;
-import com.machinespray.ROYAL.render.RenderGUIEvent;
-import com.machinespray.ROYAL.sync.knowledge.IKnowledgeHandler;
 import com.machinespray.ROYAL.proxy.CommonProxy;
-
+import com.machinespray.ROYAL.sync.knowledge.IKnowledgeHandler;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
@@ -22,6 +18,8 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 
+import java.util.Random;
+
 @Mod(modid = Main.MODID, version = Main.VERSION)
 public class Main {
     @CapabilityInject(IKnowledgeHandler.class)
@@ -29,14 +27,7 @@ public class Main {
     public static final String MODID = "royal";
     public static final String VERSION = "0.24";
     public static final Random random = new Random();
-    @SidedProxy(modId = MODID, clientSide = "com.machinespray.ROYAL.proxy.ClientProxy", serverSide = "com.machinespray.ROYAL.proxy.CommonProxy")
-    public static CommonProxy proxy;
     public static final SimpleNetworkWrapper WRAPPER_INSTANCE = NetworkRegistry.INSTANCE.newSimpleChannel(MODID);
-    public static String[] rings;
-    public static String[] scrolls;
-    @Mod.Instance
-    public static Main instance = new Main();
-
     public static final CreativeTabs royalTab = new CreativeTabs("royal") {
 
         @Override
@@ -45,6 +36,18 @@ public class Main {
         }
 
     }.setNoTitle();
+    @SidedProxy(modId = MODID, clientSide = "com.machinespray.ROYAL.proxy.ClientProxy", serverSide = "com.machinespray.ROYAL.proxy.CommonProxy")
+    public static CommonProxy proxy;
+    public static String[] rings;
+    public static String[] scrolls;
+    @Mod.Instance
+    public static Main instance = new Main();
+
+    public static IKnowledgeHandler getHandler(Entity entity) {
+        if (entity.hasCapability(CAPABILITY_KNOWLEDGE, EnumFacing.DOWN))
+            return entity.getCapability(CAPABILITY_KNOWLEDGE, EnumFacing.DOWN);
+        return null;
+    }
 
     @EventHandler
     public void preinit(FMLPreInitializationEvent event) {
@@ -60,11 +63,5 @@ public class Main {
     @EventHandler
     public void postinit(FMLInitializationEvent event) {
         proxy.postinit();
-    }
-
-    public static IKnowledgeHandler getHandler(Entity entity) {
-        if (entity.hasCapability(CAPABILITY_KNOWLEDGE, EnumFacing.DOWN))
-            return entity.getCapability(CAPABILITY_KNOWLEDGE, EnumFacing.DOWN);
-        return null;
     }
 }

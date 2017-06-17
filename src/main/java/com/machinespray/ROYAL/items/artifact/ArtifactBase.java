@@ -6,28 +6,20 @@ import com.machinespray.ROYAL.items.NetHackItem;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public abstract class ArtifactBase extends NetHackItem {
-    public double damageBase;
-
     public static ArrayList<ArtifactBase> artifacts = new ArrayList<ArtifactBase>();
+    public double damageBase;
 
     public ArtifactBase(String name, double damageBase) {
         super(name);
@@ -38,9 +30,11 @@ public abstract class ArtifactBase extends NetHackItem {
         this.setMaxDamage(2343);
         artifacts.add(this);
     }
-    public static AttributeModifier getNewAttackModifier(double damage){
+
+    public static AttributeModifier getNewAttackModifier(double damage) {
         return new AttributeModifier(ATTACK_DAMAGE_MODIFIER, "Weapon modifier", damage, 0);
     }
+
     @Override
     public float getStrVsBlock(ItemStack stack, IBlockState state) {
         Block block = state.getBlock();
