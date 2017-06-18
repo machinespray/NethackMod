@@ -1,5 +1,6 @@
 package com.machinespray.ROYAL.sync;
 
+import com.machinespray.ROYAL.EnumDataType;
 import io.netty.buffer.ByteBuf;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 

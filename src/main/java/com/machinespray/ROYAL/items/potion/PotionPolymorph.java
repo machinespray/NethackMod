@@ -1,6 +1,7 @@
 package com.machinespray.ROYAL.items.potion;
 
 import com.machinespray.ROYAL.Main;
+import com.machinespray.ROYAL.Values;
 import com.machinespray.ROYAL.entity.EntityPotionRoyal;
 import com.machinespray.ROYAL.polymorph.PolyBlockConstants;
 import com.machinespray.ROYAL.polymorph.PolyEntityConstants;
@@ -49,16 +50,16 @@ public class PotionPolymorph extends PotionBase {
                                 if (I == p.contains.get(i))
                                     id = i;
                             }
-                            int id2 = Main.random.nextInt(p.contains.size());
+                            int id2 = Values.random.nextInt(p.contains.size());
                             Item i = p.contains.get(id2);
                             while (!(p.priority.get(id) >= p.priority.get(id2))) {
-                                id2 = Main.random.nextInt(p.contains.size());
+                                id2 = Values.random.nextInt(p.contains.size());
                                 i = p.contains.get(id2);
                             }
                             if (i instanceof ItemBlock) {
                                 NonNullList<ItemStack> items = NonNullList.create();
                                 i.getSubItems(i, i.getCreativeTab(), items);
-                                world.setBlockState(mypos, ((ItemBlock) i).getBlock().getStateFromMeta(Main.random.nextInt(items.size())));
+                                world.setBlockState(mypos, ((ItemBlock) i).getBlock().getStateFromMeta(Values.random.nextInt(items.size())));
                             }
 
                         }
@@ -75,7 +76,7 @@ public class PotionPolymorph extends PotionBase {
                 if (e.canBeHitWithPotion()) {
                     PolyEntityConstants c = PolyEntityConstants.getGroup(e);
                     if (c != null && e.isEntityAlive()) {
-                        Class<? extends EntityLivingBase> E = c.contains.get(Main.random.nextInt(c.contains.size()));
+                        Class<? extends EntityLivingBase> E = c.contains.get(Values.random.nextInt(c.contains.size()));
                         try {
                             EntityLivingBase newEntity = E.getConstructor(World.class).newInstance(world);
                             newEntity.setLocationAndAngles(e.posX, e.posY, e.posZ, e.rotationYaw, e.rotationPitch);
@@ -92,5 +93,11 @@ public class PotionPolymorph extends PotionBase {
         }
     }
 
-
+    @Override
+    public String getUse() {
+        return "polymorph";
+    }
+    public boolean hasUse() {
+        return true;
+    }
 }

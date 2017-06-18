@@ -2,6 +2,7 @@ package com.machinespray.ROYAL.blocks;
 
 import com.machinespray.ROYAL.Constants;
 import com.machinespray.ROYAL.Main;
+import com.machinespray.ROYAL.Values;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
@@ -127,7 +128,7 @@ public class NetHackAltar extends Block implements Constants {
                                     EnumFacing facing, float hitX, float hitY, float hitZ) {
         if (worldIn.isRemote) {
             for (int i = 0; i < 3; i++)
-                worldIn.spawnParticle(EnumParticleTypes.CRIT_MAGIC, pos.getX() + Main.random.nextDouble(), pos.getY() + 1 + Main.random.nextDouble(), pos.getZ() + Main.random.nextDouble(), 0, 0.2, 0, 0);
+                worldIn.spawnParticle(EnumParticleTypes.CRIT_MAGIC, pos.getX() + Values.random.nextDouble(), pos.getY() + 1 + Values.random.nextDouble(), pos.getZ() + Values.random.nextDouble(), 0, 0.2, 0, 0);
             playerIn.playSound(SoundEvents.ITEM_TOTEM_USE, 0.2f, 2);
         }
 

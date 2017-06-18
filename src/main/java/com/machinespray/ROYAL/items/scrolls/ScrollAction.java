@@ -2,7 +2,9 @@ package com.machinespray.ROYAL.items.scrolls;
 
 import com.machinespray.ROYAL.Constants;
 import com.machinespray.ROYAL.Main;
+import com.machinespray.ROYAL.Values;
 import com.machinespray.ROYAL.items.NetHackItem;
+import com.machinespray.ROYAL.items.randomized.IRandomizedClass;
 import com.machinespray.ROYAL.sync.knowledge.IKnowledgeHandler;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.Entity;
@@ -82,17 +84,18 @@ public enum ScrollAction implements Constants {
             if (!playerIn.isCreative())
                 playerIn.inventory.decrStackSize(
                         playerIn.inventory.currentItem, 1);
-            if (playerIn.getHeldItemOffhand().getItem() instanceof NetHackItem) {
+            if (playerIn.getHeldItemOffhand().getItem() instanceof NetHackItem && playerIn.getHeldItemOffhand().getItem() instanceof IRandomizedClass) {
                 NetHackItem nhi = (NetHackItem) playerIn
                         .getHeldItemOffhand().getItem();
-                if (nhi.hasUse())
-                    if (!knowledge.hasKnowledge(nhi.getUse())) {
+                IRandomizedClass rc = (IRandomizedClass) nhi;
+                if (rc.hasUse())
+                    if (!knowledge.hasKnowledge(rc.getUse())) {
                         if (!worldIn.isRemote)
                             playerIn.sendMessage(new TextComponentString(
-                                    "You discover the item in your offhand is a "
-                                            + nhi.type() + " of "
-                                            + nhi.getUse() + "!"));
-                        knowledge.addKnowledge(nhi.getUse());
+                                    "You discover the item\nin your offhand is a\n"
+                                            + rc.type() + " of "
+                                            + rc.getUse() + "!"));
+                        knowledge.addKnowledge(rc.getUse());
                     }
                 NBTTagCompound nbt = playerIn.getHeldItemOffhand()
                         .getTagCompound() != null ? playerIn.getHeldItemOffhand().getTagCompound() : new NBTTagCompound();
@@ -110,31 +113,31 @@ public enum ScrollAction implements Constants {
                         .getTagCompound().getString(BUC);
                 EntityLiving entity;
                 if (buc.equals(BLESSED)) {
-                    for (int i = 0; i < Main.random.nextInt(21) + 5; i++) {
+                    for (int i = 0; i < Values.random.nextInt(21) + 5; i++) {
                         entity = new EntitySilverfish(playerIn.world);
                         entity.setPosition(
-                                playerIn.posX + Main.random.nextInt(5) - 2,
+                                playerIn.posX + Values.random.nextInt(5) - 2,
                                 playerIn.posY,
-                                playerIn.posZ + Main.random.nextInt(5) - 2);
+                                playerIn.posZ + Values.random.nextInt(5) - 2);
                         playerIn.world.spawnEntity(entity);
                     }
                 } else if (buc.equals(CURSED)) {
-                    for (int i = 0; i < Main.random.nextInt(4) + 1; i++) {
+                    for (int i = 0; i < Values.random.nextInt(4) + 1; i++) {
                         entity = new EntityBlaze(playerIn.world);
                         entity.setPosition(
-                                playerIn.posX + Main.random.nextInt(5) - 2,
+                                playerIn.posX + Values.random.nextInt(5) - 2,
                                 playerIn.posY,
-                                playerIn.posZ + Main.random.nextInt(5) - 2);
+                                playerIn.posZ + Values.random.nextInt(5) - 2);
                         playerIn.world.spawnEntity(entity);
                     }
                 }
                 if (buc.equals(UNCURSED))
-                    for (int i = 0; i < Main.random.nextInt(4) + 1; i++) {
+                    for (int i = 0; i < Values.random.nextInt(4) + 1; i++) {
                         entity = new EntityZombie(playerIn.world);
                         entity.setPosition(
-                                playerIn.posX + Main.random.nextInt(5) - 2,
+                                playerIn.posX + Values.random.nextInt(5) - 2,
                                 playerIn.posY,
-                                playerIn.posZ + Main.random.nextInt(5) - 2);
+                                playerIn.posZ + Values.random.nextInt(5) - 2);
                         playerIn.world.spawnEntity(entity);
                     }
 
@@ -155,12 +158,12 @@ public enum ScrollAction implements Constants {
                         Enchantment enchantment = null;
                         if (buc.equals(UNCURSED) || buc.equals(BLESSED))
                             try {
-                                enchantment = (Enchantment) enchantments[Main.random
+                                enchantment = (Enchantment) enchantments[Values.random
                                         .nextInt(enchantments.length)]
                                         .get(enchantment);
                                 while (!enchantment.canApply(playerIn
                                         .getHeldItemOffhand()))
-                                    enchantment = (Enchantment) enchantments[Main.random
+                                    enchantment = (Enchantment) enchantments[Values.random
                                             .nextInt(enchantments.length)]
                                             .get(enchantment);
                                 playerIn.getHeldItemOffhand()
@@ -170,7 +173,7 @@ public enum ScrollAction implements Constants {
                                                         .getMaxLevel()
                                                         : enchantment
                                                         .getMinLevel()
-                                                        + Main.random
+                                                        + Values.random
                                                         .nextInt(enchantment
                                                                 .getMaxLevel()
                                                                 + 1

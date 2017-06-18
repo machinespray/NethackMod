@@ -18,15 +18,12 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 
-import java.util.Random;
-
 @Mod(modid = Main.MODID, version = Main.VERSION)
 public class Main {
     @CapabilityInject(IKnowledgeHandler.class)
     public static final Capability<IKnowledgeHandler> CAPABILITY_KNOWLEDGE = null;
     public static final String MODID = "royal";
     public static final String VERSION = "0.24";
-    public static final Random random = new Random();
     public static final SimpleNetworkWrapper WRAPPER_INSTANCE = NetworkRegistry.INSTANCE.newSimpleChannel(MODID);
     public static final CreativeTabs royalTab = new CreativeTabs("royal") {
 
@@ -38,8 +35,6 @@ public class Main {
     }.setNoTitle();
     @SidedProxy(modId = MODID, clientSide = "com.machinespray.ROYAL.proxy.ClientProxy", serverSide = "com.machinespray.ROYAL.proxy.CommonProxy")
     public static CommonProxy proxy;
-    public static String[] rings;
-    public static String[] scrolls;
     @Mod.Instance
     public static Main instance = new Main();
 

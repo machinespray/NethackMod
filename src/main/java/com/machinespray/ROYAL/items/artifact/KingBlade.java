@@ -3,6 +3,7 @@ package com.machinespray.ROYAL.items.artifact;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import com.machinespray.ROYAL.Main;
+import com.machinespray.ROYAL.Values;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
@@ -45,7 +46,7 @@ public class KingBlade extends ArtifactBase {
         if (entityIn instanceof EntityPlayer) {
             EntityPlayer player = (EntityPlayer) entityIn;
             if (player.hurtResistantTime == 1 && !worldIn.isRemote)
-                player.removeExperienceLevel(Main.random.nextInt(player.experienceLevel / 2));
+                player.removeExperienceLevel(Values.random.nextInt(player.experienceLevel / 2));
             double newDamage = damageBase * (1 + (((double) Math.min(30, player.experienceLevel)) / 17.5));
             NBTTagCompound tag = stack.getTagCompound();
             if (tag == null)

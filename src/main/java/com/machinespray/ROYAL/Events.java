@@ -1,9 +1,6 @@
 package com.machinespray.ROYAL;
 
-import baubles.api.BaublesApi;
 import com.machinespray.ROYAL.items.NetHackItem;
-import com.machinespray.ROYAL.items.rings.ItemRing;
-import com.machinespray.ROYAL.items.rings.RingAction;
 import com.machinespray.ROYAL.items.scrolls.ScrollAction;
 import com.machinespray.ROYAL.sync.KnowledgeRequestHandler;
 import com.machinespray.ROYAL.sync.MessageRequestKnowledge;
@@ -15,11 +12,9 @@ import net.minecraft.entity.passive.EntityTameable;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.init.Blocks;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraft.world.World;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
@@ -31,13 +26,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 
 public class Events implements Constants {
-    @SideOnly(Side.CLIENT)
-    private static boolean message = true;
-
     @SubscribeEvent
     public void onLoad(WorldEvent.Load e) {
         if (!e.getWorld().isRemote) {
-            RingAction.match(e.getWorld().getSeed());
+            Values.ringInstance.match(e.getWorld().getSeed());
             ScrollAction.match(e.getWorld().getSeed());
         }
     }
@@ -50,8 +42,8 @@ public class Events implements Constants {
             if (((EntityVillager) e.getTarget()).getProfession() == 2) {
                 if (!e.getEntityPlayer().getHeldItemMainhand().getTagCompound()
                         .getBoolean(BUCI)) {
-                    String BUC = (NetHackItem.id(e.getEntityPlayer()
-                            .getHeldItemMainhand(), 0));
+                    String BUC = NetHackItem.id(e.getEntityPlayer()
+                            .getHeldItemMainhand());
                     if (BUC.equals(CURSED))
                         e.getEntityPlayer().sendMessage(
                                 new TextComponentString(TextFormatting.RED
@@ -75,7 +67,7 @@ public class Events implements Constants {
                 if (e.getEntityPlayer().getHeldItemMainhand().getItem() instanceof NetHackItem) {
                     EntityTameable target = (EntityTameable) e.getTarget();
                     String BUC = (NetHackItem.id(e.getEntityPlayer()
-                            .getHeldItemMainhand(), 0));
+                            .getHeldItemMainhand()));
                     if (BUC.equals(CURSED))
                         e.getEntityPlayer()
                                 .sendMessage(
@@ -91,8 +83,8 @@ public class Events implements Constants {
         }
     }
 
-    @SubscribeEvent
-    public void onBlockBreakBegin(PlayerEvent.BreakSpeed e) {
+    /* @SubscribeEvent
+   public void onBlockBreakBegin(PlayerEvent.BreakSpeed e) {
         World world = e.getEntityPlayer().world;
         if (e.getEntityPlayer().world
                 .getBlockState(e.getPos())
@@ -133,7 +125,7 @@ public class Events implements Constants {
                             }
                         }
                 }
-    }
+    }*/
 
 
     /*@SideOnly(Side.CLIENT)
@@ -157,10 +149,7 @@ public class Events implements Constants {
     @SideOnly(Side.CLIENT)
     @SubscribeEvent
     public void joinWorld(EntityJoinWorldEvent e) {
-        if (e.getEntity() instanceof EntityPlayerSP && message) {
-            message = false;
-            Main.rings = new String[ringNames.length];
-            Main.scrolls = new String[scrollNames.length];
+        if (e.getEntity() instanceof EntityPlayerSP) {
             Main.WRAPPER_INSTANCE.sendToServer(new MessageRequestKnowledge());
         }
     }

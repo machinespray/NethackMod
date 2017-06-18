@@ -1,4 +1,4 @@
-package com.machinespray.ROYAL.gui;
+package com.machinespray.ROYAL.render;
 
 import net.minecraft.client.gui.GuiScreen;
 

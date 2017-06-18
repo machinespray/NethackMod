@@ -1,5 +1,6 @@
-package com.machinespray.ROYAL.gui;
+package com.machinespray.ROYAL.render;
 
+import com.machinespray.ROYAL.render.GuiGuide;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.IGuiHandler;

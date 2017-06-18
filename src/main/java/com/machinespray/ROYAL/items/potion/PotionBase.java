@@ -2,6 +2,7 @@ package com.machinespray.ROYAL.items.potion;
 
 import com.machinespray.ROYAL.entity.EntityPotionRoyal;
 import com.machinespray.ROYAL.items.NetHackItem;
+import com.machinespray.ROYAL.items.randomized.IRandomizedClass;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
@@ -15,11 +16,10 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 
-public abstract class PotionBase extends NetHackItem {
+public abstract class PotionBase extends NetHackItem implements IRandomizedClass {
 
     public PotionBase(String unlocalizedName) {
-        this.setUnlocalizedName("potion_" + unlocalizedName);
-        this.setRegistryName("royal", "potion_" + unlocalizedName);
+        super("potion_" + unlocalizedName);
     }
 
 
@@ -62,6 +62,7 @@ public abstract class PotionBase extends NetHackItem {
         }
         return new ActionResult<ItemStack>(EnumActionResult.PASS, playerIn.getHeldItem(handIn));
     }
+
 
     public int getMaxItemUseDuration(ItemStack stack) {
         return 32;

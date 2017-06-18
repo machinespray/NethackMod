@@ -30,12 +30,4 @@ public interface Constants {
     //Data related Strings
     String BUC = "BUC";
     String BUCI = "BUCI";
-
-    enum Type {
-        RING, SCROLL;
-
-        public String toString() {
-            return this.name().toLowerCase().replace("_", " ");
-        }
-    }
 }

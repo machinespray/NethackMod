@@ -2,6 +2,8 @@ package com.machinespray.ROYAL.items.rings;
 
 import com.machinespray.ROYAL.Constants;
 import com.machinespray.ROYAL.Main;
+import com.machinespray.ROYAL.Values;
+import com.machinespray.ROYAL.render.RenderGUIEvent;
 import com.machinespray.ROYAL.sync.knowledge.IKnowledgeHandler;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
@@ -15,57 +17,19 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.TextComponentString;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public enum RingAction implements Constants {
     AGGRAVATE_MONSTER, CONFLICT, LEVITATION, SEE_INVISIBLE, TELEPORTATION, HUNGER, PROTECTION, REGENERATION, FIRE_RESISTANCE, STRENGTH, PARANOIA;
-    //Moved from RingActions.java
-    private static ArrayList<Integer> ids = new ArrayList<Integer>();
-    private static Random random = new Random();
     public int id;
-
-    public static void match(long seed) {
-        ids.clear();
-        random.setSeed(seed);
-        for (int i = 0; i < RingAction.values().length; i++) {
-            RingAction I = RingAction.values()[i];
-            int id = random.nextInt(Constants.ringNames.length);
-            while (ids.contains(id)) {
-                id = random.nextInt(Constants.ringNames.length);
-            }
-            I.id = id;
-            ids.add(id);
-
-        }
-    }
-
-    public static RingAction getAction(String name) {
-        int id = 100;
-        name = name.split("\\.")[1].replace("_", " ");
-        name = name.substring(0, name.length() - 1);
-        for (int i = 0; i < ringNames.length; i++) {
-            if (ringNames[i].equals(name))
-                id = i;
-        }
-        for (int i = 0; i < RingAction.values().length; i++) {
-            RingAction I = RingAction.values()[i];
-            if (id == I.id) {
-                return I;
-            }
-        }
-        return null;
-    }
 
     private void discover(Entity player) {
         IKnowledgeHandler knowledge = Main.getHandler(player);
         if (!knowledge.hasKnowledge(getKnowledgeName())) {
             if (!player.world.isRemote)
-                player.sendMessage(new TextComponentString(
-                        "You discover this is a ring of " + getKnowledgeName() + "!"));
+                RenderGUIEvent.buffer.add(
+                        "You discover this is a ring of\n" + getKnowledgeName() + "!");
             knowledge.addKnowledge(getKnowledgeName());
         }
     }
@@ -104,7 +68,7 @@ public enum RingAction implements Constants {
                     EntityLiving.class, box);
             for (EntityLiving e : list) {
                 if (e.getAttackTarget() == null) {
-                    EntityLiving entity = list.get(Main.random.nextInt(list
+                    EntityLiving entity = list.get(Values.random.nextInt(list
                             .size()));
                     if (!entity.equals(e))
                         e.setAttackTarget(entity);
@@ -131,7 +95,7 @@ public enum RingAction implements Constants {
                             .getPotionById(24), 20));
             }
         } else if (this.equals(TELEPORTATION)) {
-            if (Main.random.nextInt(200) > 198)
+            if (Values.random.nextInt(200) > 198)
                 if (!player.world.isRemote) {
                     double d0 = player.posX;
                     double d1 = player.posY;
@@ -165,12 +129,6 @@ public enum RingAction implements Constants {
                                     1.0F, 1.0F);
                             IKnowledgeHandler knowledge = Main
                                     .getHandler(player);
-                            if (!knowledge.hasKnowledge("teleportation")) {
-                                if (!player.world.isRemote)
-                                    player.sendMessage(new TextComponentString(
-                                            "You discover this is a ring of teleportation!"));
-                                knowledge.addKnowledge("teleportation");
-                            }
                         }
                         break;
 
@@ -182,8 +140,7 @@ public enum RingAction implements Constants {
             IKnowledgeHandler knowledge = Main.getHandler(player);
             if (!knowledge.hasKnowledge("hunger")) {
                 if (!player.world.isRemote)
-                    player.sendMessage(new TextComponentString(
-                            "You discover this is a ring of hunger!"));
+                    discover(player);
                 knowledge.addKnowledge("hunger");
             }
         } else if (this.equals(PROTECTION)) {
@@ -192,8 +149,7 @@ public enum RingAction implements Constants {
             IKnowledgeHandler knowledge = Main.getHandler(player);
             if (!knowledge.hasKnowledge("protection")) {
                 if (!player.world.isRemote)
-                    player.sendMessage(new TextComponentString(
-                            "You discover this is a ring of protection!"));
+                    discover(player);
                 knowledge.addKnowledge("protection");
             }
         } else if (this.equals(REGENERATION)) {
@@ -203,8 +159,7 @@ public enum RingAction implements Constants {
             IKnowledgeHandler knowledge = Main.getHandler(player);
             if (!knowledge.hasKnowledge("regeneration")) {
                 if (!player.world.isRemote)
-                    player.sendMessage(new TextComponentString(
-                            "You discover this is a ring of regeneration!"));
+                    discover(player);
                 knowledge.addKnowledge("regeneration");
             }
         } else if (this.equals(FIRE_RESISTANCE)) {
@@ -213,8 +168,7 @@ public enum RingAction implements Constants {
             IKnowledgeHandler knowledge = Main.getHandler(player);
             if (!knowledge.hasKnowledge("fire resistance")) {
                 if (!player.world.isRemote)
-                    player.sendMessage(new TextComponentString(
-                            "You discover this is a ring of fire resistance!"));
+                    discover(player);
                 knowledge.addKnowledge("fire resistance");
             }
         } else if (this.equals(STRENGTH)) {
@@ -223,22 +177,21 @@ public enum RingAction implements Constants {
             IKnowledgeHandler knowledge = Main.getHandler(player);
             if (!knowledge.hasKnowledge("strength")) {
                 if (!player.world.isRemote)
-                    player.sendMessage(new TextComponentString(
-                            "You discover this is a ring of strength!"));
+                    discover(player);
                 knowledge.addKnowledge("strength");
             }
         } else if (this.equals(PARANOIA)) {
-            if (Main.random.nextInt(200) > 198)
+            if (Values.random.nextInt(200) > 198)
                 if (!player.world.isRemote) {
                     double d0 = player.posX;
                     double d1 = player.posY;
                     double d2 = player.posZ;
-                    int i = Main.random.nextInt(SoundEvents.class
+                    int i = Values.random.nextInt(SoundEvents.class
                             .getDeclaredFields().length);
                     try {
                         Object j = null;
                         j = SoundEvents.class.getDeclaredFields()[i].get(j);
-                        player.world.playSound((EntityPlayer) null, d0, d1,
+                        player.world.playSound(null, d0, d1,
                                 d2, (SoundEvent) j, SoundCategory.PLAYERS,
                                 1.0F, 1.0F);
                         player.playSound((SoundEvent) j, 1.0F, 1.0F);

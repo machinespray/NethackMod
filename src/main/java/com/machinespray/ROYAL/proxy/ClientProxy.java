@@ -43,20 +43,6 @@ public class ClientProxy extends CommonProxy {
     }
 
     @Override
-    public String getRingUse(ItemRing ring) {
-        if (ring.getID() != -2)
-            return Main.rings[ring.getID()];
-        return null;
-    }
-
-    @Override
-    public String getScrollUse(ItemScroll scroll) {
-        if (scroll.getID() != -2)
-            return Main.scrolls[scroll.getID()];
-        return null;
-    }
-
-    @Override
     public boolean isRemote() {
         return true;
     }

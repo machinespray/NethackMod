@@ -36,24 +36,8 @@ public class CommonProxy implements Constants {
     public void postinit() {
     }
 
-    public String getRingUse(ItemRing ring) {
-        try {
-            return RingAction.getAction(ring.getUnlocalizedName()).getKnowledgeName();
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
     public boolean isRemote() {
         return false;
-    }
-
-    public String getScrollUse(ItemScroll scroll) {
-        try {
-            return ScrollAction.getAction(scroll.getUnlocalizedName()).getKnowledgeName();
-        } catch (Exception e) {
-            return null;
-        }
     }
 
 }

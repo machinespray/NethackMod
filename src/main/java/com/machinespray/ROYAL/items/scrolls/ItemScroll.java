@@ -4,6 +4,7 @@ import com.machinespray.ROYAL.Constants;
 import com.machinespray.ROYAL.Main;
 import com.machinespray.ROYAL.items.NetHackItem;
 import com.machinespray.ROYAL.items.RoyalItems;
+import com.machinespray.ROYAL.items.randomized.IRandomizedClass;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -14,7 +15,7 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class ItemScroll extends NetHackItem implements Constants {
+public class ItemScroll extends NetHackItem implements Constants, IRandomizedClass {
 
     public ItemScroll(String unlocalizedName) {
         super(unlocalizedName);
@@ -24,7 +25,7 @@ public class ItemScroll extends NetHackItem implements Constants {
     public static void initNames() {
         for (String s : scrollNames) {
             s = s.replace(" ", "_");
-            RoyalItems.scrolls.add(new ItemScroll(s));
+            //RoyalItems.scrolls.add(new ItemScroll(s));
 
         }
     }
@@ -44,28 +45,19 @@ public class ItemScroll extends NetHackItem implements Constants {
 
     @Override
     public boolean hasUse() {
-        return Main.proxy.getScrollUse(this) != null;
-    }
-
-    @Override
-    public String getUse() {
-        return Main.proxy.getScrollUse(this);
-    }
-
-    @Override
-    public int getID() {
-        for (int i = 0; i < scrollNames.length; i++) {
-            String temp = getUnlocalizedName().split("\\.")[1].replace("_", " ");
-            if (scrollNames[i].equals(temp))
-                return i;
-        }
-        return super.getID();
-
+    //    return Main.proxy.getScrollUse(this) != null;
+        return false;
     }
 
     @Override
     public String type() {
-        return Type.SCROLL.toString();
+        return null;
+    }
+
+    @Override
+    public String getUse() {
+     //   return Main.proxy.getScrollUse(this);
+        return  null;
     }
 
 }

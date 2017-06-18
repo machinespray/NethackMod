@@ -1,8 +1,8 @@
 package com.machinespray.ROYAL.sync;
 
+import com.machinespray.ROYAL.EnumDataType;
 import com.machinespray.ROYAL.Main;
-import com.machinespray.ROYAL.items.rings.RingAction;
-import com.machinespray.ROYAL.items.scrolls.ScrollAction;
+import com.machinespray.ROYAL.Values;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
@@ -25,18 +25,19 @@ public class KnowledgeRequestHandler implements
                               MessageContext ctx) {
         EntityPlayerMP player = ctx.getServerHandler().playerEntity;
         sendKnowledge(player);
-        for (int i = 0; i < RingAction.values().length; i++) {
+        Object[] actions = Values.ringInstance.getActions();
+        for (int i = 0; i < actions.length; i++) {
             Main.WRAPPER_INSTANCE.sendTo(
-                    new MessageSendKnowledge(RingAction.values()[i].getKnowledgeName(),
-                            RingAction.values()[i].id, EnumDataType.RING),
+                    new MessageSendKnowledge(actions[i].toString(),
+                            Values.ringInstance.getIdFromAction(actions[i].toString()), EnumDataType.RING),
                     player);
         }
-        for (int i = 0; i < ScrollAction.values().length; i++) {
-            Main.WRAPPER_INSTANCE.sendTo(
-                    new MessageSendKnowledge(ScrollAction.values()[i].getKnowledgeName(),
-                            ScrollAction.values()[i].id,
-                            EnumDataType.SCROLL), player);
-        }
+        //for (int i = 0; i < ScrollAction.values().length; i++) {
+        //    Main.WRAPPER_INSTANCE.sendTo(
+        //            new MessageSendKnowledge(ScrollAction.values()[i].getKnowledgeName(),
+        //                    ScrollAction.values()[i].id,
+        //                    EnumDataType.SCROLL), player);
+        //}
         return null;
     }
 }
