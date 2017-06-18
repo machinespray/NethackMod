@@ -14,17 +14,12 @@ import java.util.HashMap;
 import java.util.Random;
 
 public class DefaultRandomizedClass<T> extends NetHackItem implements IRandomizedClass {
+    private static Random random = new Random();
     private String type;
     private Item[] items;
-
-    public T[] getActions() {
-        return actions;
-    }
-
     private T[] actions;
     private HashMap<Item, T> actionMap;
     private DefaultRandomizedClass parent;
-    private static Random random = new Random();
 
     public DefaultRandomizedClass(String name, DefaultRandomizedClass parent) {
         super(name);
@@ -42,6 +37,10 @@ public class DefaultRandomizedClass<T> extends NetHackItem implements IRandomize
         }
         this.actions = actions;
         actionMap = new HashMap<Item, T>();
+    }
+
+    public T[] getActions() {
+        return actions;
     }
 
     public void match(long seed) {
@@ -103,9 +102,9 @@ public class DefaultRandomizedClass<T> extends NetHackItem implements IRandomize
 
     public int getIdFromAction(String action) {
         for (int i = 0; i < items.length; i++)
-            if(actionMap.get(items[i])!=null)
-            if (actionMap.get(items[i]).toString().equals(action))
-                return i;
+            if (actionMap.get(items[i]) != null)
+                if (actionMap.get(items[i]).toString().equals(action))
+                    return i;
         return -1;
     }
 }

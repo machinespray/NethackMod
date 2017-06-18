@@ -23,20 +23,20 @@ public class NetHackItem extends Item implements Constants {
         this.setRegistryName("royal", unlocalizedName);
     }
 
-    private String uppercase(String s) {
-        s = s.toLowerCase();
-        for (int i = 0; i < s.length(); i++)
-            if (s.toCharArray()[i] == ' ') {
-                s = s.substring(0,i+1)+s.toUpperCase().substring(i+1, i + 2) + s.substring(i + 2).toLowerCase();
-        }
-        return s.toUpperCase().substring(0, 1) + s.substring(1);
-    }
-
     public static String id(ItemStack stack) {
         NBTTagCompound nbt = stack.getTagCompound();
         nbt.setBoolean(BUCI, true);
         stack.setTagCompound(nbt);
         return nbt.getString(BUC);
+    }
+
+    private String uppercase(String s) {
+        s = s.toLowerCase();
+        for (int i = 0; i < s.length(); i++)
+            if (s.toCharArray()[i] == ' ') {
+                s = s.substring(0, i + 1) + s.toUpperCase().substring(i + 1, i + 2) + s.substring(i + 2).toLowerCase();
+            }
+        return s.toUpperCase().substring(0, 1) + s.substring(1);
     }
 
     @SideOnly(Side.CLIENT)

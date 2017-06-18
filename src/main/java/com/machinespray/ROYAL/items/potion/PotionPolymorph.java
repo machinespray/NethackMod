@@ -1,6 +1,5 @@
 package com.machinespray.ROYAL.items.potion;
 
-import com.machinespray.ROYAL.Main;
 import com.machinespray.ROYAL.Values;
 import com.machinespray.ROYAL.entity.EntityPotionRoyal;
 import com.machinespray.ROYAL.polymorph.PolyBlockConstants;
@@ -97,6 +96,7 @@ public class PotionPolymorph extends PotionBase {
     public String getUse() {
         return "polymorph";
     }
+
     public boolean hasUse() {
         return true;
     }

@@ -2,7 +2,6 @@ package com.machinespray.ROYAL.items.artifact;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
-import com.machinespray.ROYAL.Main;
 import com.machinespray.ROYAL.Values;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;

@@ -45,7 +45,7 @@ public class ItemScroll extends NetHackItem implements Constants, IRandomizedCla
 
     @Override
     public boolean hasUse() {
-    //    return Main.proxy.getScrollUse(this) != null;
+        //    return Main.proxy.getScrollUse(this) != null;
         return false;
     }
 
@@ -56,8 +56,8 @@ public class ItemScroll extends NetHackItem implements Constants, IRandomizedCla
 
     @Override
     public String getUse() {
-     //   return Main.proxy.getScrollUse(this);
-        return  null;
+        //   return Main.proxy.getScrollUse(this);
+        return null;
     }
 
 }
