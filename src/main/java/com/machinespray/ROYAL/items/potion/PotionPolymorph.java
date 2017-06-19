@@ -1,11 +1,16 @@
 package com.machinespray.ROYAL.items.potion;
 
+import com.machinespray.ROYAL.Main;
 import com.machinespray.ROYAL.Values;
 import com.machinespray.ROYAL.entity.EntityPotionRoyal;
 import com.machinespray.ROYAL.polymorph.PolyBlockConstants;
 import com.machinespray.ROYAL.polymorph.PolyEntityConstants;
+import com.machinespray.ROYAL.polymorph.PolyPlayerData;
+import com.machinespray.ROYAL.render.RenderGUIEvent;
+import com.machinespray.ROYAL.sync.MessageSendPolyStatus;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
@@ -26,7 +31,15 @@ public class PotionPolymorph extends PotionBase {
 
     @Override
     void doDrinkAction(ItemStack stack, World worldIn, EntityLivingBase entityLiving) {
-
+        if (entityLiving instanceof EntityPlayer) {
+            if (worldIn.isRemote) {
+                RenderGUIEvent.buffer.add("You feel dead inside!");
+            } else {
+                Main.WRAPPER_INSTANCE.sendToAll(new MessageSendPolyStatus((EntityPlayer) entityLiving, 1));
+                if (!PolyPlayerData.zombies.contains(entityLiving.getUniqueID().toString()))
+                    PolyPlayerData.zombies.add(entityLiving.getUniqueID().toString());
+            }
+        }
     }
 
     @Override
