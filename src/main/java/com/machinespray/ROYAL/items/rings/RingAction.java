@@ -3,10 +3,9 @@ package com.machinespray.ROYAL.items.rings;
 import com.machinespray.ROYAL.Constants;
 import com.machinespray.ROYAL.Main;
 import com.machinespray.ROYAL.Values;
-import com.machinespray.ROYAL.polymorph.RenderPlayerEvent;
+import com.machinespray.ROYAL.polymorph.PolyEvents;
 import com.machinespray.ROYAL.render.RenderGUIEvent;
 import com.machinespray.ROYAL.sync.knowledge.IKnowledgeHandler;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -21,6 +20,8 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
 
 import java.util.List;
+
+import static com.machinespray.ROYAL.Values.toOutline;
 
 public enum RingAction implements Constants {
     AGGRAVATE_MONSTER, CONFLICT, LEVITATION, SEE_INVISIBLE, TELEPORTATION, HUNGER, PROTECTION, REGENERATION, FIRE_RESISTANCE, STRENGTH, PARANOIA;
@@ -94,7 +95,7 @@ public enum RingAction implements Constants {
             for (EntityLiving e : list) {
                 if(Main.proxy.isRemote())
                     if(e.getActivePotionEffect(Potion.getPotionById(14)) != null)
-                    RenderPlayerEvent.toOutline.add(e);
+                    toOutline.add(e);
             }
         } else if (this.equals(TELEPORTATION)) {
             if (Values.random.nextInt(200) > 198)

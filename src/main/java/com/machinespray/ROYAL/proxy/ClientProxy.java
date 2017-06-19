@@ -5,8 +5,10 @@ import com.machinespray.ROYAL.blocks.RoyalBlocks;
 import com.machinespray.ROYAL.entity.EntityPotionRoyal;
 import com.machinespray.ROYAL.entity.RenderPotionFactory;
 import com.machinespray.ROYAL.items.RoyalItems;
-import com.machinespray.ROYAL.polymorph.RenderPlayerEvent;
+import com.machinespray.ROYAL.polymorph.PolyEvents;
 import com.machinespray.ROYAL.render.RenderGUIEvent;
+import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
@@ -34,8 +36,7 @@ public class ClientProxy extends CommonProxy {
     public void init() {
         super.init();
         MinecraftForge.EVENT_BUS.register(new RenderGUIEvent());
-        RenderPlayerEvent.init();
-        MinecraftForge.EVENT_BUS.register(new RenderPlayerEvent());
+        PolyEvents.init();
     }
 
     @Override
@@ -46,6 +47,10 @@ public class ClientProxy extends CommonProxy {
     @Override
     public boolean isRemote() {
         return true;
+    }
+    @Override
+    public EntityPlayer getPlayer(){
+        return Minecraft.getMinecraft().player;
     }
 
 }

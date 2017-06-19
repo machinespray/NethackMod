@@ -4,10 +4,13 @@ import com.machinespray.ROYAL.Constants;
 import com.machinespray.ROYAL.Main;
 import com.machinespray.ROYAL.blocks.RoyalBlocks;
 import com.machinespray.ROYAL.items.RoyalItems;
+import com.machinespray.ROYAL.polymorph.PolyEvents;
 import com.machinespray.ROYAL.sync.*;
 import com.machinespray.ROYAL.sync.knowledge.DefaultKnowledgeHandler;
 import com.machinespray.ROYAL.sync.knowledge.IKnowledgeHandler;
 import com.machinespray.ROYAL.sync.knowledge.Storage;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.fml.relauncher.Side;
 
@@ -25,6 +28,8 @@ public class CommonProxy implements Constants {
         Main.WRAPPER_INSTANCE.registerMessage(KnowledgeMessageHandler.class, MessageSendKnowledge.class, 0, Side.CLIENT);
         Main.WRAPPER_INSTANCE.registerMessage(KnowledgeRequestHandler.class, MessageRequestKnowledge.class, 1, Side.SERVER);
         Main.WRAPPER_INSTANCE.registerMessage(PolyStatusHandler.class, MessageSendPolyStatus.class, 2, Side.CLIENT);
+        MinecraftForge.EVENT_BUS.register(new PolyEvents());
+
     }
 
     public void postinit() {
@@ -34,4 +39,7 @@ public class CommonProxy implements Constants {
         return false;
     }
 
+    public EntityPlayer getPlayer() {
+        return null;
+    }
 }

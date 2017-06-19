@@ -1,6 +1,7 @@
 package com.machinespray.ROYAL;
 
 import com.machinespray.ROYAL.items.NetHackItem;
+import com.machinespray.ROYAL.polymorph.PolyPlayerData;
 import com.machinespray.ROYAL.sync.KnowledgeRequestHandler;
 import com.machinespray.ROYAL.sync.MessageRequestKnowledge;
 import com.machinespray.ROYAL.sync.knowledge.IKnowledgeHandler;
@@ -12,8 +13,6 @@ import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
@@ -23,6 +22,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import static com.machinespray.ROYAL.Values.toOutline;
 import static com.machinespray.ROYAL.render.RenderGUIEvent.buffer;
 
 
@@ -30,6 +30,7 @@ public class Events implements Constants {
     //Randomize on World Load
     @SubscribeEvent
     public void onLoad(WorldEvent.Load e) {
+        PolyPlayerData.zombies.clear();
         if (!e.getWorld().isRemote) {
             Values.ringInstance.match(e.getWorld().getSeed());
             Values.scrollInstance.match(e.getWorld().getSeed());
@@ -61,20 +62,14 @@ public class Events implements Constants {
         if (e.getTarget() instanceof EntityTameable) {
             if (e.getEntityPlayer().getHeldItemMainhand() != null)
                 if (e.getEntityPlayer().getHeldItemMainhand().getItem() instanceof NetHackItem) {
-                    EntityTameable target = (EntityTameable) e.getTarget();
                     String BUC = (NetHackItem.id(e.getEntityPlayer()
                             .getHeldItemMainhand()));
-                    if (BUC.equals(CURSED))
-                        e.getEntityPlayer()
-                                .sendMessage(
-                                        new TextComponentString(
-                                                TextFormatting.RED.toString()
-                                                        + "The animal's eyes grow wide with fear."));
-                    if (BUC.equals(UNCURSED) || BUC.equals(BLESSED))
-                        e.getEntityPlayer().sendMessage(
-                                new TextComponentString(TextFormatting.AQUA
-                                        .toString()
-                                        + "The animal doesn't react."));
+                    if (e.getWorld().isRemote) {
+                        if (BUC.equals(CURSED))
+                            buffer.add("The animal's eyes grow wide with fear.");
+                        if (BUC.equals(UNCURSED) || BUC.equals(BLESSED))
+                            buffer.add("The animal doesn't react.");
+                    }
                 }
         }
     }
@@ -143,6 +138,18 @@ public class Events implements Constants {
     @SubscribeEvent
     public void respawn(net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerRespawnEvent e) {
         KnowledgeRequestHandler.sendKnowledge((EntityPlayerMP) e.player);
+    }
+
+    @SideOnly(Side.CLIENT)
+    @SubscribeEvent
+    public void onRender(net.minecraftforge.client.event.RenderLivingEvent.Pre e) {
+        //Ring of See Invisible
+        if (toOutline.contains(e.getEntity())) {
+            e.getRenderer().setRenderOutlines(true);
+            toOutline.remove(e.getEntity());
+        } else {
+            e.getRenderer().setRenderOutlines(false);
+        }
     }
 
     @SubscribeEvent

@@ -15,6 +15,8 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.util.ArrayList;
 
+import static net.minecraftforge.client.GuiIngameForge.left_height;
+
 public class RenderGUIEvent extends Gui {
     public static ArrayList<String> buffer = new ArrayList<String>();
     int time = 0;
@@ -91,4 +93,32 @@ public class RenderGUIEvent extends Gui {
             }
         }
     }
+
+    @SubscribeEvent
+    public void renderArmor(RenderGameOverlayEvent.Pre event) {
+        if (event.getType() == RenderGameOverlayEvent.ElementType.ARMOR) {
+            event.setCanceled(true);
+            Minecraft mc = Minecraft.getMinecraft();
+            mc.mcProfiler.startSection("armor");
+            GlStateManager.enableBlend();
+            int left = event.getResolution().getScaledWidth() / 2 - 91;
+            int top = event.getResolution().getScaledHeight() - left_height;
+
+            int level = mc.player.getTotalArmorValue();
+            for (int i = 1; level > 0 && i < 20; i += 2) {
+                if (i < level) {
+                    drawTexturedModalRect(left, top, 34, 9, 9, 9);
+                } else if (i == level) {
+                    drawTexturedModalRect(left, top, 25, 9, 9, 9);
+                } else if (i > level) {
+                    drawTexturedModalRect(left, top, 16, 9, 9, 9);
+                }
+                left += 8;
+            }
+            left_height += 10;
+            GlStateManager.disableBlend();
+            mc.mcProfiler.endSection();
+        }
+    }
+
 }
