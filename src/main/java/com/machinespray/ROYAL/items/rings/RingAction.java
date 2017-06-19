@@ -93,6 +93,7 @@ public enum RingAction implements Constants {
                             player.posZ + 5));
             for (EntityLiving e : list) {
                 if(Main.proxy.isRemote())
+                    if(e.getActivePotionEffect(Potion.getPotionById(14)) != null)
                     RenderPlayerEvent.toOutline.add(e);
             }
         } else if (this.equals(TELEPORTATION)) {
