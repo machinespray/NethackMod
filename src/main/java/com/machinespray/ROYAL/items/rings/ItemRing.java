@@ -43,7 +43,6 @@ public class ItemRing extends DefaultRandomizedClass implements IBauble, IRandom
     //Do randomized action
     @Override
     public void onWornTick(ItemStack itemstack, EntityLivingBase player) {
-        if (!player.world.isRemote)
             if (getUse() != null)
                 ((RingAction) getActualUse()).onWornTick(itemstack,
                         player);

@@ -1,12 +1,12 @@
 package com.machinespray.ROYAL.items.scrolls;
 
-import com.machinespray.ROYAL.Constants;
 import com.machinespray.ROYAL.Main;
-import com.machinespray.ROYAL.items.NetHackItem;
 import com.machinespray.ROYAL.items.RoyalItems;
-import com.machinespray.ROYAL.items.randomized.IRandomizedClass;
+import com.machinespray.ROYAL.items.randomized.DefaultRandomizedClass;
+import com.machinespray.ROYAL.items.randomized.RandomObjectFactory;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumHand;
@@ -15,49 +15,44 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class ItemScroll extends NetHackItem implements Constants, IRandomizedClass {
+public class ItemScroll extends DefaultRandomizedClass {
 
-    public ItemScroll(String unlocalizedName) {
-        super(unlocalizedName);
+    public ItemScroll() {
+        super("SCROLL", scrollNames, ScrollAction.values(), new RandomObjectFactory() {
+            @Override
+            public DefaultRandomizedClass create(String s, DefaultRandomizedClass parent) {
+                return new ItemScroll(s, parent);
+            }
+        });
         this.setCreativeTab(Main.royalTab);
     }
 
-    public static void initNames() {
-        for (String s : scrollNames) {
-            s = s.replace(" ", "_");
-            //RoyalItems.scrolls.add(new ItemScroll(s));
-
-        }
+    public ItemScroll(String name, DefaultRandomizedClass parent) {
+        super(name, parent);
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public void registerClient() {
-        ModelLoader.setCustomModelResourceLocation(this, 0, new ModelResourceLocation(RoyalItems.base.getRegistryName(), "inventory"));
+    public String[] initNames(String[] names) {
+        String[] newNames = new String[names.length];
+        for (int i = 0; i < newNames.length; i++) {
+            newNames[i] = names[i].replace(" ", "_");
+        }
+        return newNames;
     }
+
 
     @Override
     public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn) {
-        if (ScrollAction.getAction(getUnlocalizedName()) != null)
-            ScrollAction.getAction(getUnlocalizedName()).onItemRightClick(worldIn, playerIn, handIn);
+        if (hasUse() && playerIn.isSneaking())
+            ((ScrollAction) getActualUse()).onItemRightClick(worldIn, playerIn, handIn);
         return super.onItemRightClick(worldIn, playerIn, handIn);
     }
 
+    @SideOnly(Side.CLIENT)
     @Override
-    public boolean hasUse() {
-        //    return Main.proxy.getScrollUse(this) != null;
-        return false;
-    }
-
-    @Override
-    public String type() {
-        return null;
-    }
-
-    @Override
-    public String getUse() {
-        //   return Main.proxy.getScrollUse(this);
-        return null;
+    public void registerClient() {
+        for (Item i : items)
+            ModelLoader.setCustomModelResourceLocation(i, 0, new ModelResourceLocation(RoyalItems.base.getRegistryName(), "inventory"));
     }
 
 }

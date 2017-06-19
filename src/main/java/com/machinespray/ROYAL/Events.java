@@ -1,7 +1,6 @@
 package com.machinespray.ROYAL;
 
 import com.machinespray.ROYAL.items.NetHackItem;
-import com.machinespray.ROYAL.items.scrolls.ScrollAction;
 import com.machinespray.ROYAL.sync.KnowledgeRequestHandler;
 import com.machinespray.ROYAL.sync.MessageRequestKnowledge;
 import com.machinespray.ROYAL.sync.knowledge.IKnowledgeHandler;
@@ -24,44 +23,41 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import static com.machinespray.ROYAL.render.RenderGUIEvent.buffer;
+
 
 public class Events implements Constants {
+    //Randomize on World Load
     @SubscribeEvent
     public void onLoad(WorldEvent.Load e) {
         if (!e.getWorld().isRemote) {
             Values.ringInstance.match(e.getWorld().getSeed());
-            ScrollAction.match(e.getWorld().getSeed());
+            Values.scrollInstance.match(e.getWorld().getSeed());
         }
     }
 
+    //Handle Priest/Wolf Identification
     @SubscribeEvent
     public void onEntityInteract(EntityInteract e) {
         if (e.getTarget() instanceof EntityVillager
-                && e.getEntityPlayer().getHeldItemMainhand().getItem() instanceof NetHackItem
-                && !e.getWorld().isRemote)
+                && e.getEntityPlayer().getHeldItemMainhand().getItem() instanceof NetHackItem) {
+            e.setCanceled(true);
             if (((EntityVillager) e.getTarget()).getProfession() == 2) {
                 if (!e.getEntityPlayer().getHeldItemMainhand().getTagCompound()
                         .getBoolean(BUCI)) {
                     String BUC = NetHackItem.id(e.getEntityPlayer()
                             .getHeldItemMainhand());
-                    if (BUC.equals(CURSED))
-                        e.getEntityPlayer().sendMessage(
-                                new TextComponentString(TextFormatting.RED
-                                        .toString()
-                                        + "The priest seems disturbed"));
-                    if (BUC.equals(UNCURSED))
-                        e.getEntityPlayer().sendMessage(
-                                new TextComponentString(TextFormatting.AQUA
-                                        .toString()
-                                        + "The priest seems unimpressed."));
-                    if (BUC.equals(BLESSED))
-                        e.getEntityPlayer().sendMessage(
-                                new TextComponentString(TextFormatting.GREEN
-                                        .toString()
-                                        + "The priest seems in awe."));
-                    e.setCanceled(true);
+                    if (e.getSide().equals(Side.CLIENT)) {
+                        if (BUC.equals(CURSED))
+                            buffer.add("The priest seems disturbed");
+                        if (BUC.equals(UNCURSED))
+                            buffer.add("The priest seems unimpressed");
+                        if (BUC.equals(BLESSED))
+                            buffer.add("The priest seems to be in awe");
+                    }
                 }
             }
+        }
         if (e.getTarget() instanceof EntityTameable) {
             if (e.getEntityPlayer().getHeldItemMainhand() != null)
                 if (e.getEntityPlayer().getHeldItemMainhand().getItem() instanceof NetHackItem) {
@@ -127,16 +123,6 @@ public class Events implements Constants {
                 }
     }*/
 
-
-    /*@SideOnly(Side.CLIENT)
-    @SubscribeEvent
-    public void onRender(RenderPlayerEvent.Pre e) {
-        e.getEntity().setInvisible(true);
-        LayerTexture layer = new
-                LayerTexture(e.getRenderer(), new ModelSilverfish(), new
-                ResourceLocation("textures/entity/silverfish.png"));
-        e.getRenderer().addLayer(layer);
-    }*/
 
     @SubscribeEvent
     public void attachCapabilities(AttachCapabilitiesEvent<Entity> event) {

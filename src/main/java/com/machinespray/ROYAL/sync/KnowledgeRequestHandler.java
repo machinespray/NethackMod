@@ -32,12 +32,13 @@ public class KnowledgeRequestHandler implements
                             Values.ringInstance.getIdFromAction(actions[i].toString()), EnumDataType.RING),
                     player);
         }
-        //for (int i = 0; i < ScrollAction.values().length; i++) {
-        //    Main.WRAPPER_INSTANCE.sendTo(
-        //            new MessageSendKnowledge(ScrollAction.values()[i].getKnowledgeName(),
-        //                    ScrollAction.values()[i].id,
-        //                    EnumDataType.SCROLL), player);
-        //}
+        actions = Values.scrollInstance.getActions();
+        for (int i = 0; i < actions.length; i++) {
+            Main.WRAPPER_INSTANCE.sendTo(
+                    new MessageSendKnowledge(actions[i].toString(),
+                            Values.scrollInstance.getIdFromAction(actions[i].toString()), EnumDataType.RING),
+                    player);
+        }
         return null;
     }
 }

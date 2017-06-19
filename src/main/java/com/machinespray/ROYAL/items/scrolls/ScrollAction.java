@@ -5,6 +5,7 @@ import com.machinespray.ROYAL.Main;
 import com.machinespray.ROYAL.Values;
 import com.machinespray.ROYAL.items.NetHackItem;
 import com.machinespray.ROYAL.items.randomized.IRandomizedClass;
+import com.machinespray.ROYAL.render.RenderGUIEvent;
 import com.machinespray.ROYAL.sync.knowledge.IKnowledgeHandler;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.Entity;
@@ -32,36 +33,6 @@ public enum ScrollAction implements Constants {
     private static ArrayList<Integer> ids = new ArrayList<Integer>();
     public int id;
 
-    public static void match(long seed) {
-        ids.clear();
-        random.setSeed(seed);
-        for (int i = 0; i < values().length; i++) {
-            ScrollAction I = values()[i];
-            int id = random.nextInt(Constants.scrollNames.length);
-            while (ids.contains(id)) {
-                id = random.nextInt(Constants.scrollNames.length);
-            }
-            I.id = id;
-            ids.add(id);
-        }
-    }
-
-    public static ScrollAction getAction(String name) {
-        int id = -1;
-        name = name.split("\\.")[1].replace("_", " ");
-        for (int i = 0; i < scrollNames.length; i++) {
-            if (scrollNames[i].equals(name))
-                id = i;
-        }
-        for (int i = 0; i < values().length; i++) {
-            ScrollAction I = values()[i];
-            if (id == I.id) {
-                return I;
-            }
-        }
-        return null;
-    }
-
     public String getKnowledgeName() {
         return this.name().replace("_", " ").toLowerCase();
     }
@@ -70,8 +41,8 @@ public enum ScrollAction implements Constants {
         IKnowledgeHandler knowledge = Main.getHandler(player);
         if (!knowledge.hasKnowledge(getKnowledgeName())) {
             if (!player.world.isRemote)
-                player.sendMessage(new TextComponentString(
-                        "You discover this is a scroll of " + getKnowledgeName() + "!"));
+                RenderGUIEvent.buffer.add(
+                        "You discover this is a scroll of\n" + getKnowledgeName() + "!");
             knowledge.addKnowledge(getKnowledgeName());
         }
     }
@@ -91,10 +62,10 @@ public enum ScrollAction implements Constants {
                 if (rc.hasUse())
                     if (!knowledge.hasKnowledge(rc.getUse())) {
                         if (!worldIn.isRemote)
-                            playerIn.sendMessage(new TextComponentString(
+                            RenderGUIEvent.buffer.add(
                                     "You discover the item\nin your offhand is a\n"
                                             + rc.type() + " of "
-                                            + rc.getUse() + "!"));
+                                            + rc.getUse() + "!");
                         knowledge.addKnowledge(rc.getUse());
                     }
                 NBTTagCompound nbt = playerIn.getHeldItemOffhand()

@@ -35,6 +35,7 @@ public class RoyalItems implements Constants {
     public static void registerItems() {
         //for (ItemScroll i : scrolls)
         //   i.register();
+        Values.scrollInstance.register();
         Values.ringInstance.register();
         //for (ItemRing i : rings)
         //    i.register();
@@ -50,6 +51,7 @@ public class RoyalItems implements Constants {
 
     @SideOnly(Side.CLIENT)
     public static void registerClient() {
+        Values.scrollInstance.registerClient();
         Values.ringInstance.registerClient();
         // for (ItemScroll i : scrolls)
         //    i.registerClient();

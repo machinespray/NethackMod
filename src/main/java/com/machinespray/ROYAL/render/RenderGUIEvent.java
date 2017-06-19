@@ -85,6 +85,7 @@ public class RenderGUIEvent extends Gui {
                         GlStateManager.popMatrix();
                     } else {
                         buffer.remove(0);
+                        time = 0;
                     }
                 }
             }

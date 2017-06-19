@@ -16,7 +16,7 @@ import java.util.Random;
 public class DefaultRandomizedClass<T> extends NetHackItem implements IRandomizedClass {
     private static Random random = new Random();
     private String type;
-    private Item[] items;
+    protected Item[] items;
     private T[] actions;
     private HashMap<Item, T> actionMap;
     private DefaultRandomizedClass parent;
