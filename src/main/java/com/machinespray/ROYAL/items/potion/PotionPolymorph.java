@@ -35,9 +35,8 @@ public class PotionPolymorph extends PotionBase {
             if (worldIn.isRemote) {
                 RenderGUIEvent.buffer.add("You feel dead inside!");
             } else {
-                Main.WRAPPER_INSTANCE.sendToAll(new MessageSendPolyStatus((EntityPlayer) entityLiving, 1));
-                if (!PolyPlayerData.zombies.contains(entityLiving.getUniqueID().toString()))
-                    PolyPlayerData.zombies.add(entityLiving.getUniqueID().toString());
+                Main.WRAPPER_INSTANCE.sendToAll(new MessageSendPolyStatus((EntityPlayer) entityLiving, PolyPlayerData.WRAITH));
+                PolyPlayerData.setPoly((EntityPlayer) entityLiving,PolyPlayerData.WRAITH);
             }
         }
     }

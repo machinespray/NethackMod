@@ -11,6 +11,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
+import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.SidedProxy;
@@ -48,6 +49,8 @@ public class Main {
     @EventHandler
     public void preinit(FMLPreInitializationEvent event) {
         proxy.preinit();
+        ConfigHandler.config = new Configuration(event.getSuggestedConfigurationFile());
+        ConfigHandler.init();
     }
 
     @EventHandler

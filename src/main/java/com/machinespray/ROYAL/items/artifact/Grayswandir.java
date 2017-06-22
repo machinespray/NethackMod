@@ -1,6 +1,7 @@
 package com.machinespray.ROYAL.items.artifact;
 
 import net.minecraft.enchantment.Enchantment;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -40,6 +41,16 @@ public class Grayswandir extends ArtifactBase {
     public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
         super.addInformation(stack, playerIn, tooltip, advanced);
         tooltip.add(TextFormatting.DARK_PURPLE.toString() + "Double Damage to Undead");
+    }
+
+    @Override
+    protected boolean isIntelligent() {
+        return true;
+    }
+
+    @Override
+    protected boolean shouldBlast(Entity p) {
+        return true;
     }
 
 }

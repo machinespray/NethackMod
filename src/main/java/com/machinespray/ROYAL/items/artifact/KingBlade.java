@@ -42,6 +42,7 @@ public class KingBlade extends ArtifactBase {
 
 
     public void onUpdate(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
+        super.onUpdate(stack,worldIn,entityIn,itemSlot,isSelected);
         if (entityIn instanceof EntityPlayer) {
             EntityPlayer player = (EntityPlayer) entityIn;
             if (player.hurtResistantTime == 1 && !worldIn.isRemote)

@@ -6,12 +6,20 @@ import com.machinespray.ROYAL.items.NetHackItem;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
+import net.minecraft.entity.effect.EntityLightningBolt;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionEffect;
+import net.minecraft.potion.PotionType;
+import net.minecraft.util.DamageSource;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -29,6 +37,34 @@ public abstract class ArtifactBase extends NetHackItem {
         this.setNoRepair();
         this.setMaxDamage(2343);
         artifacts.add(this);
+    }
+
+    @Override
+    public void onUpdate(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
+        if (!worldIn.isRemote)
+            if (isIntelligent())
+                if (shouldBlast(entityIn)) {
+                    EntityLightningBolt lb = new EntityLightningBolt(worldIn, entityIn.posX, entityIn.posY, entityIn.posZ, true);
+                    worldIn.addWeatherEffect(lb);
+                    EntityItem artifact = new EntityItem(worldIn);
+                    artifact.setPosition(entityIn.posX,entityIn.posY,entityIn.posZ);
+                    artifact.setPickupDelay(60);
+                    artifact.setEntityItemStack(stack.splitStack(1));
+                    worldIn.spawnEntity(artifact);
+                    if(entityIn instanceof EntityLivingBase){
+                        EntityLivingBase entityLivingBase = (EntityLivingBase) entityIn;
+                        entityLivingBase.attackEntityFrom(DamageSource.MAGIC,6.0F);
+                        entityLivingBase.addPotionEffect(new PotionEffect(Potion.getPotionById(15),20));
+                    }
+                }
+    }
+
+    protected boolean isIntelligent() {
+        return false;
+    }
+
+    protected boolean shouldBlast(Entity p) {
+        return false;
     }
 
     public static AttributeModifier getNewAttackModifier(double damage) {

@@ -5,6 +5,7 @@ import com.machinespray.ROYAL.Main;
 import com.machinespray.ROYAL.blocks.RoyalBlocks;
 import com.machinespray.ROYAL.items.RoyalItems;
 import com.machinespray.ROYAL.polymorph.PolyEvents;
+import com.machinespray.ROYAL.polymorph.PolyPlayerData;
 import com.machinespray.ROYAL.sync.*;
 import com.machinespray.ROYAL.sync.knowledge.DefaultKnowledgeHandler;
 import com.machinespray.ROYAL.sync.knowledge.IKnowledgeHandler;
@@ -29,6 +30,9 @@ public class CommonProxy implements Constants {
         Main.WRAPPER_INSTANCE.registerMessage(KnowledgeRequestHandler.class, MessageRequestKnowledge.class, 1, Side.SERVER);
         Main.WRAPPER_INSTANCE.registerMessage(PolyStatusHandler.class, MessageSendPolyStatus.class, 2, Side.CLIENT);
         MinecraftForge.EVENT_BUS.register(new PolyEvents());
+        if(!isRemote())
+        PolyPlayerData.init();
+
 
     }
 

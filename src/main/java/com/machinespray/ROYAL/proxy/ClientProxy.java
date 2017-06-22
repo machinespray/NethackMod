@@ -6,6 +6,7 @@ import com.machinespray.ROYAL.entity.EntityPotionRoyal;
 import com.machinespray.ROYAL.entity.RenderPotionFactory;
 import com.machinespray.ROYAL.items.RoyalItems;
 import com.machinespray.ROYAL.polymorph.PolyEvents;
+import com.machinespray.ROYAL.polymorph.PolyPlayerData;
 import com.machinespray.ROYAL.render.RenderGUIEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
@@ -36,20 +37,22 @@ public class ClientProxy extends CommonProxy {
     public void init() {
         super.init();
         MinecraftForge.EVENT_BUS.register(new RenderGUIEvent());
-        PolyEvents.init();
+        PolyPlayerData.initClient();
     }
 
     @Override
     public void postinit() {
         super.postinit();
+        PolyEvents.init();
     }
 
     @Override
     public boolean isRemote() {
         return true;
     }
+
     @Override
-    public EntityPlayer getPlayer(){
+    public EntityPlayer getPlayer() {
         return Minecraft.getMinecraft().player;
     }
 

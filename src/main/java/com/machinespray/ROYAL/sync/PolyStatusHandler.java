@@ -10,10 +10,7 @@ public class PolyStatusHandler implements
 
     @Override
     public IMessage onMessage(MessageSendPolyStatus message, MessageContext ctx) {
-        if (message.getType() == 1) {
-            if(!PolyPlayerData.zombies.contains(message.getUuid()))
-            PolyPlayerData.zombies.add(message.getUuid());
-        }
+        PolyPlayerData.setPoly(message.getUuid(), message.getType());
         return null;
     }
 }

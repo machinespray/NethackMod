@@ -30,7 +30,7 @@ public class Events implements Constants {
     //Randomize on World Load
     @SubscribeEvent
     public void onLoad(WorldEvent.Load e) {
-        PolyPlayerData.zombies.clear();
+        PolyPlayerData.clear();
         if (!e.getWorld().isRemote) {
             Values.ringInstance.match(e.getWorld().getSeed());
             Values.scrollInstance.match(e.getWorld().getSeed());
