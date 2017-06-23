@@ -3,30 +3,40 @@ package com.machinespray.ROYAL.polymorph;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelPlayer;
+import net.minecraft.client.model.ModelSilverfish;
 import net.minecraft.client.renderer.entity.RenderLivingBase;
 import net.minecraft.client.renderer.entity.RenderPlayer;
+import net.minecraft.client.renderer.entity.RenderSilverfish;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.lang.ref.WeakReference;
 import java.util.HashMap;
 
 public class PolyPlayerData {
-    public static HashMap<String, Integer> polymorphs = new HashMap<String, Integer>();
+    public static HashMap<String, Integer> polymorphs = new HashMap<>();
     @SideOnly(Side.CLIENT)
-    private static HashMap<Integer, ModelBase> polyModel = new HashMap<Integer, ModelBase>();
+    private static HashMap<Integer, ModelBase> polyModel = new HashMap<>();
     @SideOnly(Side.CLIENT)
-    private static HashMap<Integer, ResourceLocation> polyTexture = new HashMap<Integer, ResourceLocation>();
+    private static HashMap<Integer, ResourceLocation> polyTexture = new HashMap<>();
     @SideOnly(Side.CLIENT)
-    private static HashMap<Integer, RenderLivingBase> polyRenderer = new HashMap<Integer, RenderLivingBase>();
+    private static HashMap<Integer, RenderLivingBase> polyRenderer = new HashMap<>();
+    private static HashMap<Integer, Float> polySize = new HashMap<>();
+    private static RenderPlayer defaultRender = new RenderPlayer(Minecraft.getMinecraft().getRenderManager());
+    private static ModelPlayer defaultModel = new ModelPlayer(0.0F, false);
     private static int id = 1;
     public static int NONE = 0;
     public static int ZOMBIE;
     public static int WRAITH;
+    public static int SILVERFISH;
 
     public static int registerPoly() {
+        return id++;
+    }
+
+    public static int registerPolyUnique(float size) {
+        polySize.put(id, size);
         return id++;
     }
 
@@ -39,18 +49,26 @@ public class PolyPlayerData {
     }
 
     @SideOnly(Side.CLIENT)
+    public static int registerPolyUnique(ModelBase model, ResourceLocation texture, RenderLivingBase renderer, float size) {
+        polyModel.put(id, model);
+        polyTexture.put(id, texture);
+        polyRenderer.put(id, renderer);
+        return registerPolyUnique(size);
+    }
+
+    @SideOnly(Side.CLIENT)
     public static void initClient() {
-        ZOMBIE = registerPoly(new ModelPlayer(0.0F, false), new
-                ResourceLocation("royal", "textures/polymorph/zombie.png"), new RenderPlayer(Minecraft.getMinecraft().getRenderManager())
-        );
-        WRAITH = registerPoly(new ModelPlayer(0.0F, false), new
-                ResourceLocation("royal", "textures/polymorph/wraith.png"), new RenderPlayer(Minecraft.getMinecraft().getRenderManager())
-        );
+        ZOMBIE = registerPoly(defaultModel, new
+                ResourceLocation("royal", "textures/polymorph/zombie.png"), defaultRender);
+        WRAITH = registerPoly(defaultModel, new
+                ResourceLocation("royal", "textures/polymorph/wraith.png"), defaultRender);
+        SILVERFISH = registerPolyUnique(new ModelSilverfish(), new ResourceLocation("textures/entity/silverfish.png"), new RenderSilverfish(Minecraft.getMinecraft().getRenderManager()), 0.6F);
     }
 
     public static void init() {
         ZOMBIE = registerPoly();
         WRAITH = registerPoly();
+        SILVERFISH = registerPolyUnique(0.6F);
     }
 
     public static int getPoly(EntityPlayer player) {
@@ -75,6 +93,10 @@ public class PolyPlayerData {
     @SideOnly(Side.CLIENT)
     public static RenderLivingBase getPolyRenderer(EntityPlayer player) {
         return polyRenderer.get(getPoly(player));
+    }
+
+    public static float getPolySize(EntityPlayer player) {
+        return polySize.get(getPoly(player));
     }
 
     public static void setPoly(EntityPlayer p, int i) {

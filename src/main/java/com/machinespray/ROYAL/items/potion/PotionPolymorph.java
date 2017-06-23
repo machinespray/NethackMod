@@ -8,7 +8,9 @@ import com.machinespray.ROYAL.polymorph.PolyEntityConstants;
 import com.machinespray.ROYAL.polymorph.PolyPlayerData;
 import com.machinespray.ROYAL.render.RenderGUIEvent;
 import com.machinespray.ROYAL.sync.MessageSendPolyStatus;
+import javafx.scene.chart.Axis;
 import net.minecraft.block.Block;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -19,6 +21,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
 import java.util.List;
 
@@ -32,11 +35,12 @@ public class PotionPolymorph extends PotionBase {
     @Override
     void doDrinkAction(ItemStack stack, World worldIn, EntityLivingBase entityLiving) {
         if (entityLiving instanceof EntityPlayer) {
+            EntityPlayer player = (EntityPlayer) entityLiving;
             if (worldIn.isRemote) {
                 RenderGUIEvent.buffer.add("You feel dead inside!");
             } else {
-                Main.WRAPPER_INSTANCE.sendToAll(new MessageSendPolyStatus((EntityPlayer) entityLiving, PolyPlayerData.WRAITH));
-                PolyPlayerData.setPoly((EntityPlayer) entityLiving,PolyPlayerData.WRAITH);
+                Main.WRAPPER_INSTANCE.sendToAll(new MessageSendPolyStatus((EntityPlayer) entityLiving, PolyPlayerData.SILVERFISH));
+                PolyPlayerData.setPoly((EntityPlayer) entityLiving,PolyPlayerData.SILVERFISH);
             }
         }
     }
