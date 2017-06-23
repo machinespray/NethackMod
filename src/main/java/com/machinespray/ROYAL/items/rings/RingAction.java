@@ -3,7 +3,6 @@ package com.machinespray.ROYAL.items.rings;
 import com.machinespray.ROYAL.Constants;
 import com.machinespray.ROYAL.Main;
 import com.machinespray.ROYAL.Values;
-import com.machinespray.ROYAL.polymorph.PolyEvents;
 import com.machinespray.ROYAL.render.RenderGUIEvent;
 import com.machinespray.ROYAL.sync.knowledge.IKnowledgeHandler;
 import net.minecraft.entity.Entity;
@@ -93,9 +92,9 @@ public enum RingAction implements Constants {
                             player.posX + 5, player.posY + 5,
                             player.posZ + 5));
             for (EntityLiving e : list) {
-                if(Main.proxy.isRemote())
-                    if(e.getActivePotionEffect(Potion.getPotionById(14)) != null)
-                    toOutline.add(e);
+                if (Main.proxy.isRemote())
+                    if (e.getActivePotionEffect(Potion.getPotionById(14)) != null)
+                        toOutline.add(e);
             }
         } else if (this.equals(TELEPORTATION)) {
             if (Values.random.nextInt(200) > 198)

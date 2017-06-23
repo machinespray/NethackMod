@@ -5,7 +5,6 @@ import com.machinespray.ROYAL.proxy.CommonProxy;
 import com.machinespray.ROYAL.sync.knowledge.IKnowledgeHandler;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.MinecraftForge;

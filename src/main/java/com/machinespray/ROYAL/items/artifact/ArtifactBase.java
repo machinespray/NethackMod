@@ -17,7 +17,6 @@ import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.potion.PotionType;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
@@ -39,6 +38,10 @@ public abstract class ArtifactBase extends NetHackItem {
         artifacts.add(this);
     }
 
+    public static AttributeModifier getNewAttackModifier(double damage) {
+        return new AttributeModifier(ATTACK_DAMAGE_MODIFIER, "Weapon modifier", damage, 0);
+    }
+
     @Override
     public void onUpdate(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
         if (!worldIn.isRemote)
@@ -47,14 +50,14 @@ public abstract class ArtifactBase extends NetHackItem {
                     EntityLightningBolt lb = new EntityLightningBolt(worldIn, entityIn.posX, entityIn.posY, entityIn.posZ, true);
                     worldIn.addWeatherEffect(lb);
                     EntityItem artifact = new EntityItem(worldIn);
-                    artifact.setPosition(entityIn.posX,entityIn.posY,entityIn.posZ);
+                    artifact.setPosition(entityIn.posX, entityIn.posY, entityIn.posZ);
                     artifact.setPickupDelay(60);
                     artifact.setEntityItemStack(stack.splitStack(1));
                     worldIn.spawnEntity(artifact);
-                    if(entityIn instanceof EntityLivingBase){
+                    if (entityIn instanceof EntityLivingBase) {
                         EntityLivingBase entityLivingBase = (EntityLivingBase) entityIn;
-                        entityLivingBase.attackEntityFrom(DamageSource.MAGIC,6.0F);
-                        entityLivingBase.addPotionEffect(new PotionEffect(Potion.getPotionById(15),20));
+                        entityLivingBase.attackEntityFrom(DamageSource.MAGIC, 6.0F);
+                        entityLivingBase.addPotionEffect(new PotionEffect(Potion.getPotionById(15), 20));
                     }
                 }
     }
@@ -65,10 +68,6 @@ public abstract class ArtifactBase extends NetHackItem {
 
     protected boolean shouldBlast(Entity p) {
         return false;
-    }
-
-    public static AttributeModifier getNewAttackModifier(double damage) {
-        return new AttributeModifier(ATTACK_DAMAGE_MODIFIER, "Weapon modifier", damage, 0);
     }
 
     @Override

@@ -30,8 +30,8 @@ public class CommonProxy implements Constants {
         Main.WRAPPER_INSTANCE.registerMessage(KnowledgeRequestHandler.class, MessageRequestKnowledge.class, 1, Side.SERVER);
         Main.WRAPPER_INSTANCE.registerMessage(PolyStatusHandler.class, MessageSendPolyStatus.class, 2, Side.CLIENT);
         MinecraftForge.EVENT_BUS.register(new PolyEvents());
-        if(!isRemote())
-        PolyPlayerData.init();
+        if (!isRemote())
+            PolyPlayerData.init();
 
 
     }

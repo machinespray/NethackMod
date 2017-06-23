@@ -22,6 +22,8 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 public class ROYALTransformer implements IClassTransformer, Opcodes {
+    public static final ClassnameMap CLASS_MAPPINGS = new ClassnameMap(
+    );
     private static final Map<String, Transformer> transformers = new HashMap<>();
     private static final String ASM_HOOKS = "com/machinespray/ROYAL/asm/AsmHooks";
 
@@ -29,6 +31,10 @@ public class ROYALTransformer implements IClassTransformer, Opcodes {
     static {
         transformers.put("net.minecraft.entity.player.EntityPlayer", ROYALTransformer::transformEntityPlayer);
         transformers.put("net.minecraft.client.renderer.entity.RenderLivingBase", ROYALTransformer::transformLayerRenderer);
+    }
+
+    static {
+
     }
 
     public static byte[] transformEntityPlayer(byte[] bytes) {
@@ -71,26 +77,7 @@ public class ROYALTransformer implements IClassTransformer, Opcodes {
                 });
     }
 
-    public static final ClassnameMap CLASS_MAPPINGS = new ClassnameMap(
-    );
-
-
-    static {
-
-    }
-
     // BOILERPLATE =====================================================================================================
-
-    @Override
-    public byte[] transform(String name, String transformedName, byte[] basicClass) {
-        if (transformers.containsKey(transformedName)) {
-            String[] arr = transformedName.split("\\.");
-            log("Transforming " + arr[arr.length - 1]);
-            return transformers.get(transformedName).apply(basicClass);
-        }
-
-        return basicClass;
-    }
 
     public static byte[] transform(byte[] basicClass, MethodSignature sig, String simpleDesc, MethodAction action) {
         ClassReader reader = new ClassReader(basicClass);
@@ -109,7 +96,6 @@ public class ROYALTransformer implements IClassTransformer, Opcodes {
 
         return basicClass;
     }
-
 
     public static boolean findMethodAndTransform(ClassNode node, MethodSignature sig, MethodAction pred) {
         for (MethodNode method : node.methods) {
@@ -319,10 +305,39 @@ public class ROYALTransformer implements IClassTransformer, Opcodes {
         log(sw.toString());
     }
 
+    @Override
+    public byte[] transform(String name, String transformedName, byte[] basicClass) {
+        if (transformers.containsKey(transformedName)) {
+            String[] arr = transformedName.split("\\.");
+            log("Transforming " + arr[arr.length - 1]);
+            return transformers.get(transformedName).apply(basicClass);
+        }
+
+        return basicClass;
+    }
+
+    public interface Transformer extends Function<byte[], byte[]> {
+        // NO-OP
+    }
+
+    public interface MethodAction extends Predicate<MethodNode> {
+        // NO-OP
+    }
+
+    // Basic interface aliases to not have to clutter up the code with generics over and over again
+
+    public interface NodeFilter extends Predicate<AbstractInsnNode> {
+        // NO-OP
+    }
+
+    public interface NodeAction extends BiPredicate<MethodNode, AbstractInsnNode> {
+        // NO-OP
+    }
+
     private static class InsnArrayIterator implements ListIterator<AbstractInsnNode> {
 
-        private int index;
         private final AbstractInsnNode[] array;
+        private int index;
 
         public InsnArrayIterator(AbstractInsnNode[] array) {
             this(array, 0);
@@ -394,17 +409,17 @@ public class ROYALTransformer implements IClassTransformer, Opcodes {
             this.obfDesc = obfuscate(funcDesc);
         }
 
-        @Override
-        public String toString() {
-            return "Names [" + funcName + ", " + srgName + ", " + obfName + "] Descriptor " + funcDesc + " / " + obfDesc;
-        }
-
         private static String obfuscate(String desc) {
             for (String s : CLASS_MAPPINGS.keySet())
                 if (desc.contains(s))
                     desc = desc.replaceAll(s, CLASS_MAPPINGS.get(s));
 
             return desc;
+        }
+
+        @Override
+        public String toString() {
+            return "Names [" + funcName + ", " + srgName + ", " + obfName + "] Descriptor " + funcDesc + " / " + obfDesc;
         }
 
         public boolean matches(String methodName, String methodDesc) {
@@ -420,23 +435,5 @@ public class ROYALTransformer implements IClassTransformer, Opcodes {
             return matches(method.name, method.desc);
         }
 
-    }
-
-    // Basic interface aliases to not have to clutter up the code with generics over and over again
-
-    public interface Transformer extends Function<byte[], byte[]> {
-        // NO-OP
-    }
-
-    public interface MethodAction extends Predicate<MethodNode> {
-        // NO-OP
-    }
-
-    public interface NodeFilter extends Predicate<AbstractInsnNode> {
-        // NO-OP
-    }
-
-    public interface NodeAction extends BiPredicate<MethodNode, AbstractInsnNode> {
-        // NO-OP
     }
 }

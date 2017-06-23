@@ -16,6 +16,10 @@ import java.util.HashMap;
 
 public class PolyPlayerData {
     public static HashMap<String, Integer> polymorphs = new HashMap<>();
+    public static int NONE = 0;
+    public static int ZOMBIE;
+    public static int WRAITH;
+    public static int SILVERFISH;
     @SideOnly(Side.CLIENT)
     private static HashMap<Integer, ModelBase> polyModel = new HashMap<>();
     @SideOnly(Side.CLIENT)
@@ -26,10 +30,6 @@ public class PolyPlayerData {
     private static RenderPlayer defaultRender = new RenderPlayer(Minecraft.getMinecraft().getRenderManager());
     private static ModelPlayer defaultModel = new ModelPlayer(0.0F, false);
     private static int id = 1;
-    public static int NONE = 0;
-    public static int ZOMBIE;
-    public static int WRAITH;
-    public static int SILVERFISH;
 
     public static int registerPoly() {
         return id++;

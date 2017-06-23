@@ -15,7 +15,6 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumHandSide;
@@ -112,61 +111,61 @@ public class RenderGUIEvent extends Gui {
 
     @SubscribeEvent
     public void renderArmor(RenderGameOverlayEvent.Pre event) {
-        if(ConfigHandler.DoCustomArmorRender)
-        if (event.getType() == RenderGameOverlayEvent.ElementType.ARMOR) {
-            event.setCanceled(true);
-            Minecraft mc = Minecraft.getMinecraft();
-            mc.mcProfiler.startSection("armor");
-            GlStateManager.enableBlend();
-            int left = event.getResolution().getScaledWidth() / 2 - 91;
-            int top = event.getResolution().getScaledHeight() - left_height;
+        if (ConfigHandler.DoCustomArmorRender)
+            if (event.getType() == RenderGameOverlayEvent.ElementType.ARMOR) {
+                event.setCanceled(true);
+                Minecraft mc = Minecraft.getMinecraft();
+                mc.mcProfiler.startSection("armor");
+                GlStateManager.enableBlend();
+                int left = event.getResolution().getScaledWidth() / 2 - 91;
+                int top = event.getResolution().getScaledHeight() - left_height;
 
-            int level = mc.player.getTotalArmorValue();
-            for (int i = 1; level > 0 && i < 20; i += 2) {
-                if (i < level) {
-                    drawTexturedModalRect(left, top, 34, 9, 9, 9);
-                } else if (i == level) {
-                    drawTexturedModalRect(left, top, 25, 9, 9, 9);
-                } else if (i > level) {
-                    drawTexturedModalRect(left, top, 16, 9, 9, 9);
+                int level = mc.player.getTotalArmorValue();
+                for (int i = 1; level > 0 && i < 20; i += 2) {
+                    if (i < level) {
+                        drawTexturedModalRect(left, top, 34, 9, 9, 9);
+                    } else if (i == level) {
+                        drawTexturedModalRect(left, top, 25, 9, 9, 9);
+                    } else if (i > level) {
+                        drawTexturedModalRect(left, top, 16, 9, 9, 9);
+                    }
+                    left += 8;
                 }
-                left += 8;
+                left_height += 10;
+                GlStateManager.disableBlend();
+                mc.mcProfiler.endSection();
             }
-            left_height += 10;
-            GlStateManager.disableBlend();
-            mc.mcProfiler.endSection();
-        }
     }
+
     @SideOnly(Side.CLIENT)
     @SubscribeEvent
-    public void RenderHandEvent(RenderHandEvent e){
+    public void RenderHandEvent(RenderHandEvent e) {
         Minecraft mc = Minecraft.getMinecraft();
-        if(ConfigHandler.DoCustomArmRender)
-        if(PolyPlayerData.getPoly(mc.player)!=0) {
-            e.setCanceled(true);
-            boolean flag = mc.getRenderViewEntity() instanceof EntityLivingBase && ((EntityLivingBase) mc.getRenderViewEntity()).isPlayerSleeping();
-            if (Minecraft.getMinecraft().gameSettings.thirdPersonView == 0 && !flag && !mc.gameSettings.hideGUI && !mc.playerController.isSpectator()) {
-                Minecraft.getMinecraft().entityRenderer.enableLightmap();
-                renderItemInFirstPerson(e.getPartialTicks());
-                Minecraft.getMinecraft().entityRenderer.disableLightmap();
+        if (ConfigHandler.DoCustomArmRender)
+            if (PolyPlayerData.getPoly(mc.player) != 0) {
+                e.setCanceled(true);
+                boolean flag = mc.getRenderViewEntity() instanceof EntityLivingBase && ((EntityLivingBase) mc.getRenderViewEntity()).isPlayerSleeping();
+                if (Minecraft.getMinecraft().gameSettings.thirdPersonView == 0 && !flag && !mc.gameSettings.hideGUI && !mc.playerController.isSpectator()) {
+                    Minecraft.getMinecraft().entityRenderer.enableLightmap();
+                    renderItemInFirstPerson(e.getPartialTicks());
+                    Minecraft.getMinecraft().entityRenderer.disableLightmap();
+                }
             }
-        }
     }
 
     //Modified Code from vanilla classes for RenderHandEvent
     @SideOnly(Side.CLIENT)
-    private void renderArmFirstPerson(float p_187456_1_, float p_187456_2_, EnumHandSide p_187456_3_)
-    {
+    private void renderArmFirstPerson(float p_187456_1_, float p_187456_2_, EnumHandSide p_187456_3_) {
         boolean flag = p_187456_3_ != EnumHandSide.LEFT;
         float f = flag ? 1.0F : -1.0F;
         float f1 = MathHelper.sqrt(p_187456_2_);
-        float f2 = -0.3F * MathHelper.sin(f1 * (float)Math.PI);
-        float f3 = 0.4F * MathHelper.sin(f1 * ((float)Math.PI * 2F));
-        float f4 = -0.4F * MathHelper.sin(p_187456_2_ * (float)Math.PI);
+        float f2 = -0.3F * MathHelper.sin(f1 * (float) Math.PI);
+        float f3 = 0.4F * MathHelper.sin(f1 * ((float) Math.PI * 2F));
+        float f4 = -0.4F * MathHelper.sin(p_187456_2_ * (float) Math.PI);
         GlStateManager.translate(f * (f2 + 0.64000005F), f3 + -0.6F + p_187456_1_ * -0.6F, f4 + -0.71999997F);
         GlStateManager.rotate(f * 45.0F, 0.0F, 1.0F, 0.0F);
-        float f5 = MathHelper.sin(p_187456_2_ * p_187456_2_ * (float)Math.PI);
-        float f6 = MathHelper.sin(f1 * (float)Math.PI);
+        float f5 = MathHelper.sin(p_187456_2_ * p_187456_2_ * (float) Math.PI);
+        float f6 = MathHelper.sin(f1 * (float) Math.PI);
         GlStateManager.rotate(f * f6 * 70.0F, 0.0F, 1.0F, 0.0F);
         GlStateManager.rotate(f * f5 * -20.0F, 0.0F, 0.0F, 1.0F);
         AbstractClientPlayer abstractclientplayer = Minecraft.getMinecraft().player;
@@ -180,12 +179,9 @@ public class RenderGUIEvent extends Gui {
         RenderPlayer renderplayer = (RenderPlayer) Minecraft.getMinecraft().getItemRenderer().renderManager.getEntityRenderObject(abstractclientplayer);
         GlStateManager.disableCull();
 
-        if (flag)
-        {
+        if (flag) {
             renderplayer.renderRightArm(abstractclientplayer);
-        }
-        else
-        {
+        } else {
             renderplayer.renderLeftArm(abstractclientplayer);
         }
 
@@ -193,8 +189,7 @@ public class RenderGUIEvent extends Gui {
     }
 
 
-    public void renderItemInFirstPerson(float partialTicks)
-    {
+    public void renderItemInFirstPerson(float partialTicks) {
         Minecraft mc = Minecraft.getMinecraft();
         AbstractClientPlayer abstractclientplayer = mc.player;
         ItemRenderer itemRenderer = mc.getItemRenderer();
@@ -205,8 +200,7 @@ public class RenderGUIEvent extends Gui {
         boolean flag = true;
         boolean flag1 = true;
 
-        if (abstractclientplayer.isHandActive())
-        {
+        if (abstractclientplayer.isHandActive()) {
             ItemStack itemstack = abstractclientplayer.getActiveItemStack();
 
             if (itemstack != null && itemstack.getItem() == Items.BOW) //Forge: Data watcher can desync and cause this to NPE...
@@ -222,27 +216,25 @@ public class RenderGUIEvent extends Gui {
         this.rotateArm(partialTicks);
         GlStateManager.enableRescaleNormal();
 
-        if (flag)
-        {
+        if (flag) {
             float f3 = enumhand == EnumHand.MAIN_HAND ? f : 0.0F;
             float f5 = 1.0F - (itemRenderer.prevEquippedProgressMainHand + (itemRenderer.equippedProgressMainHand - itemRenderer.prevEquippedProgressMainHand) * partialTicks);
-            if(!net.minecraftforge.client.ForgeHooksClient.renderSpecificFirstPersonHand(EnumHand.MAIN_HAND, partialTicks, f1, f3, f5, itemRenderer.itemStackMainHand))
+            if (!net.minecraftforge.client.ForgeHooksClient.renderSpecificFirstPersonHand(EnumHand.MAIN_HAND, partialTicks, f1, f3, f5, itemRenderer.itemStackMainHand))
                 this.renderItemInFirstPerson(abstractclientplayer, partialTicks, f1, EnumHand.MAIN_HAND, f3, itemRenderer.itemStackMainHand, f5);
         }
 
-        if (flag1)
-        {
+        if (flag1) {
             float f4 = enumhand == EnumHand.OFF_HAND ? f : 0.0F;
             float f6 = 1.0F - (itemRenderer.prevEquippedProgressOffHand + (itemRenderer.equippedProgressOffHand - itemRenderer.prevEquippedProgressOffHand) * partialTicks);
-            if(!net.minecraftforge.client.ForgeHooksClient.renderSpecificFirstPersonHand(EnumHand.OFF_HAND, partialTicks, f1, f4, f6, itemRenderer.itemStackOffHand))
+            if (!net.minecraftforge.client.ForgeHooksClient.renderSpecificFirstPersonHand(EnumHand.OFF_HAND, partialTicks, f1, f4, f6, itemRenderer.itemStackOffHand))
                 this.renderItemInFirstPerson(abstractclientplayer, partialTicks, f1, EnumHand.OFF_HAND, f4, itemRenderer.itemStackOffHand, f6);
         }
 
         GlStateManager.disableRescaleNormal();
         RenderHelper.disableStandardItemLighting();
     }
-    private void rotateArroundXAndY(float angle, float angleY)
-    {
+
+    private void rotateArroundXAndY(float angle, float angleY) {
         GlStateManager.pushMatrix();
         GlStateManager.rotate(angle, 1.0F, 0.0F, 0.0F);
         GlStateManager.rotate(angleY, 0.0F, 1.0F, 0.0F);
@@ -250,18 +242,16 @@ public class RenderGUIEvent extends Gui {
         GlStateManager.popMatrix();
     }
 
-    private void setLightmap()
-    {
+    private void setLightmap() {
         Minecraft mc = Minecraft.getMinecraft();
         AbstractClientPlayer abstractclientplayer = mc.player;
-        int i = mc.world.getCombinedLight(new BlockPos(abstractclientplayer.posX, abstractclientplayer.posY + (double)abstractclientplayer.getEyeHeight(), abstractclientplayer.posZ), 0);
-        float f = (float)(i & 65535);
-        float f1 = (float)(i >> 16);
+        int i = mc.world.getCombinedLight(new BlockPos(abstractclientplayer.posX, abstractclientplayer.posY + (double) abstractclientplayer.getEyeHeight(), abstractclientplayer.posZ), 0);
+        float f = (float) (i & 65535);
+        float f1 = (float) (i >> 16);
         OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, f, f1);
     }
 
-    private void rotateArm(float p_187458_1_)
-    {
+    private void rotateArm(float p_187458_1_) {
         Minecraft mc = Minecraft.getMinecraft();
         EntityPlayerSP entityplayersp = mc.player;
         float f = entityplayersp.prevRenderArmPitch + (entityplayersp.renderArmPitch - entityplayersp.prevRenderArmPitch) * p_187458_1_;
@@ -270,41 +260,29 @@ public class RenderGUIEvent extends Gui {
         GlStateManager.rotate((entityplayersp.rotationYaw - f1) * 0.1F, 0.0F, 1.0F, 0.0F);
     }
 
-    public void renderItemInFirstPerson(AbstractClientPlayer p_187457_1_, float p_187457_2_, float p_187457_3_, EnumHand p_187457_4_, float p_187457_5_, ItemStack p_187457_6_, float p_187457_7_)
-    {
+    public void renderItemInFirstPerson(AbstractClientPlayer p_187457_1_, float p_187457_2_, float p_187457_3_, EnumHand p_187457_4_, float p_187457_5_, ItemStack p_187457_6_, float p_187457_7_) {
         ItemRenderer itemRenderer = Minecraft.getMinecraft().getItemRenderer();
         boolean flag = p_187457_4_ == EnumHand.MAIN_HAND;
         EnumHandSide enumhandside = flag ? p_187457_1_.getPrimaryHand() : p_187457_1_.getPrimaryHand().opposite();
         GlStateManager.pushMatrix();
 
-        if (p_187457_6_.isEmpty())
-        {
-            if (flag && !p_187457_1_.isInvisible())
-            {
+        if (p_187457_6_.isEmpty()) {
+            if (flag && !p_187457_1_.isInvisible()) {
                 this.renderArmFirstPerson(p_187457_7_, p_187457_5_, enumhandside);
             }
-        }
-        else if (p_187457_6_.getItem() instanceof net.minecraft.item.ItemMap)
-        {
-            if (flag && itemRenderer.itemStackOffHand.isEmpty())
-            {
+        } else if (p_187457_6_.getItem() instanceof net.minecraft.item.ItemMap) {
+            if (flag && itemRenderer.itemStackOffHand.isEmpty()) {
                 //itemRenderer.renderMapFirstPerson(p_187457_3_, p_187457_7_, p_187457_5_);
-            }
-            else
-            {
+            } else {
                 //this.renderMapFirstPersonSide(p_187457_7_, enumhandside, p_187457_5_, p_187457_6_);
             }
-        }
-        else
-        {
+        } else {
             boolean flag1 = enumhandside == EnumHandSide.RIGHT;
 
-            if (p_187457_1_.isHandActive() && p_187457_1_.getItemInUseCount() > 0 && p_187457_1_.getActiveHand() == p_187457_4_)
-            {
+            if (p_187457_1_.isHandActive() && p_187457_1_.getItemInUseCount() > 0 && p_187457_1_.getActiveHand() == p_187457_4_) {
                 int j = flag1 ? 1 : -1;
 
-                switch (p_187457_6_.getItemUseAction())
-                {
+                switch (p_187457_6_.getItemUseAction()) {
                     case NONE:
                         itemRenderer.transformSideFirstPerson(enumhandside, p_187457_7_);
                         break;
@@ -318,21 +296,19 @@ public class RenderGUIEvent extends Gui {
                         break;
                     case BOW:
                         itemRenderer.transformSideFirstPerson(enumhandside, p_187457_7_);
-                        GlStateManager.translate((float)j * -0.2785682F, 0.18344387F, 0.15731531F);
+                        GlStateManager.translate((float) j * -0.2785682F, 0.18344387F, 0.15731531F);
                         GlStateManager.rotate(-13.935F, 1.0F, 0.0F, 0.0F);
-                        GlStateManager.rotate((float)j * 35.3F, 0.0F, 1.0F, 0.0F);
-                        GlStateManager.rotate((float)j * -9.785F, 0.0F, 0.0F, 1.0F);
-                        float f5 = (float)p_187457_6_.getMaxItemUseDuration() - ((float)Minecraft.getMinecraft().player.getItemInUseCount() - p_187457_2_ + 1.0F);
+                        GlStateManager.rotate((float) j * 35.3F, 0.0F, 1.0F, 0.0F);
+                        GlStateManager.rotate((float) j * -9.785F, 0.0F, 0.0F, 1.0F);
+                        float f5 = (float) p_187457_6_.getMaxItemUseDuration() - ((float) Minecraft.getMinecraft().player.getItemInUseCount() - p_187457_2_ + 1.0F);
                         float f6 = f5 / 20.0F;
                         f6 = (f6 * f6 + f6 * 2.0F) / 3.0F;
 
-                        if (f6 > 1.0F)
-                        {
+                        if (f6 > 1.0F) {
                             f6 = 1.0F;
                         }
 
-                        if (f6 > 0.1F)
-                        {
+                        if (f6 > 0.1F) {
                             float f7 = MathHelper.sin((f5 - 0.1F) * 1.3F);
                             float f3 = f6 - 0.1F;
                             float f4 = f7 * f3;
@@ -341,16 +317,14 @@ public class RenderGUIEvent extends Gui {
 
                         GlStateManager.translate(f6 * 0.0F, f6 * 0.0F, f6 * 0.04F);
                         GlStateManager.scale(1.0F, 1.0F, 1.0F + f6 * 0.2F);
-                        GlStateManager.rotate((float)j * 45.0F, 0.0F, -1.0F, 0.0F);
+                        GlStateManager.rotate((float) j * 45.0F, 0.0F, -1.0F, 0.0F);
                 }
-            }
-            else
-            {
-                float f = -0.4F * MathHelper.sin(MathHelper.sqrt(p_187457_5_) * (float)Math.PI);
-                float f1 = 0.2F * MathHelper.sin(MathHelper.sqrt(p_187457_5_) * ((float)Math.PI * 2F));
-                float f2 = -0.2F * MathHelper.sin(p_187457_5_ * (float)Math.PI);
+            } else {
+                float f = -0.4F * MathHelper.sin(MathHelper.sqrt(p_187457_5_) * (float) Math.PI);
+                float f1 = 0.2F * MathHelper.sin(MathHelper.sqrt(p_187457_5_) * ((float) Math.PI * 2F));
+                float f2 = -0.2F * MathHelper.sin(p_187457_5_ * (float) Math.PI);
                 int i = flag1 ? 1 : -1;
-                GlStateManager.translate((float)i * f, f1, f2);
+                GlStateManager.translate((float) i * f, f1, f2);
                 itemRenderer.transformSideFirstPerson(enumhandside, p_187457_7_);
                 itemRenderer.transformFirstPerson(enumhandside, p_187457_5_);
             }

@@ -3,11 +3,19 @@ package com.machinespray.ROYAL.sync;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import org.lwjgl.Sys;
 
 public class MessageSendPolyStatus implements IMessage {
     private int type;
     private String uuid;
+
+    public MessageSendPolyStatus() {
+
+    }
+
+    public MessageSendPolyStatus(EntityPlayer player, int type) {
+        uuid = player.getUniqueID().toString();
+        this.type = type;
+    }
 
     public int getType() {
         return type;
@@ -15,14 +23,6 @@ public class MessageSendPolyStatus implements IMessage {
 
     public String getUuid() {
         return uuid;
-    }
-    public MessageSendPolyStatus() {
-
-    }
-
-    public MessageSendPolyStatus(EntityPlayer player, int type) {
-        uuid=player.getUniqueID().toString();
-        this.type = type;
     }
 
     @Override
