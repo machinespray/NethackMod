@@ -29,6 +29,7 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.registries.GameData;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -56,7 +57,7 @@ public class NetHackAltar extends Block implements Constants {
     }
 
     public void register() {
-        GameRegistry.register(this);
+        GameData.register_impl(this);
         item = new ItemBlock(this) {
             @Override
             public void addInformation(ItemStack stack, @Nullable World worldIn,
@@ -70,7 +71,7 @@ public class NetHackAltar extends Block implements Constants {
         };
         item.setRegistryName(new ResourceLocation(Main.MODID, this
                 .getUnlocalizedName()));
-        GameRegistry.register(item);
+        GameData.register_impl(item);
     }
 
     public int getType() {

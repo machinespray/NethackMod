@@ -10,9 +10,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.registries.GameData;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -25,7 +25,7 @@ public class NetHackItem extends Item implements Constants {
     }
 
     public void register() {
-        GameRegistry.register(this);
+        GameData.register_impl(this);
     }
 
     @SideOnly(Side.CLIENT)
@@ -36,25 +36,27 @@ public class NetHackItem extends Item implements Constants {
     @Override
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag advanced) {
         EntityPlayer playerIn = Minecraft.getMinecraft().player;
-        IKnowledgeHandler kh = Main.getHandler(playerIn);
-        NetHackItem nhi = ((NetHackItem) stack.getItem());
-        if (nhi.hasUse())
-            if (playerIn.isCreative() || kh.hasKnowledge(nhi.getUse()))
-                tooltip.add(nhi.getUse());
-        if (stack.getTagCompound() != null) {
-            if (stack.getTagCompound().getString(BUC) != null) {
-                if (stack.getTagCompound().getBoolean(BUCI) || playerIn.isCreative())
-                    tooltip.add(stack.getTagCompound().getString(BUC));
-            } else {
-                NBTTagCompound nbt = new NBTTagCompound();
-                nbt.setString(BUC, UNCURSED);
-                stack.setTagCompound(nbt);
-            }
-        } else {
-            NBTTagCompound nbt = new NBTTagCompound();
-            nbt.setString(BUC, UNCURSED);
-            stack.setTagCompound(nbt);
-        }
+       if(playerIn!=null) {
+           IKnowledgeHandler kh = Main.getHandler(playerIn);
+           NetHackItem nhi = ((NetHackItem) stack.getItem());
+           if (nhi.hasUse())
+               if (playerIn.isCreative() || kh.hasKnowledge(nhi.getUse()))
+                   tooltip.add(nhi.getUse());
+           if (stack.getTagCompound() != null) {
+               if (stack.getTagCompound().getString(BUC) != null) {
+                   if (stack.getTagCompound().getBoolean(BUCI) || playerIn.isCreative())
+                       tooltip.add(stack.getTagCompound().getString(BUC));
+               } else {
+                   NBTTagCompound nbt = new NBTTagCompound();
+                   nbt.setString(BUC, UNCURSED);
+                   stack.setTagCompound(nbt);
+               }
+           } else {
+               NBTTagCompound nbt = new NBTTagCompound();
+               nbt.setString(BUC, UNCURSED);
+               stack.setTagCompound(nbt);
+           }
+       }
     }
 
     public String getUse() {

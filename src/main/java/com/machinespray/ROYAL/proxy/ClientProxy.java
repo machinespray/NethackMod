@@ -10,8 +10,8 @@ public class ClientProxy extends CommonProxy {
 	@Override
 	public void preinit(){
 		super.preinit();
-		RoyalItems.registerClient();
-		RoyalBlocks.registerClient();
+		//RoyalItems.registerClient();
+		//RoyalBlocks.registerClient();
 	}
 	@Override
 	public  void init(){
@@ -25,12 +25,14 @@ public class ClientProxy extends CommonProxy {
 	@Override
 	public String getRingUse(ItemRing ring) {
 		if(ring.getID()!=-2)
+			if(Main.scrolls!=null)
 		return Main.rings[ring.getID()];
 		return null;
 	}
 	@Override
 	public String getScrollUse(ItemScroll scroll) {
 		if(scroll.getID()!=-2)
+			if(Main.scrolls!=null)
 		return Main.scrolls[scroll.getID()];
 		return null;
 	}

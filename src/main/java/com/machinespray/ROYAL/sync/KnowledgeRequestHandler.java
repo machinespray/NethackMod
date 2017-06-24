@@ -16,7 +16,7 @@ public class KnowledgeRequestHandler implements
 	@Override
 	public IMessage onMessage(MessageRequestKnowledge message,
 			MessageContext ctx) {
-		EntityPlayerMP player = ctx.getServerHandler().playerEntity;
+		EntityPlayerMP player = ctx.getServerHandler().player;
 		ArrayList<String> knowledge = Main.getHandler(player).getKnowledge();
 		for (int i = 0; i < knowledge.size(); i++)
 			Main.INSTANCE.sendTo(new MessageSendKnowledge(knowledge.get(i)),
