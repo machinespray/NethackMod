@@ -21,10 +21,8 @@ import net.minecraftforge.fml.relauncher.Side;
 public class CommonProxy implements Constants {
 	
 	public void preinit(){
-		RoyalItems.initItems();
-		RoyalItems.registerItems();
-		RoyalBlocks.initBlocks();
-		RoyalBlocks.registerBlocks();
+		//RoyalItems.initItems();
+		//RoyalItems.registerItems();
 		CapabilityManager.INSTANCE.register(IKnowledgeHandler.class, new Storage(), DefaultKnowledgeHandler.class);
 	}
 	public void init(){
