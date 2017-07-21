@@ -3,12 +3,15 @@ package com.machinespray.ROYAL.asm;
 import com.machinespray.ROYAL.polymorph.PolyEvents;
 import com.machinespray.ROYAL.polymorph.PolyPlayerData;
 import net.minecraft.client.model.ModelPlayer;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 
 public class AsmHooks {
 
     public static float eyeHeightHook(float eyeHeight, EntityPlayer player) {
+        player.setSneaking(false);
+        player.setFlag(7,false);
         if (PolyPlayerData.getPoly(player) != 0)
             if (!(PolyPlayerData.getPolyModel(player) instanceof ModelPlayer))
                 return (float) (0.9 * PolyPlayerData.getPolySize(player));

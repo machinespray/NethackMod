@@ -10,17 +10,13 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class RoyalItems implements Constants {
-    //public static ArrayList<ItemScroll> scrolls = new ArrayList<ItemScroll>();
     public static NetHackItem base;
     public static NetHackItem runicBook;
-    //public static ArrayList<ItemRing> rings = new ArrayList<ItemRing>();
     public static PotionBase potionPolymorph;
     public static PotionBase potionEnlightenment;
-    //public static NetHackItem AmuletUndying;
+    public static NetHackItem goldDust;
 
     public static void initItems() {
-        //ItemScroll.initNames();
-        //ItemRing.initNames();
         base = new NetHackItem("base");
         runicBook = new NetHackItem("runic_book");
         potionPolymorph = new PotionPolymorph();
@@ -29,23 +25,19 @@ public class RoyalItems implements Constants {
         new FireBrand();
         new FrostBrand();
         new KingBlade();
-        //AmuletUndying = new NetHackItem("amuletOfUndying");
+        goldDust = new NetHackItem("goldDust");
     }
 
     public static void registerItems() {
-        //for (ItemScroll i : scrolls)
-        //   i.register();
         Values.scrollInstance.register();
         Values.ringInstance.register();
-        //for (ItemRing i : rings)
-        //    i.register();
         base.register();
         potionPolymorph.register();
         potionEnlightenment.register();
         runicBook.register();
         for (ArtifactBase i : ArtifactBase.artifacts)
             i.register();
-        //AmuletUndying.register();
+        goldDust.register();
 
     }
 
@@ -59,6 +51,7 @@ public class RoyalItems implements Constants {
         //    i.registerClient();
         base.registerClient();
         runicBook.registerClient();
+        goldDust.registerClient();
         potionPolymorph.registerClient();
         potionEnlightenment.registerClient();
         for (ArtifactBase i : ArtifactBase.artifacts)
