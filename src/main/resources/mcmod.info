@@ -3,7 +3,7 @@
   "modid": "royal",
   "name": "Realm Of Yendor's Artifacts of the Lost",
   "description": "Add's items inspired by NetHack and other various rogulikes, along with a (WIP) deity system.",
-  "version": "0.24",
+  "version": "0.25",
   "mcversion": "1.11.2",
   "logoFile": "/royal.png",
   "authorList": ["machinespray"],
