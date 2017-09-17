@@ -4,6 +4,7 @@ import com.machinespray.ROYAL.Constants;
 import com.machinespray.ROYAL.Main;
 import com.machinespray.ROYAL.NetHackItem;
 import com.machinespray.ROYAL.RoyalItems;
+import com.machinespray.ROYAL.randomized.scroll.ScrollActionGroup;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -18,7 +19,12 @@ public class ItemScroll extends NetHackItem implements Constants {
 
     public ItemScroll(String unlocalizedName) {
         super(unlocalizedName);
+        this.actionGroup = ScrollActionGroup.INSTANCE;
         this.setCreativeTab(Main.royalTab);
+    }
+
+    private ScrollActionGroup actionGroup() {
+        return (ScrollActionGroup) actionGroup;
     }
 
     public static void initNames() {
@@ -37,19 +43,19 @@ public class ItemScroll extends NetHackItem implements Constants {
 
     @Override
     public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn) {
-        if (ScrollAction.getAction(getUnlocalizedName()) != null)
-            ScrollAction.getAction(getUnlocalizedName()).onItemRightClick(worldIn, playerIn, handIn);
+        if (actionGroup.getAction(getUnlocalizedName()) != null)
+            actionGroup().getAction(getUnlocalizedName()).onItemRightClick(worldIn, playerIn, handIn);
         return super.onItemRightClick(worldIn, playerIn, handIn);
     }
 
     @Override
     public boolean hasUse() {
-        return Main.proxy.getScrollUse(this) != null;
+        return Main.proxy.getUse(this) != null;
     }
 
     @Override
     public String getUse() {
-        return Main.proxy.getScrollUse(this);
+        return Main.proxy.getUse(this);
     }
 
     @Override

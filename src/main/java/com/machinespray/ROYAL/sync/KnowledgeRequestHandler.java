@@ -1,8 +1,8 @@
 package com.machinespray.ROYAL.sync;
 
 import com.machinespray.ROYAL.Main;
+import com.machinespray.ROYAL.randomized.scroll.ScrollActionGroup;
 import com.machinespray.ROYAL.rings.RingAction;
-import com.machinespray.ROYAL.scrolls.ScrollAction;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
@@ -25,14 +25,14 @@ public class KnowledgeRequestHandler implements
 		for (int i = 0; i < RingAction.values().length; i++) {
 			Main.INSTANCE.sendTo(
 					new MessageSendKnowledge(RingAction.values()[i].getKnowledgeName(),
-							RingAction.values()[i].id, EnumDataType.RING),
+							RingAction.values()[i].id, 0),
 					player);
 		}
-		for (int i = 0; i < ScrollAction.values().length; i++) {
+		for (int i = 0; i < ScrollActionGroup.INSTANCE.values().size(); i++) {
 			Main.INSTANCE.sendTo(
-					new MessageSendKnowledge(ScrollAction.values()[i].getKnowledgeName(),
-							ScrollAction.values()[i].id,
-							EnumDataType.SCROLL), player);
+					new MessageSendKnowledge(ScrollActionGroup.INSTANCE.values().get(i).getKnowledgeName(),
+							ScrollActionGroup.INSTANCE.values().get(i).id,
+							ScrollActionGroup.INSTANCE.id()), player);
 		}
 		return null;
 	}

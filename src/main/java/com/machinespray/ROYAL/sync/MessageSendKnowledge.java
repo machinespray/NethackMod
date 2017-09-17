@@ -14,10 +14,10 @@ public class MessageSendKnowledge implements IMessage {
 	public MessageSendKnowledge(String knowledge) {
 		this.knowledge = knowledge;
 	}
-	public MessageSendKnowledge(String knowledge,int id,EnumDataType type) {
+	public MessageSendKnowledge(String knowledge,int id,int type) {
 		this.knowledge = knowledge;
 		this.id = id;
-		this.type = type.id;
+		this.type = type;
 	}
 
 	@Override

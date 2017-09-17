@@ -1,6 +1,7 @@
 package com.machinespray.ROYAL;
 
 import com.machinespray.ROYAL.knowledge.IKnowledgeHandler;
+import com.machinespray.ROYAL.randomized.RandomActionGroup;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.util.ITooltipFlag;
@@ -21,6 +22,8 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public class NetHackItem extends Item implements Constants {
+
+    public RandomActionGroup actionGroup = null;
 
     public NetHackItem(String unlocalizedName) {
         this.setUnlocalizedName(unlocalizedName);
@@ -74,6 +77,8 @@ public class NetHackItem extends Item implements Constants {
                } else {
                    NBTTagCompound nbt = new NBTTagCompound();
                    nbt.setString(BUC, UNCURSED);
+                   if(nhi.hasUse())
+                       nbt.setString(BUC,nhi.getUse());
                    stack.setTagCompound(nbt);
                }
            } else {
@@ -111,5 +116,4 @@ public class NetHackItem extends Item implements Constants {
         return null;
     }
 
-    ;
 }

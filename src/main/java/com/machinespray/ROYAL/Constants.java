@@ -20,8 +20,20 @@ public interface Constants {
 			"gold", "wooden", "granite", "opal", "clay", "coral", "black onyx",
 			"moonstone", "tiger eye", "jade", "agate", "topaz", "sapphire",
 			"ruby", "diamond", "ivory", "emerald" };
+	//Lawful
+	String MINERVA=TextFormatting.GREEN.toString()+"bound to Minerva";
+	String VESTA=TextFormatting.GREEN.toString()+"bound to Vesta";
+	String FREYR=TextFormatting.GREEN.toString()+"bound to Freyr";
+	//Neutral
+	String PLUTO=TextFormatting.AQUA.toString()+"bound to Pluto";
+	String THOTH=TextFormatting.AQUA.toString()+"bound to Thoth";
+	String SET=TextFormatting.AQUA.toString()+"bound to Set";
+	//Chaotic
+	String FENRIS=TextFormatting.RED.toString()+"bound to Fenris";
+	String SOBEK=TextFormatting.RED.toString()+"bound to Sobek";
+	String LOKI=TextFormatting.RED.toString()+"bound to Loki";
 	//String BLESSED = TextFormatting.GREEN.toString()+"blessed";
-	String UNCURSED = TextFormatting.AQUA.toString()+"unbound";
+	String UNCURSED = "unbound";
 	//String CURSED = TextFormatting.RED.toString()+"cursed";
 	String LAWFUL = "Lawful";
 	String NEUTRAL = "Neutral";

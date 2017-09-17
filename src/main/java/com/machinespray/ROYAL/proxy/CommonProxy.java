@@ -2,15 +2,10 @@ package com.machinespray.ROYAL.proxy;
 
 import com.machinespray.ROYAL.Constants;
 import com.machinespray.ROYAL.Main;
-import com.machinespray.ROYAL.RoyalItems;
-import com.machinespray.ROYAL.altars.RoyalBlocks;
+import com.machinespray.ROYAL.NetHackItem;
 import com.machinespray.ROYAL.knowledge.DefaultKnowledgeHandler;
 import com.machinespray.ROYAL.knowledge.IKnowledgeHandler;
 import com.machinespray.ROYAL.knowledge.Storage;
-import com.machinespray.ROYAL.rings.ItemRing;
-import com.machinespray.ROYAL.rings.RingAction;
-import com.machinespray.ROYAL.scrolls.ItemScroll;
-import com.machinespray.ROYAL.scrolls.ScrollAction;
 import com.machinespray.ROYAL.sync.KnowledgeMessageHandler;
 import com.machinespray.ROYAL.sync.KnowledgeRequestHandler;
 import com.machinespray.ROYAL.sync.MessageRequestKnowledge;
@@ -31,16 +26,9 @@ public class CommonProxy implements Constants {
 	}
 	public void postinit(){
 	}
-	public String getRingUse(ItemRing ring) {
+	public String getUse(NetHackItem item) {
 		try{
-		return RingAction.getAction(ring.getUnlocalizedName()).getKnowledgeName();
-		}catch(Exception e){
-			return null;
-		}
-	}
-	public String getScrollUse(ItemScroll scroll) {
-		try{
-		return ScrollAction.getAction(scroll.getUnlocalizedName()).getKnowledgeName();
+		return item.actionGroup.getAction(item.getUnlocalizedName()).getKnowledgeName();
 		}catch(Exception e){
 			return null;
 		}
