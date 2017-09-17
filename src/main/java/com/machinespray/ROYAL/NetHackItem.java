@@ -8,6 +8,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.potion.PotionUtils;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
@@ -32,7 +35,29 @@ public class NetHackItem extends Item implements Constants {
     public void registerClient() {
         ModelLoader.setCustomModelResourceLocation(this, 0, new ModelResourceLocation(this.getRegistryName(), "inventory"));
     }
-
+    private String uppercase(String s) {
+        s = s.toLowerCase();
+        for (int i = 0; i < s.length(); i++)
+            if (s.toCharArray()[i] == ' ') {
+                s = s.substring(0, i + 1) + s.toUpperCase().substring(i + 1, i + 2) + s.substring(i + 2).toLowerCase();
+            }
+        return s.toUpperCase().substring(0, 1) + s.substring(1);
+    }
+    @SideOnly(Side.CLIENT)
+    @Override
+    public String getItemStackDisplayName(ItemStack stack) {
+        EntityPlayer player = Minecraft.getMinecraft().player;
+        if (player != null)
+            if (Main.getHandler(player) != null) {
+                if (((NetHackItem) stack.getItem()).hasUse()) {
+                    NetHackItem item = (NetHackItem) stack.getItem();
+                    if (item.hasUse())
+                        if (Main.getHandler(player).hasKnowledge(item.getUse().replace("_", " ")) || player.isCreative())
+                            return uppercase(item.type()) + " of " + uppercase(item.getUse().replace("_", " "));
+                }
+            }
+        return super.getItemStackDisplayName(stack);
+    }
     @Override
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag advanced) {
         EntityPlayer playerIn = Minecraft.getMinecraft().player;
@@ -41,7 +66,7 @@ public class NetHackItem extends Item implements Constants {
            NetHackItem nhi = ((NetHackItem) stack.getItem());
            if (nhi.hasUse())
                if (playerIn.isCreative() || kh.hasKnowledge(nhi.getUse()))
-                   tooltip.add(nhi.getUse());
+                   tooltip.add(super.getItemStackDisplayName(stack));
            if (stack.getTagCompound() != null) {
                if (stack.getTagCompound().getString(BUC) != null) {
                    if (stack.getTagCompound().getBoolean(BUCI) || playerIn.isCreative())
