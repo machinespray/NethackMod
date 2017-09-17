@@ -90,70 +90,13 @@ public static String[] getGods(long seed,String[] godsList){
 				NBTTagCompound nbt = new NBTTagCompound();
 				if (stack.getTagCompound() != null)
 					nbt = stack.getTagCompound();
-				switch (Main.random.nextInt(10)) {
-				case 8:
-					nbt.setString(BUC, BLESSED);
-					break;
-				case 9:
-					nbt.setString(BUC, CURSED);
-					break;
-				default:
 					nbt.setString(BUC, UNCURSED);
-				}
+
 				stack.setTagCompound(nbt);
 				e.getDrops().add(
 						new EntityItem(e.getEntity().world, e.getEntity().posX,
 								e.getEntity().posY, e.getEntity().posZ, stack));
 			}
-		}
-	}
-
-	@SubscribeEvent
-	public void onEntityInteract(EntityInteract e) {
-		if (e.getTarget() instanceof EntityVillager
-				&& e.getEntityPlayer().getHeldItemMainhand().getItem() instanceof NetHackItem
-				&& !e.getWorld().isRemote)
-			if (((EntityVillager) e.getTarget()).getProfession() == 2) {
-				if (!e.getEntityPlayer().getHeldItemMainhand().getTagCompound()
-						.getBoolean(BUCI)) {
-					String BUC = (NetHackItem.id(e.getEntityPlayer()
-							.getHeldItemMainhand(), 0));
-					if (BUC.equals(CURSED))
-						e.getEntityPlayer().sendMessage(
-								new TextComponentString(TextFormatting.RED
-										.toString()
-										+ "The priest seems disturbed"));
-					if (BUC.equals(UNCURSED))
-						e.getEntityPlayer().sendMessage(
-								new TextComponentString(TextFormatting.AQUA
-										.toString()
-										+ "The priest seems unimpressed."));
-					if (BUC.equals(BLESSED))
-						e.getEntityPlayer().sendMessage(
-								new TextComponentString(TextFormatting.GREEN
-										.toString()
-										+ "The priest seems in awe."));
-					e.setCanceled(true);
-				}
-			}
-		if (e.getTarget() instanceof EntityTameable) {
-			if (e.getEntityPlayer().getHeldItemMainhand() != null)
-				if (e.getEntityPlayer().getHeldItemMainhand().getItem() instanceof NetHackItem) {
-					EntityTameable target = (EntityTameable) e.getTarget();
-					String BUC = (NetHackItem.id(e.getEntityPlayer()
-							.getHeldItemMainhand(), 0));
-					if (BUC.equals(CURSED))
-						e.getEntityPlayer()
-								.sendMessage(
-										new TextComponentString(
-												TextFormatting.RED.toString()
-														+ "The animal's eyes grow wide with fear."));
-					if (BUC.equals(UNCURSED) || BUC.equals(BLESSED))
-						e.getEntityPlayer().sendMessage(
-								new TextComponentString(TextFormatting.AQUA
-										.toString()
-										+ "The animal doesn't react."));
-				}
 		}
 	}
 
@@ -288,57 +231,6 @@ public static String[] getGods(long seed,String[] godsList){
 						"The gods do not wish to hear from you now."));
 			}
 			player = null;
-		}
-		if (e.getMessage().equals("#dip")) {
-			e.setCanceled(true);
-			if (e.getPlayer().getHeldItemOffhand().getItem() instanceof ItemPotion) {
-				if (e.getPlayer().getHeldItemMainhand().getItem() instanceof NetHackItem) {
-					String buc = UNCURSED;
-					try {
-						buc = e.getPlayer().getHeldItemOffhand()
-								.getTagCompound().getString(BUC);
-					} catch (Exception er) {
-					}
-					String myBuc = e.getPlayer().getHeldItemMainhand()
-							.getTagCompound().getString(BUC);
-					String setBUC = myBuc;
-					if (buc.equals(UNCURSED)) {
-
-					} else if (buc.equals(BLESSED)) {
-						if (myBuc.equals(UNCURSED))
-							setBUC = BLESSED;
-						if (myBuc.equals(CURSED))
-							setBUC = UNCURSED;
-
-					} else if (buc.equals(CURSED)) {
-						if (myBuc.equals(UNCURSED))
-							setBUC = CURSED;
-						if (myBuc.equals(BLESSED))
-							setBUC = UNCURSED;
-					}
-					if (!myBuc.equals(setBUC)) {
-						NBTTagCompound nbt = e.getPlayer()
-								.getHeldItemMainhand().getTagCompound();
-						nbt.setString(BUC, setBUC);
-						nbt.setBoolean(BUCI, true);
-						e.getPlayer().getHeldItemMainhand().setTagCompound(nbt);
-						e.getPlayer().getHeldItemOffhand().setCount(0);
-						e.getPlayer().inventory
-								.addItemStackToInventory(new ItemStack(
-										Items.GLASS_BOTTLE));
-					}
-				} else {
-					e.getPlayer()
-							.sendMessage(
-									new TextComponentString(
-											"The item in your main hand is not applicable for dipping!"));
-				}
-			} else {
-				e.getPlayer()
-						.sendMessage(
-								new TextComponentString(
-										"The item in your offhand is not applicable for dipping into!"));
-			}
 		}
 	}
 	@SubscribeEvent

@@ -80,10 +80,10 @@ public enum RingAction implements Constants {
             AxisAlignedBB box = new AxisAlignedBB(player.posX - 5,
                     player.posY - 5, player.posZ - 5, player.posX + 5,
                     player.posY + 5, player.posZ + 5);
-            if (buc.equals(CURSED))
+            /*if (buc.equals(CURSED))
                 box = box.expand(2,2,2);
             if (buc.equals(BLESSED))
-                box = box.expand(-.5,-.5,-.5);
+                box = box.expand(-.5,-.5,-.5);*/
             List<EntityLiving> list = player.world.getEntitiesWithinAABB(
                     EntityLiving.class, box);
             for (EntityLiving e : list) {
@@ -96,10 +96,10 @@ public enum RingAction implements Constants {
             AxisAlignedBB box = new AxisAlignedBB(player.posX - 5,
                     player.posY - 5, player.posZ - 5, player.posX + 5,
                     player.posY + 5, player.posZ + 5);
-            if (buc.equals(CURSED))
+            /*if (buc.equals(CURSED))
                 box = box.expand(-.5,-.5,-.5);
             if (buc.equals(BLESSED))
-                box = box.expand(2,2,2);
+                box = box.expand(2,2,2);*/
             List<EntityLiving> list = player.world.getEntitiesWithinAABB(
                     EntityLiving.class, box);
             for (EntityLiving e : list) {

@@ -76,7 +76,7 @@ public enum ScrollAction implements Constants {
                 String buc = playerIn.getHeldItemMainhand()
                         .getTagCompound().getString(BUC);
                 EntityLiving entity;
-                if (buc.equals(BLESSED)) {
+                /*if (buc.equals(BLESSED)) {
                     for (int i = 0; i < Main.random.nextInt(21) + 5; i++) {
                         entity = new EntitySilverfish(playerIn.world);
                         entity.setPosition(
@@ -94,20 +94,20 @@ public enum ScrollAction implements Constants {
                                 playerIn.posZ + Main.random.nextInt(5) - 2);
                         playerIn.world.spawnEntity(entity);
                     }
+                }*/
+                //if (buc.equals(UNCURSED))
+                for (int i = 0; i < Main.random.nextInt(4) + 1; i++) {
+                    entity = new EntityZombie(playerIn.world);
+                    entity.setPosition(
+                            playerIn.posX + Main.random.nextInt(5) - 2,
+                            playerIn.posY,
+                            playerIn.posZ + Main.random.nextInt(5) - 2);
+                    playerIn.world.spawnEntity(entity);
                 }
-                if (buc.equals(UNCURSED))
-                    for (int i = 0; i < Main.random.nextInt(4) + 1; i++) {
-                        entity = new EntityZombie(playerIn.world);
-                        entity.setPosition(
-                                playerIn.posX + Main.random.nextInt(5) - 2,
-                                playerIn.posY,
-                                playerIn.posZ + Main.random.nextInt(5) - 2);
-                        playerIn.world.spawnEntity(entity);
-                    }
 
-            }
+                //}
 
-        } else if (this.equals(ENCHANT_WEAPON)) {
+            }} else if (this.equals(ENCHANT_WEAPON)) {
             if (!playerIn.world.isRemote) {
                 World world = playerIn.world;
                 if (!playerIn.isCreative())
@@ -120,7 +120,6 @@ public enum ScrollAction implements Constants {
                         Field[] enchantments = Enchantments.class
                                 .getDeclaredFields();
                         Enchantment enchantment = null;
-                        if (buc.equals(UNCURSED) || buc.equals(BLESSED))
                             try {
                                 enchantment = (Enchantment) enchantments[Main.random
                                         .nextInt(enchantments.length)]
@@ -133,9 +132,7 @@ public enum ScrollAction implements Constants {
                                 playerIn.getHeldItemOffhand()
                                         .addEnchantment(
                                                 enchantment,
-                                                buc.equals(BLESSED) ? enchantment
-                                                        .getMaxLevel()
-                                                        : enchantment
+                                               enchantment
                                                         .getMinLevel()
                                                         + Main.random
                                                         .nextInt(enchantment
@@ -147,9 +144,9 @@ public enum ScrollAction implements Constants {
                             } catch (IllegalArgumentException e) {
                             } catch (IllegalAccessException e) {
                             }
-                        if (buc.equals(CURSED))
-                            playerIn.getHeldItemOffhand().addEnchantment(
-                                    Enchantments.VANISHING_CURSE, 1);
+                        //if (buc.equals(CURSED))
+                            //playerIn.getHeldItemOffhand().addEnchantment(
+                                    //Enchantments.VANISHING_CURSE, 1);
                     } else
                         playerIn.sendMessage(new TextComponentString(
                                 "Your offhand glows for a second..."));

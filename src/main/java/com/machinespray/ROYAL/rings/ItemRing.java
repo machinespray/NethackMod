@@ -41,9 +41,8 @@ public class ItemRing extends NetHackItem implements Constants, IBauble {
 	@Override
 	public boolean canUnequip(ItemStack itemstack, EntityLivingBase player) {
 		if (itemstack.getTagCompound() != null)
-			if (itemstack.getTagCompound().getString(BUC) != null)
-				return !itemstack.getTagCompound().getString(BUC)
-						.equals(CURSED)||((EntityPlayer)player).isCreative();
+			if (itemstack.getTagCompound().getString(BUC) != null){}
+				//Do Negative removal effect
 		return true;
 	}
 	@Override

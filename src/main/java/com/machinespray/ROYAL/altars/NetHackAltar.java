@@ -88,7 +88,7 @@ public class NetHackAltar extends Block implements Constants {
     public boolean onBlockActivated(World worldIn, BlockPos pos,
                                     IBlockState state, EntityPlayer playerIn, EnumHand hand,
                                     EnumFacing facing, float hitX, float hitY, float hitZ) {
-        if (worldIn.isRemote) {
+        /*if (worldIn.isRemote) {
             for (int i = 0; i < 3; i++)
                 worldIn.spawnParticle(EnumParticleTypes.CRIT_MAGIC, pos.getX() + Main.random.nextDouble(), pos.getY() + 1 + Main.random.nextDouble(), pos.getZ() + Main.random.nextDouble(), 0, 0.2, 0, 0);
             playerIn.playSound(SoundEvents.ITEM_TOTEM_USE, 0.2f, 2);
@@ -180,7 +180,7 @@ public class NetHackAltar extends Block implements Constants {
                                 pos.getY() + 1, pos.getZ(), stack));
                     }
                 }
-            }
+                    */
         return true;
     }
 
