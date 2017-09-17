@@ -1,6 +1,8 @@
 package com.machinespray.ROYAL.proxy;
 
 import com.machinespray.ROYAL.items.NetHackItem;
+import com.machinespray.ROYAL.polymorph.PolyEvents;
+import com.machinespray.ROYAL.polymorph.PolyPlayerData;
 
 public class ClientProxy extends CommonProxy {
     @Override
@@ -13,12 +15,13 @@ public class ClientProxy extends CommonProxy {
     @Override
     public void init() {
         super.init();
-
+        PolyPlayerData.initClient();
     }
 
     @Override
     public void postinit() {
         super.postinit();
+        PolyEvents.init();
     }
 
     @Override
