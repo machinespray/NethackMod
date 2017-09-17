@@ -6,6 +6,7 @@ import com.machinespray.ROYAL.Constants;
 import com.machinespray.ROYAL.Main;
 import com.machinespray.ROYAL.NetHackItem;
 import com.machinespray.ROYAL.RoyalItems;
+import com.machinespray.ROYAL.randomized.ring.RingActionGroup;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -14,6 +15,7 @@ public class ItemRing extends NetHackItem implements Constants, IBauble {
 
 	public ItemRing(String unlocalizedName) {
 		super(unlocalizedName);
+		actionGroup=RingActionGroup.INSTANCE;
 		this.setCreativeTab(Main.royalTab);
 	}
 
@@ -33,8 +35,8 @@ public class ItemRing extends NetHackItem implements Constants, IBauble {
 	@Override
 	public void onWornTick(ItemStack itemstack, EntityLivingBase player) {
 		if(!player.world.isRemote)
-		if (RingAction.getAction(getUnlocalizedName()) != null)
-			RingAction.getAction(getUnlocalizedName()).onWornTick(itemstack,
+		if (actionGroup.getAction(getUnlocalizedName()) != null)
+			RingActionGroup.INSTANCE.getAction(getUnlocalizedName()).onWornTick(itemstack,
 					player);
 	}
 
@@ -47,11 +49,11 @@ public class ItemRing extends NetHackItem implements Constants, IBauble {
 	}
 	@Override
 	public boolean hasUse(){
-		return Main.proxy.getRingUse(this)!=null;
+		return Main.proxy.getUse(this)!=null;
 	}
 	@Override
 	public String getUse(){
-		return Main.proxy.getRingUse(this);
+		return Main.proxy.getUse(this);
 	}
 
 	@Override

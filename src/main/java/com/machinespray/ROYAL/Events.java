@@ -4,9 +4,9 @@ import baubles.api.BaublesApi;
 import com.machinespray.ROYAL.altars.RoyalBlocks;
 import com.machinespray.ROYAL.knowledge.IKnowledgeHandler;
 import com.machinespray.ROYAL.knowledge.Provider;
+import com.machinespray.ROYAL.randomized.ring.RingActionGroup;
 import com.machinespray.ROYAL.randomized.scroll.ScrollActionGroup;
 import com.machinespray.ROYAL.rings.ItemRing;
-import com.machinespray.ROYAL.rings.RingAction;
 import com.machinespray.ROYAL.sync.MessageRequestKnowledge;
 import net.minecraft.block.Block;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -47,7 +47,7 @@ public class Events implements Constants {
 	@SubscribeEvent
 	public void onLoad(WorldEvent.Load e) {
 		if (!e.getWorld().isRemote) {
-			RingAction.match(e.getWorld().getSeed());
+			RingActionGroup.INSTANCE.match(e.getWorld().getSeed());
 			ScrollActionGroup.INSTANCE.match(e.getWorld().getSeed());
 		}
 	}
@@ -114,7 +114,7 @@ public static String[] getGods(long seed,String[] godsList){
 						e.getEntityPlayer()).getSlots(); i++) {
 					if (BaublesApi.getBaublesHandler(e.getEntityPlayer())
 							.getStackInSlot(i).getItem() instanceof ItemRing)
-						if (RingAction.getAction((BaublesApi
+						if (RingActionGroup.INSTANCE.getAction((BaublesApi
 								.getBaublesHandler(e.getEntityPlayer())
 								.getStackInSlot(i).getItem()
 								.getUnlocalizedName())).getKnowledgeName() == "strength") {

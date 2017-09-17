@@ -1,6 +1,7 @@
 package com.machinespray.ROYAL.proxy;
 
 import com.machinespray.ROYAL.Main;
+import com.machinespray.ROYAL.NetHackItem;
 import com.machinespray.ROYAL.RoyalItems;
 import com.machinespray.ROYAL.altars.RoyalBlocks;
 import com.machinespray.ROYAL.rings.ItemRing;
@@ -23,17 +24,14 @@ public class ClientProxy extends CommonProxy {
 		super.postinit();
 	}
 	@Override
-	public String getRingUse(ItemRing ring) {
-		if(ring.getID()!=-2)
-			if(Main.scrolls!=null)
-		return Main.rings[ring.getID()];
-		return null;
-	}
-	@Override
-	public String getScrollUse(ItemScroll scroll) {
-		if(scroll.getID()!=-2)
-			if(Main.scrolls!=null)
-		return Main.scrolls[scroll.getID()];
+	public String getUse(NetHackItem item) {
+		try {
+			if (item.getID() != -2)
+				if (item.actionGroup != null)
+					return item.actionGroup.getAction(item.getUnlocalizedName()).getKnowledgeName();
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
 		return null;
 	}
 
