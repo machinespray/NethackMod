@@ -52,7 +52,7 @@ public class NetHackItem extends Item implements Constants {
                 if (((NetHackItem) stack.getItem()).hasUse()) {
                     NetHackItem item = (NetHackItem) stack.getItem();
                     if (item.hasUse())
-                        if (Main.getHandler(player).hasKnowledge(item.getUse().replace("_", " ")) || player.isCreative())
+                        if (Main.getHandler(player).hasKnowledge(item.getUse().replace("_", "")) || player.isCreative())
                             return uppercase(item.type()) + " of " + uppercase(item.getUse().replace("_", " "));
                 }
             }
