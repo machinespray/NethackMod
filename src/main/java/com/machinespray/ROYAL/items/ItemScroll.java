@@ -1,8 +1,7 @@
-package com.machinespray.ROYAL.scrolls;
+package com.machinespray.ROYAL.items;
 
 import com.machinespray.ROYAL.Constants;
 import com.machinespray.ROYAL.Main;
-import com.machinespray.ROYAL.NetHackItem;
 import com.machinespray.ROYAL.RoyalItems;
 import com.machinespray.ROYAL.randomized.scroll.ScrollActionGroup;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;

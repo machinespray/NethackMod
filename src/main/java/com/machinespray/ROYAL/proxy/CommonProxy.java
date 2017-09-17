@@ -2,7 +2,7 @@ package com.machinespray.ROYAL.proxy;
 
 import com.machinespray.ROYAL.Constants;
 import com.machinespray.ROYAL.Main;
-import com.machinespray.ROYAL.NetHackItem;
+import com.machinespray.ROYAL.items.NetHackItem;
 import com.machinespray.ROYAL.knowledge.DefaultKnowledgeHandler;
 import com.machinespray.ROYAL.knowledge.IKnowledgeHandler;
 import com.machinespray.ROYAL.knowledge.Storage;

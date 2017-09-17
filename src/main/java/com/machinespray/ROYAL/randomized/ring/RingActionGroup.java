@@ -2,8 +2,6 @@ package com.machinespray.ROYAL.randomized.ring;
 
 import com.machinespray.ROYAL.Constants;
 import com.machinespray.ROYAL.randomized.RandomActionGroup;
-import com.machinespray.ROYAL.randomized.scroll.ScrollAction;
-import com.machinespray.ROYAL.randomized.scroll.ScrollActions;
 
 import java.util.ArrayList;
 
@@ -12,7 +10,7 @@ public class RingActionGroup extends RandomActionGroup<RingAction> implements Co
     public static RingActionGroup INSTANCE = new RingActionGroup();
     protected ArrayList<RingAction> values = new ArrayList<>();
 
-    //public RingActionGroup(){ScrollActions.init(this);}
+    public RingActionGroup(){RingActions.init(this);}
 
     @Override
     public ArrayList<RingAction> values() {
@@ -32,5 +30,11 @@ public class RingActionGroup extends RandomActionGroup<RingAction> implements Co
     @Override
     public int id() {
         return 0;
+    }
+
+    @Override
+    public RingAction getAction(String name) {
+        name = name.substring(0, name.length() - 1);
+        return super.getAction(name);
     }
 }

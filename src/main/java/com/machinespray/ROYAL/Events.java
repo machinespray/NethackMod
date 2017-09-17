@@ -2,11 +2,12 @@ package com.machinespray.ROYAL;
 
 import baubles.api.BaublesApi;
 import com.machinespray.ROYAL.altars.RoyalBlocks;
+import com.machinespray.ROYAL.items.NetHackItem;
 import com.machinespray.ROYAL.knowledge.IKnowledgeHandler;
 import com.machinespray.ROYAL.knowledge.Provider;
 import com.machinespray.ROYAL.randomized.ring.RingActionGroup;
 import com.machinespray.ROYAL.randomized.scroll.ScrollActionGroup;
-import com.machinespray.ROYAL.rings.ItemRing;
+import com.machinespray.ROYAL.items.ItemRing;
 import com.machinespray.ROYAL.sync.MessageRequestKnowledge;
 import net.minecraft.block.Block;
 import net.minecraft.client.entity.EntityPlayerSP;

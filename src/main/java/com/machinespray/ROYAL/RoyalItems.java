@@ -1,7 +1,8 @@
 package com.machinespray.ROYAL;
 
-import com.machinespray.ROYAL.rings.ItemRing;
-import com.machinespray.ROYAL.scrolls.ItemScroll;
+import com.machinespray.ROYAL.items.ItemRing;
+import com.machinespray.ROYAL.items.ItemScroll;
+import com.machinespray.ROYAL.items.NetHackItem;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 

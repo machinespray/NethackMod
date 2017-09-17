@@ -2,7 +2,7 @@ package com.machinespray.ROYAL.randomized.scroll;
 
 import com.machinespray.ROYAL.Constants;
 import com.machinespray.ROYAL.Main;
-import com.machinespray.ROYAL.NetHackItem;
+import com.machinespray.ROYAL.items.NetHackItem;
 import com.machinespray.ROYAL.knowledge.IKnowledgeHandler;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.EntityLiving;

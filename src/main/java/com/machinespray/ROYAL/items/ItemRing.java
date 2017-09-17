@@ -1,14 +1,12 @@
-package com.machinespray.ROYAL.rings;
+package com.machinespray.ROYAL.items;
 
 import baubles.api.BaubleType;
 import baubles.api.IBauble;
 import com.machinespray.ROYAL.Constants;
 import com.machinespray.ROYAL.Main;
-import com.machinespray.ROYAL.NetHackItem;
 import com.machinespray.ROYAL.RoyalItems;
 import com.machinespray.ROYAL.randomized.ring.RingActionGroup;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 
 public class ItemRing extends NetHackItem implements Constants, IBauble {

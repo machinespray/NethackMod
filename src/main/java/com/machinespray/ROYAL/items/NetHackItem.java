@@ -1,5 +1,7 @@
-package com.machinespray.ROYAL;
+package com.machinespray.ROYAL.items;
 
+import com.machinespray.ROYAL.Constants;
+import com.machinespray.ROYAL.Main;
 import com.machinespray.ROYAL.knowledge.IKnowledgeHandler;
 import com.machinespray.ROYAL.randomized.RandomActionGroup;
 import net.minecraft.client.Minecraft;
@@ -9,9 +11,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.potion.PotionUtils;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
