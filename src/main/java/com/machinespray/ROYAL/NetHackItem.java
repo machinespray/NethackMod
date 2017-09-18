@@ -58,6 +58,7 @@ public class NetHackItem extends Item implements Constants {
             }
         return super.getItemStackDisplayName(stack);
     }
+    @SideOnly(Side.CLIENT)
     @Override
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag advanced) {
         EntityPlayer playerIn = Minecraft.getMinecraft().player;
