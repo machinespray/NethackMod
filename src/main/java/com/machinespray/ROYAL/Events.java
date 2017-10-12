@@ -95,60 +95,6 @@ public static String[] getGods(long seed,String[] godsList){
 	}
 
 	@SubscribeEvent
-	public void onBlockBreakBegin(PlayerEvent.BreakSpeed e) {
-		World world = e.getEntityPlayer().world;
-		if (e.getEntityPlayer().world
-				.getBlockState(e.getPos())
-				.getBlock()
-				.getBlockHardness(
-						e.getEntityPlayer().world.getBlockState(e.getPos()),
-						e.getEntityPlayer().world, e.getPos()) < .7
-				&& e.getEntityPlayer().world
-						.getBlockState(e.getPos())
-						.getBlock()
-						.getBlockHardness(
-								e.getEntityPlayer().world.getBlockState(e
-										.getPos()), e.getEntityPlayer().world,
-								e.getPos()) > 0)
-			if (!world.isRemote)
-				for (int i = 0; i < BaublesApi.getBaublesHandler(
-						e.getEntityPlayer()).getSlots(); i++) {
-					if (BaublesApi.getBaublesHandler(e.getEntityPlayer())
-							.getStackInSlot(i).getItem() instanceof ItemRing)
-						if (RingActionGroup.INSTANCE.getAction((BaublesApi
-								.getBaublesHandler(e.getEntityPlayer())
-								.getStackInSlot(i).getItem()
-								.getUnlocalizedName())).getKnowledgeName() == "strength") {
-							if (e.getEntityPlayer().inventory
-									.addItemStackToInventory(e
-											.getEntityPlayer().world
-											.getBlockState(e.getPos())
-											.getBlock()
-											.getItem(
-													e.getEntityPlayer().world,
-													e.getPos(),
-													e.getEntityPlayer().world
-															.getBlockState(e
-																	.getPos())))) {
-								e.getEntityPlayer().world.setBlockState(
-										e.getPos(),
-										Blocks.AIR.getDefaultState());
-							}
-						}
-				}
-	}
-
-	/*
-	 * @SideOnly(Side.CLIENT)
-	 * 
-	 * @SubscribeEvent public void onRender(RenderPlayerEvent.Pre e){
-	 * e.getEntity().setInvisible(true); LayerTexture layer = new
-	 * LayerTexture(e.getRenderer(), new ModelSquid(),new
-	 * ResourceLocation("textures/entity/squid.png"));
-	 * e.getRenderer().addLayer(layer); }
-	 */
-
-	@SubscribeEvent
 	public void attachCapabilities(AttachCapabilitiesEvent<Entity> event) {
 
 		if (event.getObject() instanceof EntityPlayer)
@@ -164,12 +110,6 @@ public static String[] getGods(long seed,String[] godsList){
 			Main.rings = new String[ringNames.length];
 			Main.scrolls = new String[scrollNames.length];
 			Main.INSTANCE.sendToServer(new MessageRequestKnowledge());
-			e.getEntity()
-					.sendMessage(
-							new TextComponentString(
-									"Thank you for using ROYAL "
-											+ Main.VERSION
-											+ ".\n In order to offer to a god, type\"#offer\", with at least 9 gold nuggets in hand."));
 		}
 	}
 
@@ -181,52 +121,6 @@ public static String[] getGods(long seed,String[] godsList){
 		clone.setKnowledge(original.getKnowledge());
 	}
 
-	@SubscribeEvent
-	public void onChat(ServerChatEvent e) {
-		String[] gods = getGods(e.getPlayer().world.getSeed(),this.gods);
-		if (e.getMessage().equals("#offer") && e.getPlayer() != player
-				&& e.getPlayer().getHeldItemMainhand() != null)
-			if (e.getPlayer().getHeldItemMainhand().getItem()
-					.equals(Items.GOLD_NUGGET)
-					&& e.getPlayer().getHeldItemMainhand().getCount() > 8) {
-				e.getPlayer()
-						.getHeldItemMainhand()
-						.setCount(
-								e.getPlayer().getHeldItemMainhand().getCount() - 9);
-				e.getPlayer().sendMessage(
-						new TextComponentString("Offer To Whom?\na). "
-								+ gods[0] + " (Lawful)\nb). " + gods[1]
-								+ " (Neutral)\nc). " + gods[2] + " (Chaotic)"));
-				if (player != null)
-					player.sendMessage(new TextComponentString(
-							"The gods have are now listening to someone else."));
-				player = e.getPlayer();
-				e.setCanceled(true);
-			}
-		if (e.getPlayer().equals(player) && !e.getMessage().equals("#offer")) {
-			e.setCanceled(true);
-			if (e.getMessage().equals("a") || e.getMessage().equals("b")
-					|| e.getMessage().equals("c")) {
-				int to = Character
-						.getNumericValue(e.getMessage().charAt(0) - 49);
-				player.sendMessage(new TextComponentString(gods[to]
-						+ " hears your prayer!"));
-				if (Main.random.nextInt(4) == 0) {
-					ItemStack stack = new ItemStack(RoyalBlocks.altars.get(to));
-					if (player.inventory.addItemStackToInventory(stack))
-						player.sendMessage(new TextComponentString(
-								gods[to]
-										+ " grants you an altar of their allignment. Sacrificing gold bars at it can grant you rewards!"));
-
-				}
-
-			} else {
-				player.sendMessage(new TextComponentString(
-						"The gods do not wish to hear from you now."));
-			}
-			player = null;
-		}
-	}
 	@SubscribeEvent
 	public static void registerBlocks(RegistryEvent.Register<Block> event)
 	{

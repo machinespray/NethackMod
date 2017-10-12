@@ -49,7 +49,7 @@ public class PolyEvents {
 
     @SubscribeEvent
     public void onVanillaMessesWithMe(TickEvent.PlayerTickEvent e) {
-        if (PolyPlayerData.getPoly(e.player) == PolyPlayerData.SILVERFISH) {
+        if (PolyPlayerData.getPolySize(e.player)!=0F) {
             /*
             EntityPlayer player = e.player;
             double d0 = (double) player.width / 2.0D;
@@ -62,7 +62,7 @@ public class PolyEvents {
             }*/
             if (e.player.getArrowCountInEntity() > 0)
                 e.player.setArrowCountInEntity(0);
-            setSize(e.player.width, 0.6F, e.player);
+            setSize(e.player.width, PolyPlayerData.getPolySize(e.player), e.player);
         }
     }
 
