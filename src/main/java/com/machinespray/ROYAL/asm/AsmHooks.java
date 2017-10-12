@@ -6,6 +6,8 @@ import net.minecraft.client.model.ModelPlayer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.common.Optional;
 
 public class AsmHooks {
 
@@ -14,8 +16,17 @@ public class AsmHooks {
         player.setFlag(7,false);
         if (PolyPlayerData.getPoly(player) != 0)
             if (!(PolyPlayerData.getPolyModel(player) instanceof ModelPlayer))
-                return (float) (0.9 * PolyPlayerData.getPolySize(player));
+                return (float) ((0.9 * PolyPlayerData.getPolySize(player))*getScale(player));
         return eyeHeight;
+    }
+    public static double getScale(Entity e){
+        if(Loader.isModLoaded("lilliputian"))
+        return getModdedScale(e);
+        return 1.0D;
+    }
+    @Optional.Method(modid = "lilliputian")
+    public static double getModdedScale(Entity e){
+        return lilliputian.util.EntitySizeUtil.getEntityScale(e);
     }
 
     public static boolean layerRenderHook(EntityLivingBase entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scaleIn) {

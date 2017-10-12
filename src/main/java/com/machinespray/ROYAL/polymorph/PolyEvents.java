@@ -1,14 +1,23 @@
 package com.machinespray.ROYAL.polymorph;
 
+import com.machinespray.ROYAL.asm.AsmHooks;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.RenderGlobal;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
+import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
@@ -35,15 +44,11 @@ public class PolyEvents {
             e.width = width;
             e.height = height;
 
-            if (e.width < f) {
+            //if (e.width < f) {
                 double d0 = (double) width / 2.0D;
                 e.setEntityBoundingBox(new AxisAlignedBB(e.posX - d0, e.posY, e.posZ - d0, e.posX + d0, e.posY + (double) e.height, e.posZ + d0));
                 return;
-            }
-
-            AxisAlignedBB axisalignedbb = e.getEntityBoundingBox();
-            e.setEntityBoundingBox(new AxisAlignedBB(axisalignedbb.minX, axisalignedbb.minY, axisalignedbb.minZ, axisalignedbb.minX + (double) e.width, axisalignedbb.minY + (double) e.height, axisalignedbb.minZ + (double) e.width));
-
+            //}
         }
     }
 
@@ -62,7 +67,14 @@ public class PolyEvents {
             }*/
             if (e.player.getArrowCountInEntity() > 0)
                 e.player.setArrowCountInEntity(0);
-            setSize(e.player.width, PolyPlayerData.getPolySize(e.player), e.player);
+            float scale = 1;
+            if(Loader.isModLoaded("lilliputian"))
+                scale = (float) AsmHooks.getModdedScale(e.player);
+            if(PolyPlayerData.getPolyEntity(e.player)==null) {
+                setSize(0.6F*scale, scale*1.8F, e.player);
+            }else{
+                setSize(PolyPlayerData.getPolyEntity(e.player).width*scale, PolyPlayerData.getPolyEntity(e.player).width*scale, e.player);
+            }
         }
     }
 
@@ -75,7 +87,37 @@ public class PolyEvents {
 
         }
     }
+    /*
+    @SubscribeEvent
+    public void renderWorldLast(RenderWorldLastEvent event) {
+        EntityPlayer p = Minecraft.getMinecraft().player;
+        AxisAlignedBB axisalignedbb = p.getEntityBoundingBox();
+        if(axisalignedbb!=null) {
+            EntityPlayer entityIn = p;
+            double x = 0;
+            double y = 0;
+            double z = 0;
+            GlStateManager.depthMask(false);
+            GlStateManager.disableTexture2D();
+            GlStateManager.disableLighting();
+            GlStateManager.disableCull();
+            GlStateManager.disableBlend();
+            RenderGlobal.drawBoundingBox(axisalignedbb.minX - entityIn.posX + x, axisalignedbb.minY - entityIn.posY + y, axisalignedbb.minZ - entityIn.posZ + z, axisalignedbb.maxX - entityIn.posX + x, axisalignedbb.maxY - entityIn.posY + y, axisalignedbb.maxZ - entityIn.posZ + z, 1.0F, 1.0F, 1.0F, 1.0F);
+            Tessellator tessellator = Tessellator.getInstance();
+            BufferBuilder bufferbuilder = tessellator.getBuffer();
+            Vec3d vec3d = entityIn.getLook(event.getPartialTicks());
+            bufferbuilder.begin(3, DefaultVertexFormats.POSITION_COLOR);
+            bufferbuilder.pos(x, y + (double) entityIn.getEyeHeight(), z).color(0, 0, 255, 255).endVertex();
+            bufferbuilder.pos(x + vec3d.x * 2.0D, y + (double) entityIn.getEyeHeight() + vec3d.y * 2.0D, z + vec3d.z * 2.0D).color(0, 0, 255, 255).endVertex();
+            tessellator.draw();
 
+            GlStateManager.enableTexture2D();
+            GlStateManager.enableLighting();
+            GlStateManager.enableCull();
+            GlStateManager.disableBlend();
+            GlStateManager.depthMask(true);
+        }
+    }*/
     @SubscribeEvent
     public void onPlayerUpdate(LivingEvent.LivingUpdateEvent e) {
         if (e.getEntityLiving() instanceof EntityPlayer) {

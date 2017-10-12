@@ -76,7 +76,7 @@ public class PolyPlayerData {
         WRAITH = registerPoly(defaultModel, new
                 ResourceLocation("royal", "textures/polymorph/wraith.png"), defaultRender);
         SILVERFISH = registerPolyUnique(new ModelSilverfish(), new ResourceLocation("textures/entity/silverfish.png"), new RenderSilverfish(renderManager), 0.6F,new EntitySilverfish(null));
-        WOLF = registerPolyUnique(new ModelWolf(), new ResourceLocation("textures/entity/wolf/wolf.png"), new RenderWolf(renderManager), 0.6F, new MalleableWolf());
+        WOLF = registerPolyUnique(new ModelWolf(), new ResourceLocation("textures/entity/wolf/wolf.png"), new RenderWolf(renderManager), 0.8F, new MalleableWolf());
         CAT = registerPolyUnique(new ModelOcelot(), new ResourceLocation("textures/entity/cat/ocelot.png"), new RenderOcelot(renderManager), 0.6F,new EntityOcelot(null));
         DONKEY = registerPolyUnique(new ModelHorse(), new ResourceLocation("textures/entity/horse/donkey.png"), new RenderHorse(renderManager), 1.8F, new MalleableHorse());
         OWL = registerPolyUnique(new ModelParrot(),new ResourceLocation("textures/entity/parrot/parrot_blue.png"),new RenderParrot(renderManager),.9F,new MalleableParrot());
@@ -86,14 +86,14 @@ public class PolyPlayerData {
         ZOMBIE = registerPoly();
         WRAITH = registerPoly();
         SILVERFISH = registerPolyUnique(0.6F);
-        WOLF = registerPolyUnique(0.6F);
+        WOLF = registerPolyUnique(0.8F);
         CAT = registerPolyUnique(0.6F);
         DONKEY = registerPolyUnique(1.8F);
         OWL = registerPolyUnique(.9F);
     }
 
     public static int getPoly(EntityPlayer player) {
-        return OWL;
+        return DONKEY;
         /*
         try {
             return polymorphs.get(player.getUniqueID().toString());
