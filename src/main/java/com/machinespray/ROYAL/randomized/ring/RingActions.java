@@ -2,6 +2,8 @@ package com.machinespray.ROYAL.randomized.ring;
 
 import com.machinespray.ROYAL.Main;
 import com.machinespray.ROYAL.knowledge.IKnowledgeHandler;
+import lilliputian.potions.PotionLilliputian;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -9,11 +11,14 @@ import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.potion.PotionType;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.common.Optional;
 
 import java.util.List;
 
@@ -237,5 +242,44 @@ public class RingActions {
                     }
             }
         };
+        if(Loader.isModLoaded("lilliputian")) {
+            new RingAction(group, "GROWTH") {
+                @Override
+                public void onWornTick(ItemStack itemstack, EntityLivingBase player) {
+                    if (player.getActivePotionEffect(Potion.getPotionById(10)) == null)
+                        player.addPotionEffect(getPotionGrowth());
+                    IKnowledgeHandler knowledge = Main.getHandler(player);
+                    if (!knowledge.hasKnowledge("growth")) {
+                        if (!player.world.isRemote)
+                            player.sendMessage(new TextComponentString(
+                                    "You discover this is a ring of growth!"));
+                        knowledge.addKnowledge("growth");
+                    }
+                }
+            };
+            new RingAction(group, "SHRINKING") {
+                @Override
+                public void onWornTick(ItemStack itemstack, EntityLivingBase player) {
+                    if (player.getActivePotionEffect(Potion.getPotionById(10)) == null)
+                        player.addPotionEffect(getPotionShrink());
+                    IKnowledgeHandler knowledge = Main.getHandler(player);
+                    if (!knowledge.hasKnowledge("shrinking")) {
+                        if (!player.world.isRemote)
+                            player.sendMessage(new TextComponentString(
+                                    "You discover this is a ring of shrinking!"));
+                        knowledge.addKnowledge("shrinking");
+                    }
+                }
+            };
+        }
+        }
+    @Optional.Method(modid = "lilliputian")
+    public static PotionEffect getPotionGrowth() {
+        return new PotionEffect(lilliputian.potions.PotionLilliputian.GROWING.getEffects().get(0).getPotion(),10,0, false, false);
     }
-}
+    @Optional.Method(modid = "lilliputian")
+    public static PotionEffect getPotionShrink() {
+        return new PotionEffect(PotionLilliputian.SHRINKING.getEffects().get(0).getPotion(),10,0, false, false);
+    }
+    }
+

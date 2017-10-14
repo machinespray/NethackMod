@@ -2,19 +2,13 @@ package com.machinespray.ROYAL.polymorph;
 
 import com.machinespray.ROYAL.asm.AsmHooks;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.RenderGlobal;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
-import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.fml.common.Loader;
@@ -22,8 +16,6 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
-import static com.machinespray.ROYAL.Main.proxy;
 
 
 public class PolyEvents {
@@ -38,43 +30,43 @@ public class PolyEvents {
 
     }
 
-    protected void setSize(float width, float height, Entity e) {
+    protected static void setSize(float width, float height, Entity e) {
         if (width != e.width || height != e.height) {
             float f = e.width;
             e.width = width;
             e.height = height;
 
             //if (e.width < f) {
-                double d0 = (double) width / 2.0D;
-                e.setEntityBoundingBox(new AxisAlignedBB(e.posX - d0, e.posY, e.posZ - d0, e.posX + d0, e.posY + (double) e.height, e.posZ + d0));
-                return;
+            double d0 = (double) width / 2.0D;
+            e.setEntityBoundingBox(new AxisAlignedBB(e.posX - d0, e.posY, e.posZ - d0, e.posX + d0, e.posY + (double) e.height, e.posZ + d0));
+            return;
             //}
         }
     }
 
     @SubscribeEvent
-    public void onVanillaMessesWithMe(TickEvent.PlayerTickEvent e) {
-        if (PolyPlayerData.getPolySize(e.player)!=0F) {
-            /*
-            EntityPlayer player = e.player;
-            double d0 = (double) player.width / 2.0D;
-            player.height = 0.8F;
-            AxisAlignedBB box = new AxisAlignedBB(player.posX - d0, player.posY, player.posZ - d0, player.posX + d0, player.posY + (double) player.height, player.posZ + d0);
-            try {
-                ReflectionHelper.findField(Entity.class, "av", "field_70121_D", "boundingBox").set(player, box);
-            } catch (Exception er) {
-                System.out.println(er.getMessage());
-            }*/
-            if (e.player.getArrowCountInEntity() > 0)
-                e.player.setArrowCountInEntity(0);
-            float scale = 1;
-            if(Loader.isModLoaded("lilliputian"))
-                scale = (float) AsmHooks.getModdedScale(e.player);
-            if(PolyPlayerData.getPolyEntity(e.player)==null) {
-                setSize(0.6F*scale, scale*1.8F, e.player);
-            }else{
-                setSize(PolyPlayerData.getPolyEntity(e.player).width*scale, PolyPlayerData.getPolyEntity(e.player).width*scale, e.player);
+    public void playerTickEvent(TickEvent.PlayerTickEvent e) {
+        if (!Loader.isModLoaded("lilliputian"))
+            updatePlayer(e.player);
+    }
+
+    public static void updatePlayer(EntityLivingBase e) {
+        if (e instanceof EntityPlayer) {
+            EntityPlayer player = (EntityPlayer) e;
+            if (PolyPlayerData.getPolySize(player) != 0F) {
+                if (player.getArrowCountInEntity() > 0)
+                    player.setArrowCountInEntity(0);
+                float scale = 1;
+                if (Loader.isModLoaded("lilliputian"))
+                    scale = (float) AsmHooks.getModdedScale(player);
+                if (PolyPlayerData.getPolyEntity(player) == null) {
+                    setSize(0.6F * scale, scale * 1.8F, player);
+                } else {
+                    setSize(PolyPlayerData.getPolyEntity(player).width * scale, PolyPlayerData.getPolyEntity(player).width * scale, player);
+                }
             }
+            if (PolyPlayerData.getPoly(player) == PolyPlayerData.DONKEY)
+                player.stepHeight = 1.0F;
         }
     }
 
@@ -87,6 +79,7 @@ public class PolyEvents {
 
         }
     }
+
     /*
     @SubscribeEvent
     public void renderWorldLast(RenderWorldLastEvent event) {

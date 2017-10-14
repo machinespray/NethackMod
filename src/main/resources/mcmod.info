@@ -8,6 +8,7 @@
   "logoFile": "/royal.png",
   "authorList": ["machinespray"],
   "credits": "Eladkay, Escapee, and Rushmead for organizing the modoff that this mod was created at.",
+  "dependencies": ["lilliputian"],
   "requiredMods": ["baubles"],
   "useDependencyInformation" : true
 }

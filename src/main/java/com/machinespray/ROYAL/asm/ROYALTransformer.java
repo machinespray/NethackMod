@@ -31,10 +31,27 @@ public class ROYALTransformer implements IClassTransformer, Opcodes {
     static {
         transformers.put("net.minecraft.entity.player.EntityPlayer", ROYALTransformer::transformEntityPlayer);
         transformers.put("net.minecraft.client.renderer.entity.RenderLivingBase", ROYALTransformer::transformLayerRenderer);
+        transformers.put("lilliputian.handlers.EntitySizeHandler", ROYALTransformer::transformLilliputianSizeHandler);
     }
 
     static {
 
+    }
+
+    public static byte[] transformLilliputianSizeHandler(byte[] bytes) {
+        MethodSignature signature = new MethodSignature("onLivingUpdate", "onLivingUpdate", "onLivingUpdate", "(Lnet/minecraftforge/event/entity/living/LivingEvent$LivingUpdateEvent;)V");
+        return transform(bytes, signature, "Inserting step height hook(used for lilliputian compatibility)", combine((AbstractInsnNode node) -> node.getOpcode() == RETURN,
+                (MethodNode method, AbstractInsnNode node) -> {
+
+                    InsnList newInstructions = new InsnList();
+                    newInstructions.add(new VarInsnNode(ALOAD, 0));
+                    newInstructions.add(new MethodInsnNode(INVOKEVIRTUAL, "net/minecraftforge/event/entity/living/LivingEvent$LivingUpdateEvent", "getEntityLiving", "()Lnet/minecraft/entity/EntityLivingBase;", false));
+                    newInstructions.add(new MethodInsnNode(INVOKESTATIC, "com/machinespray/ROYAL/polymorph/PolyEvents", "updatePlayer", "(Lnet/minecraft/entity/EntityLivingBase;)V", false));
+                    method.instructions.insertBefore(node, newInstructions);
+
+                    return false;
+
+                }));
     }
 
     public static byte[] transformEntityPlayer(byte[] bytes) {

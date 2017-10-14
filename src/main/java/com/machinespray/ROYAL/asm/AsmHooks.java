@@ -17,7 +17,7 @@ public class AsmHooks {
         if (PolyPlayerData.getPoly(player) != 0)
             if (!(PolyPlayerData.getPolyModel(player) instanceof ModelPlayer))
                 return (float) ((0.9 * PolyPlayerData.getPolySize(player))*getScale(player));
-        return eyeHeight;
+        return (eyeHeight);
     }
     public static double getScale(Entity e){
         if(Loader.isModLoaded("lilliputian"))

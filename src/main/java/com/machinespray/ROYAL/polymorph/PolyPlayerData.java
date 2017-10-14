@@ -93,7 +93,7 @@ public class PolyPlayerData {
     }
 
     public static int getPoly(EntityPlayer player) {
-        return DONKEY;
+        return NONE;
         /*
         try {
             return polymorphs.get(player.getUniqueID().toString());
@@ -123,7 +123,13 @@ public class PolyPlayerData {
     }
 
     public static float getPolySize(EntityPlayer player) {
-        return polySize.get(getPoly(player));
+        try {
+            return polySize.get(getPoly(player));
+        }catch (Exception e){
+            //This is being called early, because of a weird compat thing I did,return no polymorph for now, as it
+            // doesn't matter yet
+            return 0F;
+        }
     }
 
     public static void setPoly(EntityPlayer p, int i) {
