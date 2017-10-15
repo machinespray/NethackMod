@@ -17,9 +17,13 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 
 public class PolyEvents {
     public static LayerTexture texture = new LayerTexture();
+    private static HashMap<EntityPlayer,Boolean> isPollied = new HashMap<>();
 
     //Zombie: 2.5 armor, burn in daylight, 1.5 * fire damage
     //Wraith no boots/leggings
@@ -74,9 +78,14 @@ public class PolyEvents {
     @SubscribeEvent
     public void onRender(net.minecraftforge.client.event.RenderPlayerEvent.Pre e) {
         EntityPlayer p = e.getEntityPlayer();
-        if (PolyPlayerData.getPoly(p) != 0) {
+        if(isPollied.get(p)==null)
+            isPollied.put(p,false);
+            if (PolyPlayerData.getPoly(p) != 0) {
+            isPollied.put(p,true);
             p.setInvisible(true);
-
+        }else if(isPollied.get(p)){
+            isPollied.put(p,false);
+            p.setInvisible(false);
         }
     }
 

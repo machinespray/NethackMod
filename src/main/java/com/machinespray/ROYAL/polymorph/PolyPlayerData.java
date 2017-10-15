@@ -1,5 +1,8 @@
 package com.machinespray.ROYAL.polymorph;
 
+import baubles.api.BaublesApi;
+import baubles.api.cap.IBaublesItemHandler;
+import com.machinespray.ROYAL.items.NetHackItem;
 import com.machinespray.ROYAL.polymorph.customEntities.MalleableHorse;
 import com.machinespray.ROYAL.polymorph.customEntities.MalleableParrot;
 import com.machinespray.ROYAL.polymorph.customEntities.MalleableWolf;
@@ -10,6 +13,8 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntitySilverfish;
 import net.minecraft.entity.passive.*;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -79,7 +84,6 @@ public class PolyPlayerData {
         WOLF = registerPolyUnique(new ModelWolf(), new ResourceLocation("textures/entity/wolf/wolf.png"), new RenderWolf(renderManager), 0.8F, new MalleableWolf());
         CAT = registerPolyUnique(new ModelOcelot(), new ResourceLocation("textures/entity/cat/ocelot.png"), new RenderOcelot(renderManager), 0.6F,new EntityOcelot(null));
         DONKEY = registerPolyUnique(new ModelHorse(), new ResourceLocation("textures/entity/horse/donkey.png"), new RenderHorse(renderManager), 1.8F, new MalleableHorse());
-        OWL = registerPolyUnique(new ModelParrot(),new ResourceLocation("textures/entity/parrot/parrot_blue.png"),new RenderParrot(renderManager),.9F,new MalleableParrot());
     }
 
     public static void init() {
@@ -93,14 +97,15 @@ public class PolyPlayerData {
     }
 
     public static int getPoly(EntityPlayer player) {
-        return NONE;
-        /*
-        try {
-            return polymorphs.get(player.getUniqueID().toString());
-        } catch (Exception e) {
-            setPoly(player, 0);
-            return 0;
-        }*/
+        IBaublesItemHandler handler = BaublesApi.getBaublesHandler(player);
+        int slots = handler.getSlots();
+        for(int i=0; i<slots;i++)
+            if(!handler.getStackInSlot(i).isEmpty()) {
+                Item item = handler.getStackInSlot(i).getItem();
+                if(item instanceof NetHackItem)
+                    return (((NetHackItem) item).getID())%DONKEY+1;
+            }
+            return NONE;
     }
 
     @SideOnly(Side.CLIENT)
