@@ -6,6 +6,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
+import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
@@ -47,7 +48,9 @@ public class PolyEvents {
     private static Method transformEatFirstPerson;
     private static Method renderMapFirstPerson;
     private static Method renderMapFirstPersonSide;
-    private boolean isInvisible = false;
+    private static Method getMapAngleFromPitch;
+    //TODO make this method detect actual invisibility (placeholder for now)
+    private boolean customGetInvisible = false;
 
     private boolean getAndSetIsPollied(EntityPlayer p) {
         if (isPollied.get(p) == null) {
@@ -80,16 +83,18 @@ public class PolyEvents {
             transformSideFirstPerson = ItemRenderer.class.getDeclaredMethod("transformSideFirstPerson", EnumHandSide.class, float.class);
             transformFirstPerson = ItemRenderer.class.getDeclaredMethod("transformFirstPerson", EnumHandSide.class, float.class);
             transformEatFirstPerson = ItemRenderer.class.getDeclaredMethod("transformEatFirstPerson", float.class, EnumHandSide.class, ItemStack.class);
-            renderMapFirstPerson = ItemRenderer.class.getDeclaredMethod("renderMapFirstPerson", float.class, float.class, float.class);
             renderMapFirstPersonSide = ItemRenderer.class.getDeclaredMethod("renderMapFirstPersonSide", float.class, EnumHandSide.class, float.class, ItemStack.class);
+            getMapAngleFromPitch = ItemRenderer.class.getDeclaredMethod("getMapAngleFromPitch", float.class);
+            renderMapFirstPerson = ItemRenderer.class.getDeclaredMethod("renderMapFirstPerson", ItemStack.class);
             rotateAroundXAndY.setAccessible(true);
             setLightmap.setAccessible(true);
             rotateArm.setAccessible(true);
             transformSideFirstPerson.setAccessible(true);
             transformFirstPerson.setAccessible(true);
-            renderMapFirstPerson.setAccessible(true);
             renderMapFirstPersonSide.setAccessible(true);
-        }catch (Exception e ){
+            getMapAngleFromPitch.setAccessible(true);
+            renderMapFirstPerson.setAccessible(true);
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -139,7 +144,6 @@ public class PolyEvents {
     public void onRender(net.minecraftforge.client.event.RenderPlayerEvent.Pre e) {
         EntityPlayer p = e.getEntityPlayer();
         boolean wasPollied = getIsPollied(p);
-        isInvisible = p.isInvisible();
         if (getAndSetIsPollied(p)) {
             p.setInvisible(true);
         } else if (wasPollied) {
@@ -253,7 +257,7 @@ public class PolyEvents {
             renderer.enableLightmap();
             try {
                 renderItemInFirstPerson(e.getPartialTicks(), renderer.itemRenderer);
-            }catch (Exception exception ){
+            } catch (Exception exception) {
                 // Fail custom hand render
                 exception.printStackTrace();
             }
@@ -280,20 +284,20 @@ public class PolyEvents {
                 flag1 = !flag;
             }
         }
-        rotateAroundXAndY.invoke(itemRenderer,f1,f2);
+        rotateAroundXAndY.invoke(itemRenderer, f1, f2);
         setLightmap.invoke(itemRenderer);
-        rotateArm.invoke(itemRenderer,partialTicks);
+        rotateArm.invoke(itemRenderer, partialTicks);
         GlStateManager.enableRescaleNormal();
         if (flag) {
             float f3 = enumhand == EnumHand.MAIN_HAND ? f : 0.0F;
             float f5 = 1.0F - (itemRenderer.prevEquippedProgressMainHand + (itemRenderer.equippedProgressMainHand - itemRenderer.prevEquippedProgressMainHand) * partialTicks);
-                renderItemInFirstPerson(abstractclientplayer, partialTicks, f1, EnumHand.MAIN_HAND, f3, itemRenderer.itemStackMainHand, f5,itemRenderer);
+            renderItemInFirstPerson(abstractclientplayer, partialTicks, f1, EnumHand.MAIN_HAND, f3, itemRenderer.itemStackMainHand, f5, itemRenderer);
         }
 
         if (flag1) {
             float f4 = enumhand == EnumHand.OFF_HAND ? f : 0.0F;
             float f6 = 1.0F - (itemRenderer.prevEquippedProgressOffHand + (itemRenderer.equippedProgressOffHand - itemRenderer.prevEquippedProgressOffHand) * partialTicks);
-                renderItemInFirstPerson(abstractclientplayer, partialTicks, f1, EnumHand.OFF_HAND, f4, itemRenderer.itemStackOffHand, f6,itemRenderer);
+            renderItemInFirstPerson(abstractclientplayer, partialTicks, f1, EnumHand.OFF_HAND, f4, itemRenderer.itemStackOffHand, f6, itemRenderer);
         }
 
         GlStateManager.disableRescaleNormal();
@@ -333,67 +337,55 @@ public class PolyEvents {
 
         GlStateManager.enableCull();
     }
-    public void renderItemInFirstPerson(AbstractClientPlayer p_187457_1_, float p_187457_2_, float p_187457_3_, EnumHand p_187457_4_, float p_187457_5_, ItemStack p_187457_6_, float p_187457_7_,ItemRenderer itemRenderer) throws InvocationTargetException, IllegalAccessException {
+
+    public void renderItemInFirstPerson(AbstractClientPlayer p_187457_1_, float p_187457_2_, float p_187457_3_, EnumHand p_187457_4_, float p_187457_5_, ItemStack p_187457_6_, float p_187457_7_, ItemRenderer itemRenderer) throws InvocationTargetException, IllegalAccessException {
         boolean flag = p_187457_4_ == EnumHand.MAIN_HAND;
         EnumHandSide enumhandside = flag ? p_187457_1_.getPrimaryHand() : p_187457_1_.getPrimaryHand().opposite();
         GlStateManager.pushMatrix();
 
-        if (p_187457_6_.isEmpty())
-        {
-            if (flag && isInvisible)
-            {
+        if (p_187457_6_.isEmpty()) {
+            if (flag && !customGetInvisible) {
                 renderArmFirstPerson(p_187457_7_, p_187457_5_, enumhandside);
             }
-        }
-        else if (p_187457_6_.getItem() instanceof net.minecraft.item.ItemMap)
-        {
-            if (flag && itemRenderer.itemStackOffHand.isEmpty())
-            {
-                renderMapFirstPerson.invoke(itemRenderer,p_187457_3_, p_187457_7_, p_187457_5_);
+        } else if (p_187457_6_.getItem() instanceof net.minecraft.item.ItemMap) {
+            if (flag && itemRenderer.itemStackOffHand.isEmpty()) {
+                renderMapFirstPerson(p_187457_3_, p_187457_7_, p_187457_5_);
+            } else {
+                renderMapFirstPersonSide(p_187457_7_, enumhandside, p_187457_5_, p_187457_6_);
             }
-            else
-            {
-                renderMapFirstPersonSide.invoke(itemRenderer,p_187457_7_, enumhandside, p_187457_5_, p_187457_6_);
-            }
-        }
-        else
-        {
+        } else {
             boolean flag1 = enumhandside == EnumHandSide.RIGHT;
 
-            if (p_187457_1_.isHandActive() && p_187457_1_.getItemInUseCount() > 0 && p_187457_1_.getActiveHand() == p_187457_4_)
-            {
+            if (p_187457_1_.isHandActive() && p_187457_1_.getItemInUseCount() > 0 && p_187457_1_.getActiveHand() == p_187457_4_) {
                 int j = flag1 ? 1 : -1;
 
-                switch (p_187457_6_.getItemUseAction())
-                {
+                switch (p_187457_6_.getItemUseAction()) {
                     case NONE:
-                        transformSideFirstPerson.invoke(itemRenderer,enumhandside, p_187457_7_);
+                        transformSideFirstPerson.invoke(itemRenderer, enumhandside, p_187457_7_);
                         break;
                     case EAT:
                     case DRINK:
-                        transformEatFirstPerson.invoke(itemRenderer,p_187457_2_, enumhandside, p_187457_6_);
-                        transformSideFirstPerson.invoke(itemRenderer,enumhandside, p_187457_7_);
+                        transformEatFirstPerson.invoke(itemRenderer, p_187457_2_, enumhandside, p_187457_6_);
+                        transformSideFirstPerson.invoke(itemRenderer, enumhandside, p_187457_7_);
                         break;
                     case BLOCK:
-                        transformSideFirstPerson.invoke(itemRenderer,enumhandside, p_187457_7_);
+                        transformSideFirstPerson.invoke(itemRenderer, enumhandside, p_187457_7_);
                         break;
                     case BOW:
-                        transformSideFirstPerson.invoke(itemRenderer,enumhandside, p_187457_7_);
-                        GlStateManager.translate((float)j * -0.2785682F, 0.18344387F, 0.15731531F);
+                        transformSideFirstPerson.invoke(itemRenderer, enumhandside, p_187457_7_);
+                        GlStateManager.translate((float) j * -0.2785682F, 0.18344387F, 0.15731531F);
                         GlStateManager.rotate(-13.935F, 1.0F, 0.0F, 0.0F);
-                        GlStateManager.rotate((float)j * 35.3F, 0.0F, 1.0F, 0.0F);
-                        GlStateManager.rotate((float)j * -9.785F, 0.0F, 0.0F, 1.0F);
-                        float f5 = (float)p_187457_6_.getMaxItemUseDuration() - ((float)Minecraft.getMinecraft().player.getItemInUseCount() - p_187457_2_ + 1.0F);
+                        GlStateManager.rotate((float) j * 35.3F, 0.0F, 1.0F, 0.0F);
+                        GlStateManager.rotate((float) j * -9.785F, 0.0F, 0.0F, 1.0F);
+                        float f5 = (float) p_187457_6_.getMaxItemUseDuration() - ((float) Minecraft.getMinecraft().player.getItemInUseCount() - p_187457_2_ + 1.0F);
                         float f6 = f5 / 20.0F;
                         f6 = (f6 * f6 + f6 * 2.0F) / 3.0F;
 
-                        if (f6 > 1.0F)
-                        {
+                        if (f6 > 1.0F) {
                             f6 = 1.0F;
                         }
 
-                        if (f6 > 0.1F)
-                        {
+                        if (f6 > 0.1F) {
                             float f7 = MathHelper.sin((f5 - 0.1F) * 1.3F);
                             float f3 = f6 - 0.1F;
                             float f4 = f7 * f3;
@@ -402,18 +394,16 @@ public class PolyEvents {
 
                         GlStateManager.translate(f6 * 0.0F, f6 * 0.0F, f6 * 0.04F);
                         GlStateManager.scale(1.0F, 1.0F, 1.0F + f6 * 0.2F);
-                        GlStateManager.rotate((float)j * 45.0F, 0.0F, -1.0F, 0.0F);
+                        GlStateManager.rotate((float) j * 45.0F, 0.0F, -1.0F, 0.0F);
                 }
-            }
-            else
-            {
-                float f = -0.4F * MathHelper.sin(MathHelper.sqrt(p_187457_5_) * (float)Math.PI);
-                float f1 = 0.2F * MathHelper.sin(MathHelper.sqrt(p_187457_5_) * ((float)Math.PI * 2F));
-                float f2 = -0.2F * MathHelper.sin(p_187457_5_ * (float)Math.PI);
+            } else {
+                float f = -0.4F * MathHelper.sin(MathHelper.sqrt(p_187457_5_) * (float) Math.PI);
+                float f1 = 0.2F * MathHelper.sin(MathHelper.sqrt(p_187457_5_) * ((float) Math.PI * 2F));
+                float f2 = -0.2F * MathHelper.sin(p_187457_5_ * (float) Math.PI);
                 int i = flag1 ? 1 : -1;
-                GlStateManager.translate((float)i * f, f1, f2);
-                transformSideFirstPerson.invoke(itemRenderer,enumhandside, p_187457_7_);
-                transformFirstPerson.invoke(itemRenderer,enumhandside, p_187457_5_);
+                GlStateManager.translate((float) i * f, f1, f2);
+                transformSideFirstPerson.invoke(itemRenderer, enumhandside, p_187457_7_);
+                transformFirstPerson.invoke(itemRenderer, enumhandside, p_187457_5_);
             }
 
             itemRenderer.renderItemSide(p_187457_1_, p_187457_6_, flag1 ? ItemCameraTransforms.TransformType.FIRST_PERSON_RIGHT_HAND : ItemCameraTransforms.TransformType.FIRST_PERSON_LEFT_HAND, !flag1);
@@ -422,5 +412,78 @@ public class PolyEvents {
         GlStateManager.popMatrix();
     }
 
+    private void renderMapFirstPerson(float p_187463_1_, float p_187463_2_, float p_187463_3_) throws InvocationTargetException, IllegalAccessException {
+        ItemRenderer itemRenderer = Minecraft.getMinecraft().getItemRenderer();
+        float f = MathHelper.sqrt(p_187463_3_);
+        float f1 = -0.2F * MathHelper.sin(p_187463_3_ * (float) Math.PI);
+        float f2 = -0.4F * MathHelper.sin(f * (float) Math.PI);
+        GlStateManager.translate(0.0F, -f1 / 2.0F, f2);
+        float f3 = (float) getMapAngleFromPitch.invoke(itemRenderer, p_187463_1_);
+        GlStateManager.translate(0.0F, 0.04F + p_187463_2_ * -1.2F + f3 * -0.5F, -0.72F);
+        GlStateManager.rotate(f3 * -85.0F, 1.0F, 0.0F, 0.0F);
+        this.renderArms();
+        float f4 = MathHelper.sin(f * (float) Math.PI);
+        GlStateManager.rotate(f4 * 20.0F, 1.0F, 0.0F, 0.0F);
+        GlStateManager.scale(2.0F, 2.0F, 2.0F);
+        renderMapFirstPerson.invoke(itemRenderer, itemRenderer.itemStackMainHand);
+    }
+
+    private void renderArms() throws InvocationTargetException, IllegalAccessException {
+        if (!customGetInvisible) {
+            GlStateManager.disableCull();
+            GlStateManager.pushMatrix();
+            GlStateManager.rotate(90.0F, 0.0F, 1.0F, 0.0F);
+            renderArm(EnumHandSide.RIGHT);
+            renderArm(EnumHandSide.LEFT);
+            GlStateManager.popMatrix();
+            GlStateManager.enableCull();
+        }
+    }
+
+    private void renderArm(EnumHandSide p_187455_1_) {
+        Minecraft mc = Minecraft.getMinecraft();
+        mc.getTextureManager().bindTexture(PolyPlayerData.getPolyTexture(mc.player));
+        Render<AbstractClientPlayer> render = mc.getRenderManager().<AbstractClientPlayer>getEntityRenderObject(mc.player);
+        RenderPlayer renderplayer = (RenderPlayer) render;
+        GlStateManager.pushMatrix();
+        float f = p_187455_1_ == EnumHandSide.RIGHT ? 1.0F : -1.0F;
+        GlStateManager.rotate(92.0F, 0.0F, 1.0F, 0.0F);
+        GlStateManager.rotate(45.0F, 1.0F, 0.0F, 0.0F);
+        GlStateManager.rotate(f * -41.0F, 0.0F, 0.0F, 1.0F);
+        GlStateManager.translate(f * 0.3F, -1.1F, 0.45F);
+
+        if (p_187455_1_ == EnumHandSide.RIGHT) {
+            renderplayer.renderRightArm(mc.player);
+        } else {
+            renderplayer.renderLeftArm(mc.player);
+        }
+
+        GlStateManager.popMatrix();
+    }
+
+    private void renderMapFirstPersonSide(float p_187465_1_, EnumHandSide p_187465_2_, float p_187465_3_, ItemStack p_187465_4_) throws InvocationTargetException, IllegalAccessException {
+        float f = p_187465_2_ == EnumHandSide.RIGHT ? 1.0F : -1.0F;
+        GlStateManager.translate(f * 0.125F, -0.125F, 0.0F);
+
+        if (!customGetInvisible) {
+            GlStateManager.pushMatrix();
+            GlStateManager.rotate(f * 10.0F, 0.0F, 0.0F, 1.0F);
+            renderArmFirstPerson(p_187465_1_, p_187465_3_, p_187465_2_);
+            GlStateManager.popMatrix();
+        }
+
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(f * 0.51F, -0.08F + p_187465_1_ * -1.2F, -0.75F);
+        float f1 = MathHelper.sqrt(p_187465_3_);
+        float f2 = MathHelper.sin(f1 * (float) Math.PI);
+        float f3 = -0.5F * f2;
+        float f4 = 0.4F * MathHelper.sin(f1 * ((float) Math.PI * 2F));
+        float f5 = -0.3F * MathHelper.sin(p_187465_3_ * (float) Math.PI);
+        GlStateManager.translate(f * f3, f4 - 0.3F * f2, f5);
+        GlStateManager.rotate(f2 * -45.0F, 1.0F, 0.0F, 0.0F);
+        GlStateManager.rotate(f * f2 * -30.0F, 0.0F, 1.0F, 0.0F);
+        renderMapFirstPerson.invoke(Minecraft.getMinecraft().getItemRenderer(), p_187465_4_);
+        GlStateManager.popMatrix();
+    }
 
 }
