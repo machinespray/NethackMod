@@ -4,7 +4,7 @@ import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
 
 import java.util.Map;
 
-//-Dfml.coreMods.load=com.machinespray.ROYAL.asm.ROYALCorePlugin
+//-Dfml.coreMods.load=com.machinespray.ROYAL.asm.ROYALCorePlugin,lilliputian.core.FMLLoadingPlugin
 @IFMLLoadingPlugin.Name("ROYAL Plugin")
 @IFMLLoadingPlugin.TransformerExclusions("com.machinespray.ROYAL.asm")
 public class ROYALCorePlugin implements IFMLLoadingPlugin {

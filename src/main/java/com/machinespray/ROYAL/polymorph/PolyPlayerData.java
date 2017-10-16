@@ -21,6 +21,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.HashMap;
 
+//TODO make a cleaner, more organized polymorph class/object type
 public class PolyPlayerData {
     public static HashMap<String, Integer> polymorphs = new HashMap<>();
     public static int NONE = 0;
@@ -39,17 +40,27 @@ public class PolyPlayerData {
     private static HashMap<Integer, RenderLivingBase> polyRenderer = new HashMap<>();
     @SideOnly(Side.CLIENT)
     private static HashMap<Integer, EntityLivingBase> polyEntity = new HashMap<>();
+    @SideOnly(Side.CLIENT)
+    private static HashMap<Integer, Float> polyEye = new HashMap<>();
     private static HashMap<Integer, Float> polySize = new HashMap<>();
-    private static RenderPlayer defaultRender = new RenderPlayer(Minecraft.getMinecraft().getRenderManager());
-    private static ModelPlayer defaultModel = new ModelPlayer(0.0F, false);
+    public static RenderPlayer defaultRender = new RenderPlayer(Minecraft.getMinecraft().getRenderManager());
+    public static ModelPlayer defaultModel = new ModelPlayer(0.0F, false);
     private static int id = 1;
 
+    static{
+        PolyPlayerData.defaultModel.isChild=false;
+    }
 
     public static int registerPoly() {
         polySize.put(id, 0F);
         return id++;
     }
 
+    public static int registerPolyUnique(float size,float eyeHeight) {
+        polySize.put(id, size);
+        polyEye.put(id,eyeHeight);
+        return id++;
+    }
     public static int registerPolyUnique(float size) {
         polySize.put(id, size);
         return id++;
@@ -60,17 +71,17 @@ public class PolyPlayerData {
         polyModel.put(id, model);
         polyTexture.put(id, texture);
         polyRenderer.put(id, renderer);
-        polyRenderer.put(id,null);
+        polyEye.put(id,null);
         return registerPoly();
     }
 
     @SideOnly(Side.CLIENT)
-    public static int registerPolyUnique(ModelBase model, ResourceLocation texture, RenderLivingBase renderer, float size, EntityLivingBase entity) {
+    public static int registerPolyUnique(ModelBase model, ResourceLocation texture, RenderLivingBase renderer, EntityLivingBase entity) {
         polyModel.put(id, model);
         polyTexture.put(id, texture);
         polyRenderer.put(id, renderer);
         polyEntity.put(id,entity);
-        return registerPolyUnique(size);
+        return registerPolyUnique(entity.height,entity.getEyeHeight());
     }
 
     @SideOnly(Side.CLIENT)
@@ -80,11 +91,12 @@ public class PolyPlayerData {
                 ResourceLocation("royal", "textures/polymorph/zombie.png"), defaultRender);
         WRAITH = registerPoly(defaultModel, new
                 ResourceLocation("royal", "textures/polymorph/wraith.png"), defaultRender);
-        SILVERFISH = registerPolyUnique(new ModelSilverfish(), new ResourceLocation("textures/entity/silverfish.png"), new RenderSilverfish(renderManager), 0.6F,new EntitySilverfish(null));
-        WOLF = registerPolyUnique(new ModelWolf(), new ResourceLocation("textures/entity/wolf/wolf.png"), new RenderWolf(renderManager), 0.8F, new MalleableWolf());
-        CAT = registerPolyUnique(new ModelOcelot(), new ResourceLocation("textures/entity/cat/ocelot.png"), new RenderOcelot(renderManager), 0.6F,new EntityOcelot(null));
-        DONKEY = registerPolyUnique(new ModelHorse(), new ResourceLocation("textures/entity/horse/donkey.png"), new RenderHorse(renderManager), 1.8F, new MalleableHorse());
+        SILVERFISH = registerPolyUnique(new ModelSilverfish(), new ResourceLocation("textures/entity/silverfish.png"), new RenderSilverfish(renderManager),new EntitySilverfish(null));
+        WOLF = registerPolyUnique(new ModelWolf(), new ResourceLocation("textures/entity/wolf/wolf.png"), new RenderWolf(renderManager),  new MalleableWolf());
+        CAT = registerPolyUnique(new ModelOcelot(), new ResourceLocation("textures/entity/cat/ocelot.png"), new RenderOcelot(renderManager),new EntityOcelot(null));
+        DONKEY = registerPolyUnique(new ModelHorse(), new ResourceLocation("textures/entity/horse/donkey.png"), new RenderHorse(renderManager), new MalleableHorse());
     }
+
 
     public static void init() {
         ZOMBIE = registerPoly();
@@ -97,6 +109,8 @@ public class PolyPlayerData {
     }
 
     public static int getPoly(EntityPlayer player) {
+        if(true)
+            return ZOMBIE;
         IBaublesItemHandler handler = BaublesApi.getBaublesHandler(player);
         int slots = handler.getSlots();
         for(int i=0; i<slots;i++)
@@ -125,6 +139,10 @@ public class PolyPlayerData {
     @SideOnly(Side.CLIENT)
     public static RenderLivingBase getPolyRenderer(EntityPlayer player) {
         return polyRenderer.get(getPoly(player));
+    }
+
+    public static Float getPolyEye(EntityPlayer player) {
+        return polyEye.get(getPoly(player));
     }
 
     public static float getPolySize(EntityPlayer player) {

@@ -23,21 +23,11 @@ public class LayerTexture implements LayerRenderer<EntityLivingBase> {
             EntityPlayer player = (EntityPlayer) entitylivingbaseIn;
             if (PolyPlayerData.getPoly(player) != NONE) {
                 if (PolyPlayerData.getPolyEntity(player) == null) {
-                    ModelBase model = PolyPlayerData.getPolyModel(player);
-                    model.isChild = false;
-                    PolyPlayerData.getPolyRenderer(player).bindTexture(PolyPlayerData.getPolyTexture(player));
-                    if (model instanceof ModelPlayer) {
-                        if (entitylivingbaseIn.isSneaking()) {
-                            ((ModelPlayer) model).isSneak = true;
-
-                        } else {
-                            ((ModelPlayer) model).isSneak = false;
-
-                        }
-                    }
+                    PolyPlayerData.defaultRender.bindTexture(PolyPlayerData.getPolyTexture(player));
                     GlStateManager.enableAlpha();
                     GlStateManager.enableBlend();
-                    model.render(entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
+                    PolyPlayerData.defaultModel.isSneak=entitylivingbaseIn.isSneaking();
+                    PolyPlayerData.defaultModel.render(entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
                 } else {
                     ModelBase model = PolyPlayerData.getPolyModel(player);
                     EntityLivingBase entity = PolyPlayerData.getPolyEntity(player);
