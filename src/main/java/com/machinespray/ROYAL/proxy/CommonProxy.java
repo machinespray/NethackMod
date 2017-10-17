@@ -6,6 +6,7 @@ import com.machinespray.ROYAL.items.NetHackItem;
 import com.machinespray.ROYAL.knowledge.DefaultKnowledgeHandler;
 import com.machinespray.ROYAL.knowledge.IKnowledgeHandler;
 import com.machinespray.ROYAL.knowledge.Storage;
+import com.machinespray.ROYAL.polymorph.PolyPlayerData;
 import com.machinespray.ROYAL.sync.KnowledgeMessageHandler;
 import com.machinespray.ROYAL.sync.KnowledgeRequestHandler;
 import com.machinespray.ROYAL.sync.MessageRequestKnowledge;
@@ -21,6 +22,7 @@ public class CommonProxy implements Constants {
 		CapabilityManager.INSTANCE.register(IKnowledgeHandler.class, new Storage(), DefaultKnowledgeHandler.class);
 	}
 	public void init(){
+		PolyPlayerData.init();
 		Main.INSTANCE.registerMessage(KnowledgeMessageHandler.class, MessageSendKnowledge.class, 0, Side.CLIENT); 
 		Main.INSTANCE.registerMessage(KnowledgeRequestHandler.class, MessageRequestKnowledge.class, 1, Side.SERVER);
 	}

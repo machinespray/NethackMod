@@ -31,11 +31,25 @@ public class ROYALTransformer implements IClassTransformer, Opcodes {
     static {
         transformers.put("net.minecraft.entity.player.EntityPlayer", ROYALTransformer::transformEntityPlayer);
         transformers.put("net.minecraft.client.renderer.entity.RenderLivingBase", ROYALTransformer::transformLayerRenderer);
+        transformers.put("net.minecraft.client.entity.AbstractClientPlayer", ROYALTransformer::transformAbstractClientPlayer);
         transformers.put("lilliputian.handlers.EntitySizeHandler", ROYALTransformer::transformLilliputianSizeHandler);
     }
 
     static {
 
+    }
+
+    private static byte[] transformAbstractClientPlayer(byte[] bytes) {
+        MethodSignature signature = new MethodSignature("getLocationSkin", "func_110311_f", "e", "()Lnet/minecraft/util/ResourceLocation;");
+        return transform(bytes, signature, "Inserting skin hook (used for polymorphing)", combine((AbstractInsnNode node) -> node.getOpcode() == ARETURN,
+                (MethodNode method, AbstractInsnNode node) -> {
+                    InsnList newInstructions = new InsnList();
+                    newInstructions.add(new VarInsnNode(ALOAD, 0));
+                    newInstructions.add(new MethodInsnNode(INVOKESTATIC, ASM_HOOKS, "getSkin", "(Lnet/minecraft/util/ResourceLocation;Lnet/minecraft/client/entity/AbstractClientPlayer;)Lnet/minecraft/util/ResourceLocation;", false));
+                    method.instructions.insertBefore(node, newInstructions);
+                    return false;
+
+                }));
     }
 
     public static byte[] transformLilliputianSizeHandler(byte[] bytes) {

@@ -3,6 +3,7 @@ package com.machinespray.ROYAL;
 import com.machinespray.ROYAL.knowledge.IKnowledgeHandler;
 import com.machinespray.ROYAL.polymorph.PolyEvents;
 import com.machinespray.ROYAL.proxy.CommonProxy;
+import net.minecraft.advancements.Advancement;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
@@ -27,6 +28,7 @@ public class Main {
     public static final String MODID = "royal";
     public static final String VERSION = "0.25";
     public static final Random random = new Random();
+    private static Boolean isObf = null;
     @SidedProxy(modId = MODID, clientSide = "com.machinespray.ROYAL.proxy.ClientProxy", serverSide = "com.machinespray.ROYAL.proxy.CommonProxy")
     public static CommonProxy proxy;
     public static final SimpleNetworkWrapper INSTANCE = NetworkRegistry.INSTANCE.newSimpleChannel(MODID);
@@ -63,6 +65,17 @@ public class Main {
         if (entity.hasCapability(CAPABILITY_KNOWLEDGE, EnumFacing.DOWN))
             return entity.getCapability(CAPABILITY_KNOWLEDGE, EnumFacing.DOWN);
         return null;
+    }
+
+    public static boolean isObf() {
+        if (isObf == null)
+            try {
+                Advancement.class.getDeclaredField("parent");
+                isObf = false;
+            } catch (Exception e) {
+                isObf = true;
+            }
+        return isObf.booleanValue();
     }
 
 }
