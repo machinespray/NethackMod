@@ -1,7 +1,5 @@
 package com.machinespray.ROYAL;
 
-import net.minecraft.util.text.TextFormatting;
-
 public interface Constants {
 	//Item/Block Names
 	String[] scrollNames = { "ZELGO MER", "JUYED AWK YACC", "NR 9",
@@ -20,14 +18,15 @@ public interface Constants {
 			"gold", "wooden", "granite", "opal", "clay", "coral", "black onyx",
 			"moonstone", "tiger eye", "jade", "agate", "topaz", "sapphire",
 			"ruby", "diamond", "ivory", "emerald" };
-	//String BLESSED = TextFormatting.GREEN.toString()+"blessed";
-	String UNCURSED = TextFormatting.AQUA.toString()+"unbound";
-	//String CURSED = TextFormatting.RED.toString()+"cursed";
+	//TODO
+	/*String BLESSED = TextFormatting.GREEN.toString()+"blessed";
+	String UNCURSED = TextFormatting.AQUA.toString()+"uncursed";
+	String CURSED = TextFormatting.RED.toString()+"cursed";
 	String LAWFUL = "Lawful";
 	String NEUTRAL = "Neutral";
 	String CHAOTIC = "Chaotic";
 	String ALTAR = "Altar";
 	//Data related Strings
 	String BUC = "BUC";
-	String BUCI = "BUCI";
+	String BUCI = "BUCI";*/
 }

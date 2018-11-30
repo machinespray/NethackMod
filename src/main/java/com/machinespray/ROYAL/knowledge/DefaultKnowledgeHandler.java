@@ -1,9 +1,10 @@
 package com.machinespray.ROYAL.knowledge;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 
 public class DefaultKnowledgeHandler implements IKnowledgeHandler {
-	private ArrayList<String> knowledge = new ArrayList<String>();
+	private ArrayList<String> knowledge = new ArrayList<>();
 
 	@Override
 	public void addKnowledge(String ul) {
@@ -15,6 +16,7 @@ public class DefaultKnowledgeHandler implements IKnowledgeHandler {
 		return knowledge.contains(ul);
 	}
 
+	@Nonnull
 	@Override
 	public ArrayList<String> getKnowledge() {
 		return knowledge;

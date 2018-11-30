@@ -7,7 +7,6 @@ import com.machinespray.ROYAL.Main;
 import com.machinespray.ROYAL.NetHackItem;
 import com.machinespray.ROYAL.RoyalItems;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 
 public class ItemRing extends NetHackItem implements Constants, IBauble {
@@ -34,17 +33,9 @@ public class ItemRing extends NetHackItem implements Constants, IBauble {
 	public void onWornTick(ItemStack itemstack, EntityLivingBase player) {
 		if(!player.world.isRemote)
 		if (RingAction.getAction(getUnlocalizedName()) != null)
-			RingAction.getAction(getUnlocalizedName()).onWornTick(itemstack,
-					player);
+			RingAction.getAction(getUnlocalizedName()).onWornTick(player);
 	}
 
-	@Override
-	public boolean canUnequip(ItemStack itemstack, EntityLivingBase player) {
-		if (itemstack.getTagCompound() != null)
-			if (itemstack.getTagCompound().getString(BUC) != null){}
-				//Do Negative removal effect
-		return true;
-	}
 	@Override
 	public boolean hasUse(){
 		return Main.proxy.getRingUse(this)!=null;

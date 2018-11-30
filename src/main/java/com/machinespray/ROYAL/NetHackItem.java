@@ -7,10 +7,6 @@ import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.potion.PotionUtils;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
@@ -68,20 +64,6 @@ public class NetHackItem extends Item implements Constants {
            if (nhi.hasUse())
                if (playerIn.isCreative() || kh.hasKnowledge(nhi.getUse()))
                    tooltip.add(super.getItemStackDisplayName(stack));
-           if (stack.getTagCompound() != null) {
-               if (stack.getTagCompound().getString(BUC) != null) {
-                   if (stack.getTagCompound().getBoolean(BUCI) || playerIn.isCreative())
-                       tooltip.add(stack.getTagCompound().getString(BUC));
-               } else {
-                   NBTTagCompound nbt = new NBTTagCompound();
-                   nbt.setString(BUC, UNCURSED);
-                   stack.setTagCompound(nbt);
-               }
-           } else {
-               NBTTagCompound nbt = new NBTTagCompound();
-               nbt.setString(BUC, UNCURSED);
-               stack.setTagCompound(nbt);
-           }
        }
     }
 
@@ -97,20 +79,7 @@ public class NetHackItem extends Item implements Constants {
         return -2;
     }
 
-    public static String id(ItemStack stack, int i) {
-        NBTTagCompound nbt = stack.getTagCompound();
-        switch (i) {
-            case 0:
-                nbt.setBoolean(BUCI, true);
-                stack.setTagCompound(nbt);
-                return nbt.getString(BUC);
-        }
-        return null;
-    }
-
     public String type() {
         return null;
     }
-
-    ;
 }
