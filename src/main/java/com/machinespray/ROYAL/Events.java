@@ -6,14 +6,19 @@ import com.machinespray.ROYAL.knowledge.Provider;
 import com.machinespray.ROYAL.rings.RingAction;
 import com.machinespray.ROYAL.scrolls.ScrollAction;
 import com.machinespray.ROYAL.sync.MessageRequestKnowledge;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.ModelRegistryEvent;
+import net.minecraftforge.client.event.RenderLivingEvent;
+import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.client.model.b3d.B3DLoader;
 import net.minecraftforge.client.model.obj.OBJLoader;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
@@ -27,8 +32,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 
 @Mod.EventBusSubscriber(modid = Main.MODID)
 public class Events implements Constants {
@@ -122,7 +126,6 @@ public class Events implements Constants {
 	}
 
 	//Tasks used to delay getting knowledge when joining a server
-	//TODO find a good place to run this on the client without using a Scheduled thing
 	static Timer timer = new Timer();
 	static TimerTask scheduleGetKnowledge;
 
@@ -137,5 +140,24 @@ public class Events implements Constants {
 				}
 			}
 		};
+	}
+
+	private static List<UUID> clientVisionList = new ArrayList<>();
+
+	//Handle the ring of vision effect
+	@SideOnly(Side.CLIENT)
+	@SubscribeEvent
+	public static void renderEntities(RenderLivingEvent.Pre e) {
+		EntityLivingBase entity = e.getEntity();
+		UUID uuid = entity.getUniqueID();
+		if (Minecraft.getMinecraft().player.getDistanceSqToEntity(entity) > 150) {
+			if (clientVisionList.contains(uuid)) {
+				entity.setGlowing(false);
+				clientVisionList.remove(uuid);
+			}
+			return;
+		}
+		clientVisionList.add(uuid);
+		e.getEntity().setGlowing(true);
 	}
 }

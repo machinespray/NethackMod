@@ -29,7 +29,7 @@ import java.util.Random;
 import java.util.logging.Logger;
 
 public enum RingAction implements Constants {
-	AGGRAVATE_MONSTER, CONFLICT, LEVITATION, SEE_INVISIBLE, TELEPORTATION, NOTHING, PROTECTION, REGENERATION, FIRE_RESISTANCE, STRENGTH, PARANOIA;
+	AGGRAVATE_MONSTER, CONFLICT, LEVITATION, VISION, TELEPORTATION, NOTHING, PROTECTION, REGENERATION, FIRE_RESISTANCE, STRENGTH, PARANOIA;
 
 	public int id;
 
@@ -111,12 +111,8 @@ public enum RingAction implements Constants {
 						, 20, -1, false, false));
 				player.addPotionEffect(new PotionEffect(
 						Potion.getPotionFromResourceLocation("minecraft:speed"), 20, 255, false, false));
-				discover(player);
-				return;
-			case SEE_INVISIBLE:
-				for (EntityLiving e : list) {
-					addPotionEffect(24, e);
-				}
+				if (player instanceof EntityPlayer)
+					discover((EntityPlayer) player);
 				return;
 			case PARANOIA:
 				if (player instanceof EntityPlayer)
@@ -142,19 +138,16 @@ public enum RingAction implements Constants {
 	}
 
 
-	private void discover(Entity player) {
-		if (player instanceof EntityPlayerMP) {
-			IKnowledgeHandler knowledge = Main.getHandler(player);
-			if (!knowledge.hasKnowledge(getKnowledgeName())) {
-				player.sendMessage(new TextComponentString(
-						"You discover this is a ring of " + getKnowledgeName() + "!"));
-				knowledge.addKnowledge(getKnowledgeName());
-				Main.INSTANCE.sendTo(new MessageSendKnowledge(getKnowledgeName()), (EntityPlayerMP) player);
-			}
-		} else {
-			Logger.getGlobal().warning("ROYAL:Discovery packet attempted to be sent from client-side");
+	private void discover(EntityPlayer player) {
+		IKnowledgeHandler knowledge = Main.getHandler(player);
+		if (!knowledge.hasKnowledge(getKnowledgeName())) {
+			player.sendStatusMessage(new TextComponentString(
+					"You discover this is a ring of " + getKnowledgeName() + "!"), true);
+			knowledge.addKnowledge(getKnowledgeName());
+			Main.INSTANCE.sendTo(new MessageSendKnowledge(getKnowledgeName()), (EntityPlayerMP) player);
 		}
 	}
+
 
 	private List<EntityLiving> getLocalLiving(EntityLivingBase player) {
 		AxisAlignedBB box = new AxisAlignedBB(player.posX - 5,

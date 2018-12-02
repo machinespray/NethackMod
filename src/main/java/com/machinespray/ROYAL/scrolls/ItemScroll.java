@@ -16,57 +16,57 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ItemScroll extends NetHackItem implements Constants {
 
-    public ItemScroll(String unlocalizedName) {
-        super(unlocalizedName);
-        this.setCreativeTab(Main.royalTab);
-    }
+	public ItemScroll(String unlocalizedName) {
+		super(unlocalizedName);
+		this.setCreativeTab(Main.royalTab);
+	}
 
-    public static void initNames() {
-        for (String s : scrollNames) {
-            s = s.replace(" ", "_");
-            RoyalItems.scrolls.add(new ItemScroll(s));
+	public static void initNames() {
+		for (String s : scrollNames) {
+			s = s.replace(" ", "_");
+			RoyalItems.scrolls.add(new ItemScroll(s));
 
-        }
-    }
+		}
+	}
 
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void registerClient() {
-        ModelLoader.setCustomModelResourceLocation(this, 0, new ModelResourceLocation(RoyalItems.base.getRegistryName(), "inventory"));
-    }
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerClient() {
+		ModelLoader.setCustomModelResourceLocation(this, 0, new ModelResourceLocation(RoyalItems.base.getRegistryName(), "inventory"));
+	}
 
-    @Override
-    public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn) {
-        if(!worldIn.isRemote)
-        if (ScrollAction.getAction(getUnlocalizedName()) != null)
-            ScrollAction.getAction(getUnlocalizedName()).onItemRightClick(worldIn, playerIn, handIn);
-        return super.onItemRightClick(worldIn, playerIn, handIn);
-    }
+	@Override
+	public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn) {
+		if (!worldIn.isRemote)
+			if (ScrollAction.getAction(getUnlocalizedName()) != null && handIn.equals(EnumHand.MAIN_HAND))
+				ScrollAction.getAction(getUnlocalizedName()).onItemRightClick(playerIn);
+		return super.onItemRightClick(worldIn, playerIn, handIn);
+	}
 
-    @Override
-    public boolean hasUse() {
-        return Main.proxy.getScrollUse(this) != null;
-    }
+	@Override
+	public boolean hasUse() {
+		return Main.proxy.getScrollUse(this) != null;
+	}
 
-    @Override
-    public String getUse() {
-        return Main.proxy.getScrollUse(this);
-    }
+	@Override
+	public String getUse() {
+		return Main.proxy.getScrollUse(this);
+	}
 
-    @Override
-    public int getID() {
-        for (int i = 0; i < scrollNames.length; i++) {
-            String temp = getUnlocalizedName().split("\\.")[1].replace("_", " ");
-            if (scrollNames[i].equals(temp))
-                return i;
-        }
-        return super.getID();
+	@Override
+	public int getID() {
+		for (int i = 0; i < scrollNames.length; i++) {
+			String temp = getUnlocalizedName().split("\\.")[1].replace("_", " ");
+			if (scrollNames[i].equals(temp))
+				return i;
+		}
+		return super.getID();
 
-    }
+	}
 
-    @Override
-    public String type() {
-        return "scroll";
-    }
+	@Override
+	public String type() {
+		return "scroll";
+	}
 
 }
