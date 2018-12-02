@@ -76,24 +76,24 @@ public enum RingAction implements Constants {
 		return this.name().replace("_", " ").toLowerCase();
 	}
 
-	public void onWornTick(EntityLivingBase player) {
+	public void onWornTick(EntityLivingBase living) {
 		if (Arrays.asList(potionRings).contains(this)) {
 			for (int i = 0; i < potionRings.length; i++)
 				if (potionRings[i].equals(this)) {
-					addPotionEffect(potionIds[i], player);
+					addPotionEffect(potionIds[i], living);
 					break;
 				}
 			return;
 		}
-		List<EntityLiving> list = getLocalLiving(player);
+		List<EntityLiving> list = getLocalLiving(living);
 		switch (this) {
 			case AGGRAVATE_MONSTER:
-				if (player instanceof EntityPlayer)
-					if (((EntityPlayer) player).isCreative())
+				if (living instanceof EntityPlayer)
+					if (((EntityPlayer) living).isCreative())
 						return;
 				for (EntityLiving e : list) {
-					if (e.getAttackTarget() == null || e.getAttackTarget() != player) {
-						e.setAttackTarget(player);
+					if (e.getAttackTarget() == null || e.getAttackTarget() != living) {
+						e.setAttackTarget(living);
 					}
 				}
 				return;
@@ -107,28 +107,26 @@ public enum RingAction implements Constants {
 				}
 				return;
 			case LEVITATION:
-				player.addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("minecraft:levitation")
-						, 20, -1, false, false));
-				player.addPotionEffect(new PotionEffect(
-						Potion.getPotionFromResourceLocation("minecraft:speed"), 20, 255, false, false));
-				if (player instanceof EntityPlayer)
-					discover((EntityPlayer) player);
+				if (!(living instanceof EntityPlayer))
+					return;
+				doLevitation((EntityPlayer) living);
+				discover((EntityPlayer) living);
 				return;
 			case PARANOIA:
-				if (player instanceof EntityPlayer)
+				if (living instanceof EntityPlayer)
 					if (Main.random.nextInt(1000) > 998)
-						if (!player.world.isRemote) {
-							double d0 = player.posX;
-							double d1 = player.posY;
-							double d2 = player.posZ;
+						if (!living.world.isRemote) {
+							double d0 = living.posX;
+							double d1 = living.posY;
+							double d2 = living.posZ;
 							int i = Main.random.nextInt(SoundEvents.class.getDeclaredFields().length);
 							try {
 								Object j;
 								j = SoundEvents.class.getDeclaredFields()[i].get(null);
-								player.world.playSound((EntityPlayer) player, d0, d1,
+								living.world.playSound((EntityPlayer) living, d0, d1,
 										d2, (SoundEvent) j, SoundCategory.PLAYERS,
 										1.0F, 1.0F);
-								player.playSound((SoundEvent) j, 1.0F, 1.0F);
+								living.playSound((SoundEvent) j, 1.0F, 1.0F);
 							} catch (IllegalAccessException e) {
 								e.printStackTrace();
 							}
@@ -170,5 +168,34 @@ public enum RingAction implements Constants {
 		ids.ensureCapacity(message.knowledge);
 		ids.set(message.knowledge, message.id);
 		values()[message.knowledge].id = message.id;
+	}
+
+	public void clientAction(EntityLivingBase player) {
+		EntityPlayer entityPlayer = (EntityPlayer) player;
+		if (this.equals(LEVITATION))
+			doLevitation(entityPlayer);
+	}
+
+	private void doLevitation(EntityPlayer entityPlayer) {
+		if (entityPlayer.isInWater()) {
+			entityPlayer.onGround = true;
+			entityPlayer.motionY = 0;
+			entityPlayer.stepHeight = 0.1F;
+		}
+		entityPlayer.fallDistance = 0.0F;
+		entityPlayer.stepHeight = 2.0F;
+		if (entityPlayer.onGround) {
+			entityPlayer.posY += 0.35;
+		} else if (entityPlayer.motionY < 0.0D) {
+			entityPlayer.motionY *= 0.6D;
+		}
+		if (entityPlayer.onGround) {
+			entityPlayer.motionX *= 1.2;
+			entityPlayer.motionX = Math.min(entityPlayer.motionX, 0.5);
+			entityPlayer.motionX = Math.max(entityPlayer.motionX, -0.5);
+			entityPlayer.motionZ *= 1.2;
+			entityPlayer.motionZ = Math.min(entityPlayer.motionZ, 0.5);
+			entityPlayer.motionZ = Math.max(entityPlayer.motionZ, -0.5);
+		}
 	}
 }

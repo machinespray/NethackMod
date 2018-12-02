@@ -19,7 +19,7 @@ public class ItemRing extends NetHackItem implements Constants, IBauble {
 	public static void initNames() {
 		for (String s : ringNames) {
 			s = s.replace(" ", "_");
-			RoyalItems.rings.add(new ItemRing(s+"R"));
+			RoyalItems.rings.add(new ItemRing(s + "R"));
 
 		}
 	}
@@ -28,20 +28,26 @@ public class ItemRing extends NetHackItem implements Constants, IBauble {
 	public BaubleType getBaubleType(ItemStack itemstack) {
 		return BaubleType.RING;
 	}
-	
+
 	@Override
 	public void onWornTick(ItemStack itemstack, EntityLivingBase player) {
-		if(!player.world.isRemote)
-		if (RingAction.getAction(getUnlocalizedName()) != null)
-			RingAction.getAction(getUnlocalizedName()).onWornTick(player);
+		if (RingAction.getAction(getUnlocalizedName()) == null)
+			return;
+			if (player.world.isRemote){
+				RingAction.getAction(getUnlocalizedName()).clientAction(player);
+			return;
+		}
+			if (RingAction.getAction(getUnlocalizedName()) != null)
+				RingAction.getAction(getUnlocalizedName()).onWornTick(player);
 	}
 
 	@Override
-	public boolean hasUse(){
-		return Main.proxy.getRingUse(this)!=null;
+	public boolean hasUse() {
+		return Main.proxy.getRingUse(this) != null;
 	}
+
 	@Override
-	public String getUse(){
+	public String getUse() {
 		return Main.proxy.getRingUse(this);
 	}
 
@@ -49,16 +55,23 @@ public class ItemRing extends NetHackItem implements Constants, IBauble {
 	public String type() {
 		return "ring";
 	}
+
 	@Override
-	public int getID(){
-		for(int i=0;i<ringNames.length;i++){
+	public int getID() {
+		for (int i = 0; i < ringNames.length; i++) {
 			String temp = getUnlocalizedName().split("\\.")[1].replace("_", " ");
-			temp = temp.substring(0, temp.length()-1);
-			if(ringNames[i].equals(temp))
+			temp = temp.substring(0, temp.length() - 1);
+			if (ringNames[i].equals(temp))
 				return i;
 		}
 		return super.getID();
-		
 	}
 
+	@Override
+	public void onUnequipped(ItemStack itemstack, EntityLivingBase player) {
+		//Reset Step Height for the levitation ring
+		player.stepHeight = 0.06F;
 	}
+
+
+}

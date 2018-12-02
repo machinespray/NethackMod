@@ -126,8 +126,8 @@ public class Events implements Constants {
 	}
 
 	//Tasks used to delay getting knowledge when joining a server
-	static Timer timer = new Timer();
-	static TimerTask scheduleGetKnowledge;
+	private static Timer timer = new Timer();
+	private static TimerTask scheduleGetKnowledge;
 
 	private static void resetSchedule() {
 		scheduleGetKnowledge = new TimerTask() {
@@ -150,6 +150,7 @@ public class Events implements Constants {
 	public static void renderEntities(RenderLivingEvent.Pre e) {
 		EntityLivingBase entity = e.getEntity();
 		UUID uuid = entity.getUniqueID();
+		if(!Minecraft.getMinecraft().player.equals(entity))
 		if (Minecraft.getMinecraft().player.getDistanceSqToEntity(entity) > 150) {
 			if (clientVisionList.contains(uuid)) {
 				entity.setGlowing(false);
