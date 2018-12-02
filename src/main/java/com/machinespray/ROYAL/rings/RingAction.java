@@ -59,14 +59,15 @@ public enum RingAction implements Constants {
 		name = name.split("\\.")[1].replace("_", " ");
 		name = name.substring(0, name.length() - 1);
 		for (int i = 0; i < ringNames.length; i++) {
-			if (ringNames[i].equals(name))
+			if (ringNames[i].equals(name)) {
 				id = i;
+				break;
+			}
 		}
 		for (int i = 0; i < RingAction.values().length; i++) {
 			RingAction I = RingAction.values()[i];
-			if (id == I.id) {
+			if (id == I.id)
 				return I;
-			}
 		}
 		return null;
 	}
@@ -171,6 +172,7 @@ public enum RingAction implements Constants {
 	@SideOnly(Side.CLIENT)
 	public static void match(MessageSendKnowledge message) {
 		ids.ensureCapacity(message.knowledge);
-		ids.set(message.knowledge,message.id);
+		ids.set(message.knowledge, message.id);
+		values()[message.knowledge].id = message.id;
 	}
 }

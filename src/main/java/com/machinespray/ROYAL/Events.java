@@ -16,7 +16,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.b3d.B3DLoader;
 import net.minecraftforge.client.model.obj.OBJLoader;
-import net.minecraftforge.common.network.ForgeNetworkHandler;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
@@ -25,11 +24,9 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -86,9 +83,9 @@ public class Events implements Constants {
 	@SideOnly(Side.CLIENT)
 	@SubscribeEvent
 	public void joinWorld(EntityJoinWorldEvent e) {
-		if ((!(e.getEntity() instanceof EntityPlayerSP) || worldKnowledge) || Main.proxy.getPlayer() == null)
+		if (!(e.getEntity() instanceof EntityPlayerSP) || worldKnowledge || Main.proxy.getPlayer() == null)
 			return;
-		if(!e.getEntity().equals(Main.proxy.getPlayer()))
+		if (!e.getEntity().equals(Main.proxy.getPlayer()))
 			return;
 		worldKnowledge = true;
 		RingAction.ids.clear();
@@ -99,6 +96,7 @@ public class Events implements Constants {
 			ScrollAction.ids.add(-1);
 
 		Main.clientKnowledge = new DefaultKnowledgeHandler();
+		System.out.println("Knowledge Request Sent!");
 		Main.INSTANCE.sendToServer(new MessageRequestKnowledge());
 	}
 

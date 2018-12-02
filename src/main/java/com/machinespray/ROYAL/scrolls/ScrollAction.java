@@ -123,14 +123,15 @@ public enum ScrollAction implements Constants {
 		int id = -1;
 		name = name.split("\\.")[1].replace("_", " ");
 		for (int i = 0; i < scrollNames.length; i++) {
-			if (scrollNames[i].equals(name))
+			if (scrollNames[i].equals(name)) {
 				id = i;
+				break;
+			}
 		}
 		for (int i = 0; i < values().length; i++) {
 			ScrollAction I = values()[i];
-			if (id == I.id) {
+			if (id == I.id)
 				return I;
-			}
 		}
 		return null;
 	}
@@ -139,6 +140,7 @@ public enum ScrollAction implements Constants {
 	public static void match(MessageSendKnowledge message) {
 		ids.ensureCapacity(message.knowledge);
 		ids.set(message.knowledge,message.id);
+		values()[message.knowledge].id=message.id;
 	}
 
 }
