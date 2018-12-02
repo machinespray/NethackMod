@@ -7,7 +7,7 @@ public class MessageSendKnowledge implements IMessage {
 	public int knowledge;
 	public int id = -1;
 	public int type;
-	public String stknowledge;
+	public String stknowledge = "";
 
 	public MessageSendKnowledge() {
 	}
@@ -27,6 +27,10 @@ public class MessageSendKnowledge implements IMessage {
 		this.knowledge = buf.readInt();
 		this.id = buf.readInt();
 		this.type = buf.readInt();
+		int temp = buf.readInt();
+		for (int i = 0; i < temp; i++)
+			stknowledge += buf.readChar();
+
 	}
 
 	@Override
@@ -34,6 +38,9 @@ public class MessageSendKnowledge implements IMessage {
 		buf.writeInt(knowledge);
 		buf.writeInt(id);
 		buf.writeInt(type);
+		buf.writeInt(stknowledge.length());
+		for (char c : stknowledge.toCharArray())
+			buf.writeChar(c);
 	}
 
 }

@@ -83,61 +83,64 @@ public enum RingAction implements Constants {
 					addPotionEffect(potionIds[i], player);
 					break;
 				}
-		} else if (this.equals(AGGRAVATE_MONSTER)) {
-			if (player instanceof EntityPlayer)
-				if (((EntityPlayer) player).isCreative())
-					return;
-			for (EntityLiving e : getLocalLiving(player)) {
-				if (e.getAttackTarget() == null || e.getAttackTarget() != player) {
-					e.setAttackTarget(player);
-				}
-			}
-		} else if (this.equals(CONFLICT)) {
-			List<EntityLiving> list = getLocalLiving(player);
-			for (EntityLiving e : list) {
-				if (e.getAttackTarget() == null) {
-					EntityLiving entity = list.get(Main.random.nextInt(list
-							.size()));
-					if (!entity.equals(e))
-						e.setAttackTarget(entity);
-				}
-
-			}
-		} else if (this.equals(LEVITATION)) {
-			player.addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("minecraft:levitation")
-					, 20, -1, false, false));
-			player.addPotionEffect(new PotionEffect(
-					Potion.getPotionFromResourceLocation("minecraft:speed"), 20, 255, false, false));
-			discover(player);
-
-		} else if (this.equals(SEE_INVISIBLE)) {
-			List<EntityLiving> list = getLocalLiving(player);
-			for (EntityLiving e : list) {
-				addPotionEffect(24, e);
-			}
-		} else if (this.equals(TELEPORTATION)) {
-			//TODO
-		} else if (this.equals(PARANOIA)) {
-			if (player instanceof EntityPlayer)
-				if (Main.random.nextInt(1000) > 998)
-					if (!player.world.isRemote) {
-						double d0 = player.posX;
-						double d1 = player.posY;
-						double d2 = player.posZ;
-						int i = Main.random.nextInt(SoundEvents.class.getDeclaredFields().length);
-						try {
-							Object j;
-							j = SoundEvents.class.getDeclaredFields()[i].get(null);
-							player.world.playSound((EntityPlayer) player, d0, d1,
-									d2, (SoundEvent) j, SoundCategory.PLAYERS,
-									1.0F, 1.0F);
-							player.playSound((SoundEvent) j, 1.0F, 1.0F);
-						} catch (IllegalAccessException e) {
-							e.printStackTrace();
-						}
-					}
+			return;
 		}
+		List<EntityLiving> list = getLocalLiving(player);
+		switch (this) {
+			case AGGRAVATE_MONSTER:
+				if (player instanceof EntityPlayer)
+					if (((EntityPlayer) player).isCreative())
+						return;
+				for (EntityLiving e : list) {
+					if (e.getAttackTarget() == null || e.getAttackTarget() != player) {
+						e.setAttackTarget(player);
+					}
+				}
+				return;
+			case CONFLICT:
+				for (EntityLiving e : list) {
+					if (e.getAttackTarget() == null) {
+						EntityLiving entity = list.get(Main.random.nextInt(list.size()));
+						if (!entity.equals(e))
+							e.setAttackTarget(entity);
+					}
+				}
+				return;
+			case LEVITATION:
+				player.addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("minecraft:levitation")
+						, 20, -1, false, false));
+				player.addPotionEffect(new PotionEffect(
+						Potion.getPotionFromResourceLocation("minecraft:speed"), 20, 255, false, false));
+				discover(player);
+				return;
+			case SEE_INVISIBLE:
+				for (EntityLiving e : list) {
+					addPotionEffect(24, e);
+				}
+				return;
+			case PARANOIA:
+				if (player instanceof EntityPlayer)
+					if (Main.random.nextInt(1000) > 998)
+						if (!player.world.isRemote) {
+							double d0 = player.posX;
+							double d1 = player.posY;
+							double d2 = player.posZ;
+							int i = Main.random.nextInt(SoundEvents.class.getDeclaredFields().length);
+							try {
+								Object j;
+								j = SoundEvents.class.getDeclaredFields()[i].get(null);
+								player.world.playSound((EntityPlayer) player, d0, d1,
+										d2, (SoundEvent) j, SoundCategory.PLAYERS,
+										1.0F, 1.0F);
+								player.playSound((SoundEvent) j, 1.0F, 1.0F);
+							} catch (IllegalAccessException e) {
+								e.printStackTrace();
+							}
+						}
+		}
+
 	}
+
 
 	private void discover(Entity player) {
 		if (player instanceof EntityPlayerMP) {

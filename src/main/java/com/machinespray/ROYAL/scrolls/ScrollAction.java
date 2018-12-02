@@ -11,6 +11,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Enchantments;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
@@ -37,13 +38,16 @@ public enum ScrollAction implements Constants {
 		return this.name().replace("_", " ").toLowerCase();
 	}
 
-	private void discover(Entity player) {
+	private void discover(EntityPlayer player){
+		discover(player,this.getKnowledgeName());
+	}
+	private void discover(Entity player,String knowledgeName) {
 		IKnowledgeHandler knowledge = Main.getHandler(player);
-		if (!knowledge.hasKnowledge(getKnowledgeName())) {
-			if (!player.world.isRemote)
-				player.sendMessage(new TextComponentString(
-						"You discover this is a scroll of " + getKnowledgeName() + "!"));
-			knowledge.addKnowledge(getKnowledgeName());
+		if (!knowledge.hasKnowledge(knowledgeName)) {
+			player.sendMessage(new TextComponentString(
+					"You discover this is a scroll of " + knowledgeName + "!"));
+			knowledge.addKnowledge(knowledgeName);
+			Main.INSTANCE.sendTo(new MessageSendKnowledge(knowledgeName), (EntityPlayerMP) player);
 		}
 	}
 
@@ -57,13 +61,15 @@ public enum ScrollAction implements Constants {
 			discover(playerIn);
 
 			if (playerIn.getHeldItemOffhand().getItem() instanceof NetHackItem) {
-				discover(playerIn);
+				NetHackItem item = (NetHackItem)playerIn.getHeldItemOffhand().getItem();
+				if(item.hasUse())
+					discover(playerIn,item.getUse());
 			}
 		} else if (this.equals(CREATE_MONSTER)) {
 			if (!playerIn.world.isRemote) {
 				discover(playerIn);
 				EntityLiving entity;
-				for (int i = 0; i < Main.random.nextInt(4) + 1; i++) {
+				for (int i = 0; i < Main.random.nextInt(4) + 3; i++) {
 					entity = new EntityZombie(playerIn.world);
 					entity.setPosition(
 							playerIn.posX + Main.random.nextInt(5) - 2,
@@ -76,7 +82,7 @@ public enum ScrollAction implements Constants {
 			ItemStack enchantable = playerIn.getHeldItemOffhand();
 
 			if (enchantable.isItemEnchantable()) {
-				EnchantmentHelper.addRandomEnchantment(Main.random, enchantable, 60, true);
+				EnchantmentHelper.addRandomEnchantment(Main.random, enchantable, 10, true);
 /*
 				Map<Enchantment, Integer> enchants = EnchantmentHelper.getEnchantments(enchantable);
 				ArrayList<Enchantment> appliable = new ArrayList<>();
@@ -139,8 +145,8 @@ public enum ScrollAction implements Constants {
 	@SideOnly(Side.CLIENT)
 	public static void match(MessageSendKnowledge message) {
 		ids.ensureCapacity(message.knowledge);
-		ids.set(message.knowledge,message.id);
-		values()[message.knowledge].id=message.id;
+		ids.set(message.knowledge, message.id);
+		values()[message.knowledge].id = message.id;
 	}
 
 }
