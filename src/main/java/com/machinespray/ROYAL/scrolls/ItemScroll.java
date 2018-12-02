@@ -37,6 +37,7 @@ public class ItemScroll extends NetHackItem implements Constants {
 
     @Override
     public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn) {
+        if(!worldIn.isRemote)
         if (ScrollAction.getAction(getUnlocalizedName()) != null)
             ScrollAction.getAction(getUnlocalizedName()).onItemRightClick(worldIn, playerIn, handIn);
         return super.onItemRightClick(worldIn, playerIn, handIn);

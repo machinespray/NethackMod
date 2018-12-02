@@ -4,6 +4,7 @@ import com.machinespray.ROYAL.Constants;
 import com.machinespray.ROYAL.Main;
 import com.machinespray.ROYAL.errors.UndefinedPotionError;
 import com.machinespray.ROYAL.knowledge.IKnowledgeHandler;
+import com.machinespray.ROYAL.sync.KnowledgeMessageHandler;
 import com.machinespray.ROYAL.sync.MessageSendKnowledge;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
@@ -18,6 +19,8 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -33,7 +36,7 @@ public enum RingAction implements Constants {
 	private static RingAction[] potionRings = {PROTECTION, REGENERATION, FIRE_RESISTANCE, STRENGTH};
 	private static int[] potionIds = {11, 10, 12, 5};
 
-	private static ArrayList<Integer> ids = new ArrayList<>();
+	public static ArrayList<Integer> ids = new ArrayList<>();
 	private static Random random = new Random();
 
 	public static void match(long seed) {
@@ -84,8 +87,7 @@ public enum RingAction implements Constants {
 				if (((EntityPlayer) player).isCreative())
 					return;
 			for (EntityLiving e : getLocalLiving(player)) {
-				if (e.getAttackTarget() == null
-						|| e.getAttackTarget() != player) {
+				if (e.getAttackTarget() == null || e.getAttackTarget() != player) {
 					e.setAttackTarget(player);
 				}
 			}
@@ -108,53 +110,12 @@ public enum RingAction implements Constants {
 			discover(player);
 
 		} else if (this.equals(SEE_INVISIBLE)) {
-			List<EntityLiving> list = player.world.getEntitiesWithinAABB(
-					EntityLiving.class, new AxisAlignedBB(player.posX - 5,
-							player.posY - 5, player.posZ - 5,
-							player.posX + 5, player.posY + 5,
-							player.posZ + 5));
+			List<EntityLiving> list = getLocalLiving(player);
 			for (EntityLiving e : list) {
 				addPotionEffect(24, e);
 			}
 		} else if (this.equals(TELEPORTATION)) {
-			if (Main.random.nextInt(200) > 198)
-				if (!player.world.isRemote) {
-					double d0 = player.posX;
-					double d1 = player.posY;
-					double d2 = player.posZ;
-
-					for (int i = 0; i < 16; i++) {
-						double d3 = player.posX
-								+ (player.getRNG().nextDouble() - 0.5D)
-								* 16.0D;
-						double d4 = MathHelper
-								.clamp(player.posY
-												+ (double) (player.getRNG()
-												.nextInt(16) - 8), 0.0D,
-										(double) (player.world
-												.getActualHeight() - 1));
-						double d5 = player.posZ
-								+ (player.getRNG().nextDouble() - 0.5D)
-								* 16.0D;
-
-						if (player.isRiding()) {
-							player.dismountRidingEntity();
-						}
-
-						if (player.attemptTeleport(d3, d4, d5)) {
-							player.world.playSound(null, d0,
-									d1, d2,
-									SoundEvents.ITEM_CHORUS_FRUIT_TELEPORT,
-									SoundCategory.PLAYERS, 1.0F, 1.0F);
-							player.playSound(
-									SoundEvents.ITEM_CHORUS_FRUIT_TELEPORT,
-									1.0F, 1.0F);
-							discover(player);
-							break;
-						}
-
-					}
-				}
+			//TODO
 		} else if (this.equals(PARANOIA)) {
 			if (player instanceof EntityPlayer)
 				if (Main.random.nextInt(1000) > 998)
@@ -162,8 +123,7 @@ public enum RingAction implements Constants {
 						double d0 = player.posX;
 						double d1 = player.posY;
 						double d2 = player.posZ;
-						int i = Main.random.nextInt(SoundEvents.class
-								.getDeclaredFields().length);
+						int i = Main.random.nextInt(SoundEvents.class.getDeclaredFields().length);
 						try {
 							Object j;
 							j = SoundEvents.class.getDeclaredFields()[i].get(null);
@@ -171,7 +131,7 @@ public enum RingAction implements Constants {
 									d2, (SoundEvent) j, SoundCategory.PLAYERS,
 									1.0F, 1.0F);
 							player.playSound((SoundEvent) j, 1.0F, 1.0F);
-						}catch (IllegalAccessException e){
+						} catch (IllegalAccessException e) {
 							e.printStackTrace();
 						}
 					}
@@ -208,4 +168,9 @@ public enum RingAction implements Constants {
 			entity.addPotionEffect(new PotionEffect(effect, 80, 0, false, false));
 	}
 
+	@SideOnly(Side.CLIENT)
+	public static void match(MessageSendKnowledge message) {
+		ids.ensureCapacity(message.knowledge);
+		ids.set(message.knowledge,message.id);
+	}
 }

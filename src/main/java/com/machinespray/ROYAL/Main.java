@@ -32,10 +32,9 @@ public class Main
     @SidedProxy(modId=MODID,clientSide="com.machinespray.ROYAL.proxy.ClientProxy",serverSide="com.machinespray.ROYAL.proxy.CommonProxy")
     public static CommonProxy proxy;
 	public static final SimpleNetworkWrapper INSTANCE = NetworkRegistry.INSTANCE.newSimpleChannel(MODID);
+	private static Events eventsInstance = new Events();
 	static DefaultKnowledgeHandler clientKnowledge =  null;
-	public static String[] rings;
-	public static String[] scrolls;
-	
+
     public static final CreativeTabs royalTab = new CreativeTabs("royal"){
 
 		@Override
@@ -47,7 +46,7 @@ public class Main
     @EventHandler
     public void preinit(FMLPreInitializationEvent event){proxy.preinit();}
     @EventHandler
-    public void init(FMLInitializationEvent event){proxy.init();MinecraftForge.EVENT_BUS.register(new Events());}
+    public void init(FMLInitializationEvent event){proxy.init();MinecraftForge.EVENT_BUS.register(eventsInstance);}
     @EventHandler
     public void postinit(FMLInitializationEvent event){proxy.postinit();}
 
@@ -58,5 +57,8 @@ public class Main
             return entity.getCapability(CAPABILITY_KNOWLEDGE, EnumFacing.DOWN);
         throw new UnknownKnowledgeError("Unable to get knowledge handler for entity:"+entity.getName());
     }
+    public static Events getEventsInstance(){
+    	return eventsInstance;
+	}
 
 }

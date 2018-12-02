@@ -13,6 +13,7 @@ import com.machinespray.ROYAL.sync.KnowledgeMessageHandler;
 import com.machinespray.ROYAL.sync.KnowledgeRequestHandler;
 import com.machinespray.ROYAL.sync.MessageRequestKnowledge;
 import com.machinespray.ROYAL.sync.MessageSendKnowledge;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.fml.relauncher.Side;
 
@@ -28,6 +29,10 @@ public class CommonProxy implements Constants {
 	}
 
 	public void postinit() {
+	}
+
+	public EntityPlayer getPlayer() {
+		return null;
 	}
 
 	public String getRingUse(ItemRing ring) {

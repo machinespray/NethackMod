@@ -15,7 +15,7 @@ public class KnowledgeRequestHandler implements
 
 	@Override
 	public IMessage onMessage(MessageRequestKnowledge message,
-			MessageContext ctx) {
+							  MessageContext ctx) {
 		EntityPlayerMP player = ctx.getServerHandler().player;
 		ArrayList<String> knowledge = Main.getHandler(player).getKnowledge();
 		for (int i = 0; i < knowledge.size(); i++)
@@ -24,13 +24,14 @@ public class KnowledgeRequestHandler implements
 		RingAction.match(player.world.getSeed());
 		for (int i = 0; i < RingAction.values().length; i++) {
 			Main.INSTANCE.sendTo(
-					new MessageSendKnowledge(RingAction.values()[i].getKnowledgeName(),
+					new MessageSendKnowledge(i,
 							RingAction.values()[i].id, EnumDataType.RING),
 					player);
 		}
+		ScrollAction.match(player.world.getSeed());
 		for (int i = 0; i < ScrollAction.values().length; i++) {
 			Main.INSTANCE.sendTo(
-					new MessageSendKnowledge(ScrollAction.values()[i].getKnowledgeName(),
+					new MessageSendKnowledge(i,
 							ScrollAction.values()[i].id,
 							EnumDataType.SCROLL), player);
 		}

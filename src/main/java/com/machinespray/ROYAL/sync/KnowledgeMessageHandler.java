@@ -1,6 +1,8 @@
 package com.machinespray.ROYAL.sync;
 
 import com.machinespray.ROYAL.Main;
+import com.machinespray.ROYAL.rings.RingAction;
+import com.machinespray.ROYAL.scrolls.ScrollAction;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
@@ -14,12 +16,13 @@ public class KnowledgeMessageHandler implements
 	@Override
 	public IMessage onMessage(MessageSendKnowledge message, MessageContext ctx) {
 		if(message.id==-1){
-		Main.getHandler(Minecraft.getMinecraft().player).addKnowledge(message.knowledge);
+		Main.getHandler(Minecraft.getMinecraft().player).addKnowledge(message.stknowledge);
 		}else if(EnumDataType.get(message.type)==EnumDataType.RING){
-			Main.rings[message.id]=message.knowledge;
+			RingAction.match(message);
 		}else if(EnumDataType.get(message.type)==EnumDataType.SCROLL){
-			Main.scrolls[message.id]=message.knowledge;
+			ScrollAction.match(message);
 		}
 		return null;
 	}
+
 }
