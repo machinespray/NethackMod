@@ -13,6 +13,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
@@ -22,7 +23,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public enum ScrollAction implements Constants {
-	IDENTIFY, CREATE_MONSTER, ENCHANT_WEAPON, TELEPORT, DESTROY_WEAPON;
+	IDENTIFY, CREATE_MONSTER, ENCHANT_WEAPON, RECALL, DESTROY_WEAPON;
 	public int id;
 
 	public String getKnowledgeName() {
@@ -77,7 +78,15 @@ public enum ScrollAction implements Constants {
 				if (enchantable.isItemEnchantable()) {
 					EnchantmentHelper.addRandomEnchantment(Main.random, enchantable, 10, true);
 				}
-
+				//TODO fail
+				return;
+			case RECALL:
+				if (playerIn.dimension != 0)
+					return;
+				BlockPos pos = playerIn.getBedLocation();
+				if (pos == null)
+					pos = playerIn.world.getSpawnPoint();
+				playerIn.setPositionAndUpdate(pos.getX(),pos.getY(),pos.getZ());
 		}
 	}
 

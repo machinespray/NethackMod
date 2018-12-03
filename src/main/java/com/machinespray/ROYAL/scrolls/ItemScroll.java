@@ -64,6 +64,12 @@ public class ItemScroll extends NetHackItem implements Constants {
 
 	}
 
+	@SideOnly(Side.CLIENT)
+	public boolean hasEffect(ItemStack stack) {
+		return hasUse();
+	}
+
+
 	@Override
 	public String type() {
 		return "scroll";

@@ -1,5 +1,8 @@
 package com.machinespray.ROYAL;
 
+import baubles.api.BaublesApi;
+import baubles.api.IBauble;
+import baubles.api.cap.IBaublesItemHandler;
 import com.machinespray.ROYAL.knowledge.DefaultKnowledgeHandler;
 import com.machinespray.ROYAL.knowledge.IKnowledgeHandler;
 import com.machinespray.ROYAL.knowledge.Provider;
@@ -150,14 +153,26 @@ public class Events implements Constants {
 	public static void renderEntities(RenderLivingEvent.Pre e) {
 		EntityLivingBase entity = e.getEntity();
 		UUID uuid = entity.getUniqueID();
-		if(!Minecraft.getMinecraft().player.equals(entity))
-		if (Minecraft.getMinecraft().player.getDistanceSqToEntity(entity) > 150) {
-			if (clientVisionList.contains(uuid)) {
-				entity.setGlowing(false);
-				clientVisionList.remove(uuid);
-			}
-			return;
+		EntityPlayerSP player = Minecraft.getMinecraft().player;
+		IBaublesItemHandler baubles = BaublesApi.getBaublesHandler(player);
+		boolean vision = false;
+		for(int i=0;i<baubles.getSlots();i++) {
+			Item item = baubles.getStackInSlot(i).getItem();
+			if(!(item instanceof NetHackItem))
+				continue;
+			String use = ((NetHackItem) item).getUse();
+			vision = use.equals(RingAction.VISION.getKnowledgeName()) || vision;
 		}
+		if(!vision)
+			return;
+		if (!player.equals(entity))
+			if (player.getDistanceSqToEntity(entity) > 150) {
+				if (clientVisionList.contains(uuid)) {
+					entity.setGlowing(false);
+					clientVisionList.remove(uuid);
+				}
+				return;
+			}
 		clientVisionList.add(uuid);
 		e.getEntity().setGlowing(true);
 	}

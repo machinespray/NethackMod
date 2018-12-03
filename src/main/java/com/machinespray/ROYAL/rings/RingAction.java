@@ -190,12 +190,15 @@ public enum RingAction implements Constants {
 			entityPlayer.motionY *= 0.6D;
 		}
 		if (entityPlayer.onGround) {
-			entityPlayer.motionX *= 1.2;
-			entityPlayer.motionX = Math.min(entityPlayer.motionX, 0.5);
-			entityPlayer.motionX = Math.max(entityPlayer.motionX, -0.5);
-			entityPlayer.motionZ *= 1.2;
-			entityPlayer.motionZ = Math.min(entityPlayer.motionZ, 0.5);
-			entityPlayer.motionZ = Math.max(entityPlayer.motionZ, -0.5);
+			entityPlayer.motionX = levitationMovement(entityPlayer.motionX);
+			entityPlayer.motionZ = levitationMovement(entityPlayer.motionZ);
 		}
+	}
+
+	private double levitationMovement(double speed) {
+		speed *= 1.2;
+		speed = Math.min(speed, 0.5);
+		speed = Math.max(speed, -0.5);
+		return speed;
 	}
 }
