@@ -1,48 +1,36 @@
-package com.machinespray.ROYAL.scrolls;
+package com.machinespray.ROYAL.action.scrolls;
 
 import com.machinespray.ROYAL.Constants;
+import com.machinespray.ROYAL.action.Discovery;
 import com.machinespray.ROYAL.Main;
 import com.machinespray.ROYAL.NetHackItem;
-import com.machinespray.ROYAL.knowledge.IKnowledgeHandler;
 import com.machinespray.ROYAL.sync.MessageSendKnowledge;
 import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumHand;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.ArrayList;
 import java.util.Random;
 
-public enum ScrollAction implements Constants {
+public enum ScrollAction implements Constants, Discovery {
 	IDENTIFY, CREATE_MONSTER, ENCHANT_WEAPON, RECALL, DESTROY_WEAPON;
 	public int id;
 
+	private void discover(EntityPlayer player, boolean sound) {
+		if (player instanceof EntityPlayerMP)
+		discover((EntityPlayerMP) player, getKnowledgeName(), sound);
+	}
+
 	public String getKnowledgeName() {
 		return this.name().replace("_", " ").toLowerCase();
-	}
-
-	private void discover(EntityPlayer player) {
-		discover(player, this.getKnowledgeName(), "scroll");
-	}
-
-	//TODO get rid of separate discover methods
-	private void discover(EntityPlayer player, String knowledgeName, String prefix) {
-		IKnowledgeHandler knowledge = Main.getHandler(player);
-		if (!knowledge.hasKnowledge(knowledgeName)) {
-			player.sendStatusMessage(new TextComponentString(
-					"You discover this is a " + prefix + " of " + knowledgeName + "!"), true);
-			knowledge.addKnowledge(knowledgeName);
-			Main.INSTANCE.sendTo(new MessageSendKnowledge(knowledgeName), (EntityPlayerMP) player);
-		}
 	}
 
 	public void onItemRightClick(EntityPlayer playerIn) {
@@ -53,16 +41,18 @@ public enum ScrollAction implements Constants {
 			case IDENTIFY:
 				if (playerIn.getHeldItemOffhand().getItem() instanceof NetHackItem) {
 					NetHackItem item = (NetHackItem) playerIn.getHeldItemOffhand().getItem();
-					if (item.hasUse()) {
-						discover(playerIn, item.getUse(), item.type());
-						discover(playerIn);
+					if (item.hasUse())
+					if(!Main.getHandler(playerIn).hasKnowledge(item.getUse())){
+						boolean sound = Main.getHandler(playerIn).hasKnowledge("identify");
+						discover(playerIn, !sound);
+						discover((EntityPlayerMP) playerIn,item.getUse(), sound);
 						return;
 					}
-					//TODO fail
-					return;
 				}
+				playerIn.world.playSound(null, playerIn.getPosition(), SoundEvents.ENTITY_BLAZE_SHOOT, SoundCategory.BLOCKS, 0.5F, 1.0F);
+				return;
 			case CREATE_MONSTER:
-				discover(playerIn);
+				discover(playerIn, true);
 				EntityLiving entity;
 				for (int i = 0; i < Main.random.nextInt(4) + 3; i++) {
 					entity = new EntityZombie(playerIn.world);
@@ -76,17 +66,20 @@ public enum ScrollAction implements Constants {
 			case ENCHANT_WEAPON:
 				ItemStack enchantable = playerIn.getHeldItemOffhand();
 				if (enchantable.isItemEnchantable()) {
+					discover(playerIn, true);
 					EnchantmentHelper.addRandomEnchantment(Main.random, enchantable, 10, true);
+					return;
 				}
-				//TODO fail
+				playerIn.world.playSound(null, playerIn.getPosition(), SoundEvents.ENTITY_BLAZE_SHOOT, SoundCategory.BLOCKS, 0.5F, 1.0F);
 				return;
 			case RECALL:
 				if (playerIn.dimension != 0)
 					return;
 				BlockPos pos = playerIn.getBedLocation();
 				if (pos == null)
-					pos = playerIn.world.getSpawnPoint();
-				playerIn.setPositionAndUpdate(pos.getX(),pos.getY(),pos.getZ());
+					pos = playerIn.world.provider.getRandomizedSpawnPoint();
+				discover(playerIn, true);
+				playerIn.setPositionAndUpdate(pos.getX(), pos.getY(), pos.getZ());
 		}
 	}
 

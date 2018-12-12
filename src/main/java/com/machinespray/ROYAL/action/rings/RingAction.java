@@ -1,12 +1,10 @@
-package com.machinespray.ROYAL.rings;
+package com.machinespray.ROYAL.action.rings;
 
 import com.machinespray.ROYAL.Constants;
+import com.machinespray.ROYAL.action.Discovery;
 import com.machinespray.ROYAL.Main;
 import com.machinespray.ROYAL.errors.UndefinedPotionError;
-import com.machinespray.ROYAL.knowledge.IKnowledgeHandler;
-import com.machinespray.ROYAL.sync.KnowledgeMessageHandler;
 import com.machinespray.ROYAL.sync.MessageSendKnowledge;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -17,8 +15,6 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -26,9 +22,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
-import java.util.logging.Logger;
 
-public enum RingAction implements Constants {
+public enum RingAction implements Constants, Discovery {
 	AGGRAVATE_MONSTER, CONFLICT, LEVITATION, VISION, TELEPORTATION, NOTHING, PROTECTION, REGENERATION, FIRE_RESISTANCE, STRENGTH, PARANOIA;
 
 	public int id;
@@ -137,13 +132,8 @@ public enum RingAction implements Constants {
 
 
 	private void discover(EntityPlayer player) {
-		IKnowledgeHandler knowledge = Main.getHandler(player);
-		if (!knowledge.hasKnowledge(getKnowledgeName())) {
-			player.sendStatusMessage(new TextComponentString(
-					"You discover this is a ring of " + getKnowledgeName() + "!"), true);
-			knowledge.addKnowledge(getKnowledgeName());
-			Main.INSTANCE.sendTo(new MessageSendKnowledge(getKnowledgeName()), (EntityPlayerMP) player);
-		}
+		if (player instanceof EntityPlayerMP)
+			discover((EntityPlayerMP) player, getKnowledgeName(), true);
 	}
 
 

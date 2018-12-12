@@ -1,18 +1,16 @@
 package com.machinespray.ROYAL;
 
 import baubles.api.BaublesApi;
-import baubles.api.IBauble;
 import baubles.api.cap.IBaublesItemHandler;
 import com.machinespray.ROYAL.knowledge.DefaultKnowledgeHandler;
 import com.machinespray.ROYAL.knowledge.IKnowledgeHandler;
 import com.machinespray.ROYAL.knowledge.Provider;
-import com.machinespray.ROYAL.rings.RingAction;
-import com.machinespray.ROYAL.scrolls.ScrollAction;
+import com.machinespray.ROYAL.action.rings.RingAction;
+import com.machinespray.ROYAL.action.scrolls.ScrollAction;
 import com.machinespray.ROYAL.sync.MessageRequestKnowledge;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -21,7 +19,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.RenderLivingEvent;
-import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.client.model.b3d.B3DLoader;
 import net.minecraftforge.client.model.obj.OBJLoader;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
@@ -41,7 +38,7 @@ import java.util.*;
 public class Events implements Constants {
 	private static boolean worldKnowledge = false;
 
-	@SubscribeEvent
+	/*@SubscribeEvent
 	public void onDrop(LivingDropsEvent e) {
 		if (!e.getEntity().world.isRemote && !(e.getEntity() instanceof EntityPlayer)) {
 			if (Main.random.nextInt(15) > 13) {
@@ -65,7 +62,7 @@ public class Events implements Constants {
 								e.getEntity().posY, e.getEntity().posZ, stack));
 			}
 		}
-	}
+	}//*/
 
 	@SubscribeEvent
 	public void attachCapabilities(AttachCapabilitiesEvent<Entity> event) {
@@ -156,16 +153,23 @@ public class Events implements Constants {
 		EntityPlayerSP player = Minecraft.getMinecraft().player;
 		IBaublesItemHandler baubles = BaublesApi.getBaublesHandler(player);
 		boolean vision = false;
-		for(int i=0;i<baubles.getSlots();i++) {
+		for (int i = 0; i < baubles.getSlots(); i++) {
 			Item item = baubles.getStackInSlot(i).getItem();
-			if(!(item instanceof NetHackItem))
+			if (!(item instanceof NetHackItem))
 				continue;
 			String use = ((NetHackItem) item).getUse();
 			vision = use.equals(RingAction.VISION.getKnowledgeName()) || vision;
 		}
-		if(!vision)
+		if (!vision) {
+			for (UUID uuid1 : clientVisionList) {
+				Entity entity1 = getEntityFromLoaded(uuid1);
+				if (entity1 != null)
+					entity1.setGlowing(false);
+			}
+			clientVisionList.clear();
 			return;
-		if (!player.equals(entity))
+		}
+		if (!player.equals(entity)) {
 			if (player.getDistanceSqToEntity(entity) > 150) {
 				if (clientVisionList.contains(uuid)) {
 					entity.setGlowing(false);
@@ -173,7 +177,16 @@ public class Events implements Constants {
 				}
 				return;
 			}
-		clientVisionList.add(uuid);
-		e.getEntity().setGlowing(true);
+			clientVisionList.add(uuid);
+			e.getEntity().setGlowing(true);
+		}
+	}
+	@SideOnly(Side.CLIENT)
+	private static Entity getEntityFromLoaded(UUID uuid1) {
+		List<Entity> entities = Minecraft.getMinecraft().world.getLoadedEntityList();
+		for(Entity e : entities)
+			if(e.getUniqueID().equals(uuid1))
+				return e;
+		return null;
 	}
 }

@@ -1,4 +1,4 @@
-package com.machinespray.ROYAL.scrolls;
+package com.machinespray.ROYAL.action.scrolls;
 
 import com.machinespray.ROYAL.Constants;
 import com.machinespray.ROYAL.Main;
@@ -21,13 +21,6 @@ public class ItemScroll extends NetHackItem implements Constants {
 		this.setCreativeTab(Main.royalTab);
 	}
 
-	public static void initNames() {
-		for (String s : scrollNames) {
-			s = s.replace(" ", "_");
-			RoyalItems.scrolls.add(new ItemScroll(s));
-
-		}
-	}
 
 	@Override
 	@SideOnly(Side.CLIENT)

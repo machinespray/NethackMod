@@ -1,8 +1,8 @@
 package com.machinespray.ROYAL.sync;
 
 import com.machinespray.ROYAL.Main;
-import com.machinespray.ROYAL.rings.RingAction;
-import com.machinespray.ROYAL.scrolls.ScrollAction;
+import com.machinespray.ROYAL.action.rings.RingAction;
+import com.machinespray.ROYAL.action.scrolls.ScrollAction;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;

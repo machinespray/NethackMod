@@ -21,7 +21,7 @@ public class NetHackItem extends Item implements Constants {
 
 	public NetHackItem(String unlocalizedName) {
 		this.setUnlocalizedName(unlocalizedName);
-		this.setRegistryName("royal", unlocalizedName);
+		this.setRegistryName(Main.MODID, unlocalizedName);
 	}
 
 	public void register() {
@@ -30,18 +30,32 @@ public class NetHackItem extends Item implements Constants {
 
 	@SideOnly(Side.CLIENT)
 	public void registerClient() {
-		ModelLoader.setCustomModelResourceLocation(this, 0, new ModelResourceLocation(this.getRegistryName(), "inventory"));
+		ModelLoader.setCustomModelResourceLocation(this, 0, new ModelResourceLocation(getRegistryName(), "inventory"));
 	}
 
-	private String uppercase(String s) {
-		s = s.toLowerCase();
-		for (int i = 0; i < s.length(); i++)
-			if (s.toCharArray()[i] == ' ') {
-				s = s.substring(0, i + 1) + s.toUpperCase().substring(i + 1, i + 2) + s.substring(i + 2).toLowerCase();
-			}
-		return s.toUpperCase().substring(0, 1) + s.substring(1);
+	@Override
+	public EnumRarity getRarity(ItemStack stack) {
+		return hasUse() ? EnumRarity.UNCOMMON : super.getRarity(stack);
 	}
 
+	//Methods Relating to an item's use
+	public String getUse() {
+		return null;
+	}
+
+	public boolean hasUse() {
+		return false;
+	}
+
+	public int getID() {
+		return -2;
+	}
+
+	public String type() {
+		return null;
+	}
+
+	//Methods related to the client displaying item tooltips
 	@SideOnly(Side.CLIENT)
 	@Override
 	public String getItemStackDisplayName(ItemStack stack) {
@@ -70,24 +84,13 @@ public class NetHackItem extends Item implements Constants {
 					tooltip.add(super.getItemStackDisplayName(stack));
 		}
 	}
-	@Override
-	public EnumRarity getRarity(ItemStack stack){
-		return EnumRarity.UNCOMMON;
+
+	private String uppercase(String s) {
+		s = s.toLowerCase();
+		for (int i = 0; i < s.length(); i++)
+			if (s.toCharArray()[i] == ' ')
+				s = s.substring(0, i + 1) + s.toUpperCase().substring(i + 1, i + 2) + s.substring(i + 2).toLowerCase();
+		return s.toUpperCase().substring(0, 1) + s.substring(1);
 	}
 
-	public String getUse() {
-		return null;
-	}
-
-	public boolean hasUse() {
-		return false;
-	}
-
-	public int getID() {
-		return -2;
-	}
-
-	public String type() {
-		return null;
-	}
 }

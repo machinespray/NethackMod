@@ -1,4 +1,4 @@
-package com.machinespray.ROYAL.rings;
+package com.machinespray.ROYAL.action.rings;
 
 import baubles.api.BaubleType;
 import baubles.api.IBauble;
@@ -16,14 +16,6 @@ public class ItemRing extends NetHackItem implements Constants, IBauble {
 		this.setCreativeTab(Main.royalTab);
 	}
 
-	public static void initNames() {
-		for (String s : ringNames) {
-			s = s.replace(" ", "_");
-			RoyalItems.rings.add(new ItemRing(s + "R"));
-
-		}
-	}
-
 	@Override
 	public BaubleType getBaubleType(ItemStack itemstack) {
 		return BaubleType.RING;
@@ -33,12 +25,12 @@ public class ItemRing extends NetHackItem implements Constants, IBauble {
 	public void onWornTick(ItemStack itemstack, EntityLivingBase player) {
 		if (RingAction.getAction(getUnlocalizedName()) == null)
 			return;
-			if (player.world.isRemote){
-				RingAction.getAction(getUnlocalizedName()).clientAction(player);
+		if (player.world.isRemote) {
+			RingAction.getAction(getUnlocalizedName()).clientAction(player);
 			return;
 		}
-			if (RingAction.getAction(getUnlocalizedName()) != null)
-				RingAction.getAction(getUnlocalizedName()).onWornTick(player);
+		if (RingAction.getAction(getUnlocalizedName()) != null)
+			RingAction.getAction(getUnlocalizedName()).onWornTick(player);
 	}
 
 	@Override

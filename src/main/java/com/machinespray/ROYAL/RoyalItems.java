@@ -1,37 +1,36 @@
 package com.machinespray.ROYAL;
 
-import com.machinespray.ROYAL.rings.ItemRing;
-import com.machinespray.ROYAL.scrolls.ItemScroll;
+import com.machinespray.ROYAL.action.RandomizedItemGroup;
+import com.machinespray.ROYAL.action.rings.ItemRing;
+import com.machinespray.ROYAL.action.rings.RingBuilder;
+import com.machinespray.ROYAL.action.scrolls.ItemScroll;
+import com.machinespray.ROYAL.action.scrolls.ScrollBuilder;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.ArrayList;
 
 public class RoyalItems {
-	public static ArrayList<ItemScroll> scrolls = new ArrayList<>();
+	public static RandomizedItemGroup scrolls = new RandomizedItemGroup(new ScrollBuilder(), Constants.scrollNames);
+	public static RandomizedItemGroup rings = new RandomizedItemGroup(new RingBuilder(), Constants.ringNames,"R");
 	public static NetHackItem base;
-	public static ArrayList<ItemRing> rings = new ArrayList<>();
 
 	public static void initItems() {
-		ItemScroll.initNames();
-		ItemRing.initNames();
+		scrolls.initNames();
+		rings.initNames();
 		base = new NetHackItem("base");
 	}
 
 	public static void registerItems() {
-		for (ItemScroll i : scrolls)
-			i.register();
-		for (ItemRing i : rings)
-			i.register();
+		scrolls.register();
+		rings.register();
 		base.register();
 	}
 
 	@SideOnly(Side.CLIENT)
 	public static void registerClient() {
 		base.registerClient();
-		for (ItemScroll i : scrolls)
-			i.registerClient();
-		for (ItemRing i : rings)
-			i.registerClient();
+		scrolls.registerClient();
+		rings.registerClient();
 	}
 }
