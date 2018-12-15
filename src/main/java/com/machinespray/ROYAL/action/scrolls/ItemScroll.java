@@ -25,7 +25,7 @@ public class ItemScroll extends NetHackItem implements Constants {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerClient() {
-		ModelLoader.setCustomModelResourceLocation(this, 0, new ModelResourceLocation(RoyalItems.base.getRegistryName(), "inventory"));
+		ModelLoader.setCustomModelResourceLocation(this, 0, new ModelResourceLocation("royal:scrolls", "inventory"));
 	}
 
 	@Override

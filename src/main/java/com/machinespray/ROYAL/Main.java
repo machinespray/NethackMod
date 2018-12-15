@@ -41,7 +41,7 @@ public class Main {
 
 		@Override
 		public ItemStack getTabIconItem() {
-			return new ItemStack(RoyalItems.base);
+			return new ItemStack(RoyalItems.scrolls.getItems().get(0));
 		}
 
 	}.setNoTitle();

@@ -1,5 +1,6 @@
 package com.machinespray.ROYAL;
 
+import com.machinespray.ROYAL.action.ItemBase;
 import com.machinespray.ROYAL.action.RandomizedItemGroup;
 import com.machinespray.ROYAL.action.rings.ItemRing;
 import com.machinespray.ROYAL.action.rings.RingBuilder;
@@ -18,7 +19,7 @@ public class RoyalItems {
 	public static void initItems() {
 		scrolls.initNames();
 		rings.initNames();
-		base = new NetHackItem("base");
+		base = new ItemBase("base");
 	}
 
 	public static void registerItems() {
