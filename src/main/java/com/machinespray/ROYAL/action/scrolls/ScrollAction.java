@@ -7,13 +7,16 @@ import com.machinespray.ROYAL.NetHackItem;
 import com.machinespray.ROYAL.sync.MessageSendKnowledge;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.effect.EntityLightningBolt;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -21,7 +24,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public enum ScrollAction implements Constants, Discovery {
-	IDENTIFY, CREATE_MONSTER, ENCHANT_WEAPON, RECALL, DESTROY_WEAPON;
+	IDENTIFY, CREATE_MONSTER, ENCHANT_WEAPON, RECALL, SMITE;
 	public int id;
 
 	private void discover(EntityPlayer player, boolean sound) {
@@ -80,6 +83,28 @@ public enum ScrollAction implements Constants, Discovery {
 					pos = playerIn.world.provider.getRandomizedSpawnPoint();
 				discover(playerIn, true);
 				playerIn.setPositionAndUpdate(pos.getX(), pos.getY(), pos.getZ());
+				return;
+			case SMITE:
+				discover(playerIn,true);
+				World world = playerIn.world;
+				BlockPos blockPos = new BlockPos(playerIn.posX,playerIn.posY,playerIn.posZ);
+				blockPos = blockPos.add(
+						Main.random.nextInt(11)-5,
+						10,
+						Main.random.nextInt(11)-5);
+				int i=0;
+				while(!world.getBlockState(blockPos).isSideSolid(world,blockPos, EnumFacing.UP)&&i<21) {
+					blockPos = blockPos.down();
+					i++;
+				}
+				EntityLightningBolt bolt = new EntityLightningBolt(
+						playerIn.world,
+						blockPos.getX(),
+						blockPos.getY(),
+						blockPos.getZ(),
+						false
+						);
+				playerIn.world.addWeatherEffect(bolt);
 		}
 	}
 

@@ -41,4 +41,7 @@ public class RandomizedItemGroup {
 		for (NetHackItem i : items)
 			i.registerClient();
 	}
+	public ArrayList<NetHackItem> getItems(){
+		return items;
+	}
 }

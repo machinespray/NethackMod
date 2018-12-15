@@ -2,6 +2,7 @@ package com.machinespray.ROYAL;
 
 import baubles.api.BaublesApi;
 import baubles.api.cap.IBaublesItemHandler;
+import com.machinespray.ROYAL.config.RoyalConfig;
 import com.machinespray.ROYAL.knowledge.DefaultKnowledgeHandler;
 import com.machinespray.ROYAL.knowledge.IKnowledgeHandler;
 import com.machinespray.ROYAL.knowledge.Provider;
@@ -38,25 +39,12 @@ import java.util.*;
 public class Events implements Constants {
 	private static boolean worldKnowledge = false;
 
-	/*@SubscribeEvent
+	@SubscribeEvent
 	public void onDrop(LivingDropsEvent e) {
+		if(Main.config.doMobDrops)
 		if (!e.getEntity().world.isRemote && !(e.getEntity() instanceof EntityPlayer)) {
 			if (Main.random.nextInt(15) > 13) {
-				ItemStack stack;
-				if (Main.random.nextInt(2) == 0) {
-					stack = new ItemStack(RoyalItems.rings.get(Main.random
-							.nextInt(RoyalItems.rings.size())));
-					while (!((NetHackItem) stack.getItem()).hasUse())
-						stack = new ItemStack(RoyalItems.rings.get(Main.random
-								.nextInt(RoyalItems.rings.size())));
-				} else {
-					stack = new ItemStack(RoyalItems.scrolls.get(Main.random
-							.nextInt(RoyalItems.scrolls.size())));
-					while (!((NetHackItem) stack.getItem()).hasUse())
-						stack = new ItemStack(
-								RoyalItems.scrolls.get(Main.random
-										.nextInt(RoyalItems.scrolls.size())));
-				}
+				ItemStack stack = Main.getStackForWorld();
 				e.getDrops().add(
 						new EntityItem(e.getEntity().world, e.getEntity().posX,
 								e.getEntity().posY, e.getEntity().posZ, stack));
