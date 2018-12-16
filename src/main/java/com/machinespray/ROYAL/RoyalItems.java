@@ -13,7 +13,7 @@ import java.util.ArrayList;
 
 public class RoyalItems {
 	public static RandomizedItemGroup scrolls = new RandomizedItemGroup(new ScrollBuilder(), Constants.scrollNames);
-	public static RandomizedItemGroup rings = new RandomizedItemGroup(new RingBuilder(), Constants.ringNames,"R");
+	public static RandomizedItemGroup rings = new RandomizedItemGroup(new RingBuilder(), RingName.getRingNames(),"R");
 	public static NetHackItem base;
 
 	public static void initItems() {

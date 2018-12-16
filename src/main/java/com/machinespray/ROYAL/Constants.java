@@ -13,11 +13,7 @@ public interface Constants {
 			"MAPIRO MAHAMA DIROMAT", "GNIK SISI VLE", "HAPAX LEGOMENON",
 			"EIRIS SAZUN IDISI", "PHOL ENDE WODAN", "GHOTI", "ZLORFIK",
 			"VAS CORP BET MANI", "STRC PRST SKRZ KRK", "XOR OTA" };
-	String[] ringNames = { "pearl", "iron", "twisted", "steel", "wire",
-			"engagement", "shiny", "bronze", "brass", "copper", "silver",
-			"gold", "wooden", "granite", "opal", "clay", "coral", "black onyx",
-			"moonstone", "tiger eye", "jade", "agate", "topaz", "sapphire",
-			"ruby", "diamond", "ivory", "emerald" };
+
 	//TODO
 	/*String BLESSED = TextFormatting.GREEN.toString()+"blessed";
 	String UNCURSED = TextFormatting.AQUA.toString()+"uncursed";

@@ -2,10 +2,7 @@ package com.machinespray.ROYAL.action.rings;
 
 import baubles.api.BaubleType;
 import baubles.api.IBauble;
-import com.machinespray.ROYAL.Constants;
-import com.machinespray.ROYAL.Main;
-import com.machinespray.ROYAL.NetHackItem;
-import com.machinespray.ROYAL.RoyalItems;
+import com.machinespray.ROYAL.*;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 
@@ -50,10 +47,10 @@ public class ItemRing extends NetHackItem implements Constants, IBauble {
 
 	@Override
 	public int getID() {
-		for (int i = 0; i < ringNames.length; i++) {
+		for (int i = 0; i < RingName.getRingNames().length; i++) {
 			String temp = getUnlocalizedName().split("\\.")[1].replace("_", " ");
 			temp = temp.substring(0, temp.length() - 1);
-			if (ringNames[i].equals(temp))
+			if (RingName.getRingNames()[i].equals(temp))
 				return i;
 		}
 		return super.getID();

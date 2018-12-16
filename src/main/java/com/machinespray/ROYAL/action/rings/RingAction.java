@@ -1,6 +1,7 @@
 package com.machinespray.ROYAL.action.rings;
 
 import com.machinespray.ROYAL.Constants;
+import com.machinespray.ROYAL.RingName;
 import com.machinespray.ROYAL.action.Discovery;
 import com.machinespray.ROYAL.Main;
 import com.machinespray.ROYAL.errors.UndefinedPotionError;
@@ -39,9 +40,9 @@ public enum RingAction implements Constants, Discovery {
 		random.setSeed(seed);
 		for (int i = 0; i < RingAction.values().length; i++) {
 			RingAction I = RingAction.values()[i];
-			int id = random.nextInt(Constants.ringNames.length);
+			int id = random.nextInt(RingName.getRingNames().length);
 			while (ids.contains(id)) {
-				id = random.nextInt(Constants.ringNames.length);
+				id = random.nextInt(RingName.getRingNames().length);
 			}
 			I.id = id;
 			ids.add(id);
@@ -53,8 +54,8 @@ public enum RingAction implements Constants, Discovery {
 		int id = 100;
 		name = name.split("\\.")[1].replace("_", " ");
 		name = name.substring(0, name.length() - 1);
-		for (int i = 0; i < ringNames.length; i++) {
-			if (ringNames[i].equals(name)) {
+		for (int i = 0; i < RingName.getRingNames().length; i++) {
+			if (RingName.getRingNames()[i].equals(name)) {
 				id = i;
 				break;
 			}
@@ -72,6 +73,11 @@ public enum RingAction implements Constants, Discovery {
 	}
 
 	public void onWornTick(EntityLivingBase living) {
+		if (this.equals(REGENERATION)) {
+			if (Main.random.nextInt(2000) > 1998)
+				living.heal(1.0F);
+			return;
+		}
 		if (Arrays.asList(potionRings).contains(this)) {
 			for (int i = 0; i < potionRings.length; i++)
 				if (potionRings[i].equals(this)) {

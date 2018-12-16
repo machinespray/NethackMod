@@ -9,30 +9,41 @@ import com.machinespray.ROYAL.knowledge.Provider;
 import com.machinespray.ROYAL.action.rings.RingAction;
 import com.machinespray.ROYAL.action.scrolls.ScrollAction;
 import com.machinespray.ROYAL.sync.MessageRequestKnowledge;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.client.model.b3d.B3DLoader;
 import net.minecraftforge.client.model.obj.OBJLoader;
+import net.minecraftforge.event.AnvilUpdateEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
+import net.minecraftforge.event.entity.player.AnvilRepairEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.oredict.OreDictionary;
+import org.apache.commons.lang3.ArrayUtils;
 
+import javax.annotation.Nullable;
 import java.util.*;
 
 @Mod.EventBusSubscriber(modid = Main.MODID)
@@ -41,15 +52,15 @@ public class Events implements Constants {
 
 	@SubscribeEvent
 	public void onDrop(LivingDropsEvent e) {
-		if(Main.config.doMobDrops)
-		if (!e.getEntity().world.isRemote && !(e.getEntity() instanceof EntityPlayer)) {
-			if (Main.random.nextInt(15) > 13) {
-				ItemStack stack = Main.getStackForWorld();
-				e.getDrops().add(
-						new EntityItem(e.getEntity().world, e.getEntity().posX,
-								e.getEntity().posY, e.getEntity().posZ, stack));
+		if (Main.config.doMobDrops)
+			if (!e.getEntity().world.isRemote && !(e.getEntity() instanceof EntityPlayer)) {
+				if (Main.random.nextInt(15) > 13) {
+					ItemStack stack = Main.getStackForWorld();
+					e.getDrops().add(
+							new EntityItem(e.getEntity().world, e.getEntity().posX,
+									e.getEntity().posY, e.getEntity().posZ, stack));
+				}
 			}
-		}
 	}//*/
 
 	@SubscribeEvent
@@ -169,12 +180,66 @@ public class Events implements Constants {
 			e.getEntity().setGlowing(true);
 		}
 	}
+
 	@SideOnly(Side.CLIENT)
 	private static Entity getEntityFromLoaded(UUID uuid1) {
 		List<Entity> entities = Minecraft.getMinecraft().world.getLoadedEntityList();
-		for(Entity e : entities)
-			if(e.getUniqueID().equals(uuid1))
+		for (Entity e : entities)
+			if (e.getUniqueID().equals(uuid1))
 				return e;
 		return null;
+	}
+
+	@SubscribeEvent
+	public static void anvilUpdate(AnvilUpdateEvent e) {
+		if (!isRing(e.getLeft()) || !getHarvest(e.getRight(), "axe"))
+			return;
+		e.setMaterialCost(1);
+		e.setCost(1);
+		NetHackItem nhi = (NetHackItem) e.getLeft().getItem();
+		String name = RingName.values()[nhi.getID()].getOreDictName();
+		NonNullList ores = OreDictionary.getOres(name);
+		if (ores.size() > 0) {
+			e.setOutput(OreDictionary.getOres(name).get(0).copy());
+			return;
+		}
+		e.setOutput(new ItemStack(Items.IRON_NUGGET));
+	}
+
+	@SubscribeEvent
+	public static void anvilFinish(AnvilRepairEvent e) {
+		if (!isRing(e.getItemInput()))
+			return;
+		EntityLivingBase entityLiving = e.getEntityLiving();
+		World world = entityLiving.world;
+		if (world.isRemote)
+			return;
+		BlockPos pos = e.getEntityLiving().getPosition();
+		ItemStack axe = e.getIngredientInput();
+		if (axe.isItemStackDamageable())
+			axe.damageItem(1, entityLiving);
+		EntityItem entityItem = new EntityItem(world, pos.getX(), pos.getY() + 1, pos.getZ(), axe);
+		world.spawnEntity(entityItem);
+		if (e.getItemResult().getItem().equals(Items.IRON_NUGGET))
+			return;
+		entityItem = new EntityItem(world, pos.getX(), pos.getY() + 1, pos.getZ(), new ItemStack(Items.IRON_NUGGET));
+		world.spawnEntity(entityItem);
+	}
+
+	private static boolean isRing(ItemStack i) {
+		if (!(i.getItem() instanceof NetHackItem))
+			return false;
+		NetHackItem nhi = (NetHackItem) i.getItem();
+		if (nhi.type().equals("ring"))
+			return true;
+		return false;
+	}
+
+	private static boolean getHarvest(ItemStack i, String toolClass) {
+		Set<String> effective = i.getItem().getToolClasses(i);
+		for (String s : effective)
+			if (s.equals(toolClass))
+				return true;
+		return false;
 	}
 }

@@ -85,7 +85,9 @@ public class NetHackItem extends Item implements Constants {
 		}
 	}
 
-	private String uppercase(String s) {
+	public static String uppercase(String s) {
+		if(s.length()==0)
+			return "";
 		s = s.toLowerCase();
 		for (int i = 0; i < s.length(); i++)
 			if (s.toCharArray()[i] == ' ')
