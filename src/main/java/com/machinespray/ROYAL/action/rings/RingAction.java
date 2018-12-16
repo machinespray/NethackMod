@@ -74,7 +74,7 @@ public enum RingAction implements Constants, Discovery {
 
 	public void onWornTick(EntityLivingBase living) {
 		if (this.equals(REGENERATION)) {
-			if (Main.random.nextInt(2000) > 1998)
+			if (Main.random.nextInt(400) > 398)
 				living.heal(1.0F);
 			return;
 		}
