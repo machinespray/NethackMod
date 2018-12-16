@@ -73,7 +73,7 @@ public class Main {
 
 	public static ItemStack getStackForWorld() {
 		ItemStack stack;
-		if (Main.random.nextInt(2) == 0) {
+		if (random.nextInt(config.ringParts+config.scrollParts)<config.ringParts) {
 			stack = new ItemStack(RoyalItems.rings.getItems().get(Main.random
 					.nextInt(RoyalItems.rings.getItems().size())));
 			while (!((NetHackItem) stack.getItem()).hasUse())
