@@ -57,7 +57,7 @@ public class Events implements Constants {
 									e.getEntity().posY, e.getEntity().posZ, stack));
 				}
 			}
-	}//*/
+	}
 
 	@SubscribeEvent
 	public void attachCapabilities(AttachCapabilitiesEvent<Entity> event) {
@@ -188,7 +188,7 @@ public class Events implements Constants {
 
 	@SubscribeEvent
 	public static void anvilUpdate(AnvilUpdateEvent e) {
-		if (!isRing(e.getLeft()) || !getHarvest(e.getRight(), "axe"))
+		if (!isRing(e.getLeft()) || getHarvest(e.getRight(), "axe") < 2)
 			return;
 		e.setMaterialCost(1);
 		e.setCost(1);
@@ -204,25 +204,30 @@ public class Events implements Constants {
 
 	@SubscribeEvent
 	public static void anvilFinish(AnvilRepairEvent e) {
+		//Continue only if this is a ring being smashed
 		if (!isRing(e.getItemInput()))
 			return;
 		EntityLivingBase entityLiving = e.getEntityLiving();
 		World world = entityLiving.world;
+		//Continue only on the server
 		if (world.isRemote)
 			return;
 		BlockPos pos = e.getEntityLiving().getPosition();
 		ItemStack axe = e.getIngredientInput();
+		//Try to damage the axe used, if possible
 		if (axe.isItemStackDamageable())
 			axe.damageItem(5, entityLiving);
+		//Play a sound hint, if applicable
 		NetHackItem nhi = (NetHackItem) e.getItemInput().getItem();
-		if (RingAction.getAction(nhi.getUnlocalizedName()) != null) {
-			SoundEvent hint = RingAction.getAction(nhi.getUnlocalizedName()).hint;
-			world.playSound(null, pos, hint, SoundCategory.PLAYERS, 3.0F, 1.0F);
-		}
+		RingAction action = RingAction.getAction(nhi.getUnlocalizedName());
+		if (action != null)
+			world.playSound(null, pos, action.hint, SoundCategory.PLAYERS, 3.0F, 1.0F);
+		//Give the axe back
 		EntityItem entityItem = new EntityItem(world, pos.getX(), pos.getY() + 1, pos.getZ(), axe);
 		world.spawnEntity(entityItem);
-		if (e.getItemResult().getItem().equals(Items.IRON_NUGGET))
+		if (!hasOres(nhi))
 			return;
+		//Drop an Iron Ingot, if the anvil didn't already give the player one.
 		entityItem = new EntityItem(world, pos.getX(), pos.getY() + 1, pos.getZ(), new ItemStack(Items.IRON_NUGGET));
 		world.spawnEntity(entityItem);
 	}
@@ -236,11 +241,13 @@ public class Events implements Constants {
 		return false;
 	}
 
-	private static boolean getHarvest(ItemStack i, String toolClass) {
-		Set<String> effective = i.getItem().getToolClasses(i);
-		for (String s : effective)
-			if (s.equals(toolClass))
-				return true;
-		return false;
+	private static boolean hasOres(NetHackItem nhi){
+		String name = RingName.values()[nhi.getID()].getOreDictName();
+		NonNullList ores = OreDictionary.getOres(name);
+		return ores.size()>0;
+	}
+
+	private static int getHarvest(ItemStack i, String toolClass) {
+		return i.getItem().getHarvestLevel(i, toolClass, null, null);
 	}
 }
