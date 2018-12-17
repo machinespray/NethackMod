@@ -1,7 +1,7 @@
 {
     "parent":"royal:item/ringbase",
         "textures": {
-        "layer0":"royal:items/ring_ivory"
+        "layer0":"royal:items/ring_quartz"
     }
     
 }

@@ -1,6 +1,8 @@
-package com.machinespray.ROYAL;
+package com.machinespray.ROYAL.action.rings;
 
-import static com.machinespray.ROYAL.RingName.Prefix.*;
+import com.machinespray.ROYAL.NetHackItem;
+
+import static com.machinespray.ROYAL.action.rings.RingName.Prefix.*;
 
 public enum RingName {
 	PEARL, IRON(INGOT), TWISTED, STEEL(INGOT), WIRE(IRON),

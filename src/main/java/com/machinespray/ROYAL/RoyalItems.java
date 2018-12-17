@@ -2,14 +2,11 @@ package com.machinespray.ROYAL;
 
 import com.machinespray.ROYAL.action.ItemBase;
 import com.machinespray.ROYAL.action.RandomizedItemGroup;
-import com.machinespray.ROYAL.action.rings.ItemRing;
 import com.machinespray.ROYAL.action.rings.RingBuilder;
-import com.machinespray.ROYAL.action.scrolls.ItemScroll;
+import com.machinespray.ROYAL.action.rings.RingName;
 import com.machinespray.ROYAL.action.scrolls.ScrollBuilder;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
-import java.util.ArrayList;
 
 public class RoyalItems {
 	public static RandomizedItemGroup scrolls = new RandomizedItemGroup(new ScrollBuilder(), Constants.scrollNames);

@@ -11,6 +11,7 @@ public class ItemRing extends NetHackItem implements Constants, IBauble {
 	public ItemRing(String unlocalizedName) {
 		super(unlocalizedName);
 		this.setCreativeTab(Main.royalTab);
+		this.setMaxStackSize(1);
 	}
 
 	@Override

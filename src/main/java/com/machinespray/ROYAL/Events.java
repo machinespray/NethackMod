@@ -2,26 +2,23 @@ package com.machinespray.ROYAL;
 
 import baubles.api.BaublesApi;
 import baubles.api.cap.IBaublesItemHandler;
-import com.machinespray.ROYAL.config.RoyalConfig;
+import com.machinespray.ROYAL.action.rings.RingName;
 import com.machinespray.ROYAL.knowledge.DefaultKnowledgeHandler;
 import com.machinespray.ROYAL.knowledge.IKnowledgeHandler;
 import com.machinespray.ROYAL.knowledge.Provider;
 import com.machinespray.ROYAL.action.rings.RingAction;
 import com.machinespray.ROYAL.action.scrolls.ScrollAction;
 import com.machinespray.ROYAL.sync.MessageRequestKnowledge;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.ModelRegistryEvent;
@@ -41,10 +38,9 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
-import org.apache.commons.lang3.ArrayUtils;
 
-import javax.annotation.Nullable;
 import java.util.*;
+import java.util.Timer;
 
 @Mod.EventBusSubscriber(modid = Main.MODID)
 public class Events implements Constants {
@@ -217,7 +213,12 @@ public class Events implements Constants {
 		BlockPos pos = e.getEntityLiving().getPosition();
 		ItemStack axe = e.getIngredientInput();
 		if (axe.isItemStackDamageable())
-			axe.damageItem(1, entityLiving);
+			axe.damageItem(5, entityLiving);
+		NetHackItem nhi = (NetHackItem) e.getItemInput().getItem();
+		if (RingAction.getAction(nhi.getUnlocalizedName()) != null) {
+			SoundEvent hint = RingAction.getAction(nhi.getUnlocalizedName()).hint;
+			world.playSound(null, pos, hint, SoundCategory.PLAYERS, 3.0F, 1.0F);
+		}
 		EntityItem entityItem = new EntityItem(world, pos.getX(), pos.getY() + 1, pos.getZ(), axe);
 		world.spawnEntity(entityItem);
 		if (e.getItemResult().getItem().equals(Items.IRON_NUGGET))

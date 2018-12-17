@@ -1,7 +1,6 @@
 package com.machinespray.ROYAL.action.rings;
 
 import com.machinespray.ROYAL.Constants;
-import com.machinespray.ROYAL.RingName;
 import com.machinespray.ROYAL.action.Discovery;
 import com.machinespray.ROYAL.Main;
 import com.machinespray.ROYAL.errors.UndefinedPotionError;
@@ -23,11 +22,29 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
-
+ class SoundTypes{
+ 	static SoundEvent combat = 	SoundEvents.BLOCK_GLASS_BREAK;
+ 	static SoundEvent magic = SoundEvents.ENTITY_WITCH_AMBIENT;
+ 	static SoundEvent arcane = SoundEvents.ENTITY_ENDERMEN_SCREAM;
+ }
 public enum RingAction implements Constants, Discovery {
-	AGGRAVATE_MONSTER, CONFLICT, LEVITATION, VISION, TELEPORTATION, NOTHING, PROTECTION, REGENERATION, FIRE_RESISTANCE, STRENGTH, PARANOIA;
+	AGGRAVATE_MONSTER(SoundTypes.combat),
+	CONFLICT(SoundTypes.combat),
+	LEVITATION(SoundTypes.arcane),
+	VISION(SoundTypes.arcane),
+	NOTHING(null),
+	PROTECTION(SoundTypes.combat),
+	REGENERATION(SoundTypes.magic),
+	FIRE_RESISTANCE(SoundTypes.magic),
+	STRENGTH(SoundTypes.combat),
+	PARANOIA(SoundTypes.magic);
 
 	public int id;
+	public final SoundEvent hint;
+
+	RingAction(SoundEvent hint) {
+		this.hint = hint;
+	}
 
 	private static RingAction[] potionRings = {PROTECTION, REGENERATION, FIRE_RESISTANCE, STRENGTH};
 	private static int[] potionIds = {11, 10, 12, 5};
