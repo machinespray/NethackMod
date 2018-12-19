@@ -2,13 +2,13 @@ package com.machinespray.ROYAL.proxy;
 
 import com.machinespray.ROYAL.Constants;
 import com.machinespray.ROYAL.Main;
-import com.machinespray.ROYAL.knowledge.DefaultKnowledgeHandler;
-import com.machinespray.ROYAL.knowledge.IKnowledgeHandler;
-import com.machinespray.ROYAL.knowledge.Storage;
 import com.machinespray.ROYAL.action.rings.ItemRing;
 import com.machinespray.ROYAL.action.rings.RingAction;
 import com.machinespray.ROYAL.action.scrolls.ItemScroll;
 import com.machinespray.ROYAL.action.scrolls.ScrollAction;
+import com.machinespray.ROYAL.knowledge.DefaultKnowledgeHandler;
+import com.machinespray.ROYAL.knowledge.IKnowledgeHandler;
+import com.machinespray.ROYAL.knowledge.Storage;
 import com.machinespray.ROYAL.sync.KnowledgeMessageHandler;
 import com.machinespray.ROYAL.sync.KnowledgeRequestHandler;
 import com.machinespray.ROYAL.sync.MessageRequestKnowledge;

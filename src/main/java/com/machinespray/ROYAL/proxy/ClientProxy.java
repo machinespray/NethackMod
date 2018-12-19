@@ -5,16 +5,22 @@ import net.minecraft.entity.player.EntityPlayer;
 
 public class ClientProxy extends CommonProxy {
 	@Override
-	public void preinit() { super.preinit(); }
+	public void preinit() {
+		super.preinit();
+	}
 
 	@Override
-	public void init() { super.init(); }
+	public void init() {
+		super.init();
+	}
 
 	@Override
-	public void postinit() { super.postinit(); }
+	public void postinit() {
+		super.postinit();
+	}
 
 	@Override
-	public EntityPlayer getPlayer(){
+	public EntityPlayer getPlayer() {
 		return Minecraft.getMinecraft().player;
 	}
 }

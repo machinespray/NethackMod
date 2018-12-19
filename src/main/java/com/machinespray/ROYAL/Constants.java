@@ -2,7 +2,7 @@ package com.machinespray.ROYAL;
 
 public interface Constants {
 	//Item/Block Names
-	String[] scrollNames = { "ZELGO MER", "JUYED AWK YACC", "NR 9",
+	String[] scrollNames = {"ZELGO MER", "JUYED AWK YACC", "NR 9",
 			"XIXAXA XOXAXA XUXAXA", "PRATYAVAYAH", "DAIYEN FOOELS",
 			"LEP GEX VEN ZEA", "PRIRUTSENIE", "ELBIB YLOH", "VERR YED HORRE",
 			"VENZAR BORGAVVE", "THARR", "YUM YUM", "KERNOD WEL", "ELAM EBOW",
@@ -12,7 +12,7 @@ public interface Constants {
 			"KO BATE", "ABRA KA DABRA", "ASHPD SODALG",
 			"MAPIRO MAHAMA DIROMAT", "GNIK SISI VLE", "HAPAX LEGOMENON",
 			"EIRIS SAZUN IDISI", "PHOL ENDE WODAN", "GHOTI", "ZLORFIK",
-			"VAS CORP BET MANI", "STRC PRST SKRZ KRK", "XOR OTA" };
+			"VAS CORP BET MANI", "STRC PRST SKRZ KRK", "XOR OTA"};
 
 	//TODO
 	/*String BLESSED = TextFormatting.GREEN.toString()+"blessed";

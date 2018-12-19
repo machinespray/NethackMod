@@ -2,7 +2,9 @@ package com.machinespray.ROYAL.action.rings;
 
 import baubles.api.BaubleType;
 import baubles.api.IBauble;
-import com.machinespray.ROYAL.*;
+import com.machinespray.ROYAL.Constants;
+import com.machinespray.ROYAL.Main;
+import com.machinespray.ROYAL.NetHackItem;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 

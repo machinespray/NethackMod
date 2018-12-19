@@ -7,14 +7,15 @@ enum EnumDataType {
 	EnumDataType(int id) {
 		this.id = id;
 	}
-	static EnumDataType get(int id){
-		switch(id){
-		case 0:
-			return RING;
-		case 1:
-			return SCROLL;
-		case 2:
-			return POTION;
+
+	static EnumDataType get(int id) {
+		switch (id) {
+			case 0:
+				return RING;
+			case 1:
+				return SCROLL;
+			case 2:
+				return POTION;
 		}
 		return null;
 	}

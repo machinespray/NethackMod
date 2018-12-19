@@ -2,12 +2,12 @@ package com.machinespray.ROYAL;
 
 import baubles.api.BaublesApi;
 import baubles.api.cap.IBaublesItemHandler;
+import com.machinespray.ROYAL.action.rings.RingAction;
 import com.machinespray.ROYAL.action.rings.RingName;
+import com.machinespray.ROYAL.action.scrolls.ScrollAction;
 import com.machinespray.ROYAL.knowledge.DefaultKnowledgeHandler;
 import com.machinespray.ROYAL.knowledge.IKnowledgeHandler;
 import com.machinespray.ROYAL.knowledge.Provider;
-import com.machinespray.ROYAL.action.rings.RingAction;
-import com.machinespray.ROYAL.action.scrolls.ScrollAction;
 import com.machinespray.ROYAL.sync.MessageRequestKnowledge;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -18,7 +18,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.*;
+import net.minecraft.util.NonNullList;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.ModelRegistryEvent;
@@ -40,72 +42,14 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
 
 import java.util.*;
-import java.util.Timer;
 
 @Mod.EventBusSubscriber(modid = Main.MODID)
 public class Events implements Constants {
 	private static boolean worldKnowledge = false;
-
-	@SubscribeEvent
-	public void onDrop(LivingDropsEvent e) {
-		if (Main.config.doMobDrops)
-			if (!e.getEntity().world.isRemote && !(e.getEntity() instanceof EntityPlayer)) {
-				if (Main.random.nextInt(15) > 13) {
-					ItemStack stack = Main.getStackForWorld();
-					e.getDrops().add(
-							new EntityItem(e.getEntity().world, e.getEntity().posX,
-									e.getEntity().posY, e.getEntity().posZ, stack));
-				}
-			}
-	}
-
-	@SubscribeEvent
-	public void attachCapabilities(AttachCapabilitiesEvent<Entity> event) {
-
-		if (event.getObject() instanceof EntityPlayer)
-			event.addCapability(new ResourceLocation("royal", "knowledge"),
-					new Provider());
-	}
-
-	@SubscribeEvent
-	public void joinWorldClient(WorldEvent.Load e) {
-		if (e.getWorld().isRemote) {
-			resetSchedule();
-			worldKnowledge = false;
-			timer.scheduleAtFixedRate(scheduleGetKnowledge, 100, 100);
-			return;
-		}
-		RingAction.match(e.getWorld().getSeed());
-		ScrollAction.match(e.getWorld().getSeed());
-	}
-
-	@SideOnly(Side.CLIENT)
-	@SubscribeEvent
-	public void joinWorld(EntityJoinWorldEvent e) {
-		if (!(e.getEntity() instanceof EntityPlayerSP) || worldKnowledge || Main.proxy.getPlayer() == null)
-			return;
-		if (!e.getEntity().equals(Main.proxy.getPlayer()))
-			return;
-		worldKnowledge = true;
-		RingAction.ids.clear();
-		for (RingAction ignored : RingAction.values())
-			RingAction.ids.add(-1);
-		ScrollAction.ids.clear();
-		for (ScrollAction ignored : ScrollAction.values())
-			ScrollAction.ids.add(-1);
-
-		Main.clientKnowledge = new DefaultKnowledgeHandler();
-		System.out.println("Knowledge Request Sent!");
-		Main.INSTANCE.sendToServer(new MessageRequestKnowledge());
-	}
-
-	@SideOnly(Side.SERVER)
-	@SubscribeEvent
-	public void clonePlayer(PlayerEvent.Clone event) {
-		final IKnowledgeHandler original = Main.getHandler(event.getOriginal());
-		final IKnowledgeHandler clone = Main.getHandler(event.getEntityPlayer());
-		clone.setKnowledge(original.getKnowledge());
-	}
+	//Tasks used to delay getting knowledge when joining a server
+	private static Timer timer = new Timer();
+	private static TimerTask scheduleGetKnowledge;
+	private static List<UUID> clientVisionList = new ArrayList<>();
 
 	@SubscribeEvent
 	public static void registerItems(RegistryEvent.Register<Item> event) {
@@ -120,10 +64,6 @@ public class Events implements Constants {
 		RoyalItems.registerClient();
 	}
 
-	//Tasks used to delay getting knowledge when joining a server
-	private static Timer timer = new Timer();
-	private static TimerTask scheduleGetKnowledge;
-
 	private static void resetSchedule() {
 		scheduleGetKnowledge = new TimerTask() {
 			@Override
@@ -136,8 +76,6 @@ public class Events implements Constants {
 			}
 		};
 	}
-
-	private static List<UUID> clientVisionList = new ArrayList<>();
 
 	//Handle the ring of vision effect
 	@SideOnly(Side.CLIENT)
@@ -241,13 +179,74 @@ public class Events implements Constants {
 		return false;
 	}
 
-	private static boolean hasOres(NetHackItem nhi){
+	private static boolean hasOres(NetHackItem nhi) {
 		String name = RingName.values()[nhi.getID()].getOreDictName();
 		NonNullList ores = OreDictionary.getOres(name);
-		return ores.size()>0;
+		return ores.size() > 0;
 	}
 
 	private static int getHarvest(ItemStack i, String toolClass) {
 		return i.getItem().getHarvestLevel(i, toolClass, null, null);
+	}
+
+	@SubscribeEvent
+	public void onDrop(LivingDropsEvent e) {
+		if (Main.config.doMobDrops)
+			if (!e.getEntity().world.isRemote && !(e.getEntity() instanceof EntityPlayer)) {
+				if (Main.random.nextInt(15) > 13) {
+					ItemStack stack = Main.getStackForWorld();
+					e.getDrops().add(
+							new EntityItem(e.getEntity().world, e.getEntity().posX,
+									e.getEntity().posY, e.getEntity().posZ, stack));
+				}
+			}
+	}
+
+	@SubscribeEvent
+	public void attachCapabilities(AttachCapabilitiesEvent<Entity> event) {
+
+		if (event.getObject() instanceof EntityPlayer)
+			event.addCapability(new ResourceLocation("royal", "knowledge"),
+					new Provider());
+	}
+
+	@SubscribeEvent
+	public void joinWorldClient(WorldEvent.Load e) {
+		if (e.getWorld().isRemote) {
+			resetSchedule();
+			worldKnowledge = false;
+			timer.scheduleAtFixedRate(scheduleGetKnowledge, 100, 100);
+			return;
+		}
+		RingAction.match(e.getWorld().getSeed());
+		ScrollAction.match(e.getWorld().getSeed());
+	}
+
+	@SideOnly(Side.CLIENT)
+	@SubscribeEvent
+	public void joinWorld(EntityJoinWorldEvent e) {
+		if (!(e.getEntity() instanceof EntityPlayerSP) || worldKnowledge || Main.proxy.getPlayer() == null)
+			return;
+		if (!e.getEntity().equals(Main.proxy.getPlayer()))
+			return;
+		worldKnowledge = true;
+		RingAction.ids.clear();
+		for (RingAction ignored : RingAction.values())
+			RingAction.ids.add(-1);
+		ScrollAction.ids.clear();
+		for (ScrollAction ignored : ScrollAction.values())
+			ScrollAction.ids.add(-1);
+
+		Main.clientKnowledge = new DefaultKnowledgeHandler();
+		System.out.println("Knowledge Request Sent!");
+		Main.INSTANCE.sendToServer(new MessageRequestKnowledge());
+	}
+
+	@SideOnly(Side.SERVER)
+	@SubscribeEvent
+	public void clonePlayer(PlayerEvent.Clone event) {
+		final IKnowledgeHandler original = Main.getHandler(event.getOriginal());
+		final IKnowledgeHandler clone = Main.getHandler(event.getEntityPlayer());
+		clone.setKnowledge(original.getKnowledge());
 	}
 }

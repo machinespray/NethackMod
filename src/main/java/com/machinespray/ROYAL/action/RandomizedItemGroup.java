@@ -26,7 +26,7 @@ public class RandomizedItemGroup {
 	public void initNames() {
 		for (String s : names) {
 			s = s.replace(" ", "_");
-			items.add(builder.build(s+suffix));
+			items.add(builder.build(s + suffix));
 
 		}
 	}
@@ -41,7 +41,8 @@ public class RandomizedItemGroup {
 		for (NetHackItem i : items)
 			i.registerClient();
 	}
-	public ArrayList<NetHackItem> getItems(){
+
+	public ArrayList<NetHackItem> getItems() {
 		return items;
 	}
 }

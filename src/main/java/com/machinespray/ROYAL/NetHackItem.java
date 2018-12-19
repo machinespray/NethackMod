@@ -24,6 +24,16 @@ public class NetHackItem extends Item implements Constants {
 		this.setRegistryName(Main.MODID, unlocalizedName);
 	}
 
+	public static String uppercase(String s) {
+		if (s.length() == 0)
+			return "";
+		s = s.toLowerCase();
+		for (int i = 0; i < s.length(); i++)
+			if (s.toCharArray()[i] == ' ')
+				s = s.substring(0, i + 1) + s.toUpperCase().substring(i + 1, i + 2) + s.substring(i + 2).toLowerCase();
+		return s.toUpperCase().substring(0, 1) + s.substring(1);
+	}
+
 	public void register() {
 		GameData.register_impl(this);
 	}
@@ -83,16 +93,6 @@ public class NetHackItem extends Item implements Constants {
 				if (playerIn.isCreative() || kh.hasKnowledge(nhi.getUse()))
 					tooltip.add(super.getItemStackDisplayName(stack));
 		}
-	}
-
-	public static String uppercase(String s) {
-		if(s.length()==0)
-			return "";
-		s = s.toLowerCase();
-		for (int i = 0; i < s.length(); i++)
-			if (s.toCharArray()[i] == ' ')
-				s = s.substring(0, i + 1) + s.toUpperCase().substring(i + 1, i + 2) + s.substring(i + 2).toLowerCase();
-		return s.toUpperCase().substring(0, 1) + s.substring(1);
 	}
 
 }

@@ -15,11 +15,11 @@ public class KnowledgeMessageHandler implements
 	@SideOnly(Side.CLIENT)
 	@Override
 	public IMessage onMessage(MessageSendKnowledge message, MessageContext ctx) {
-		if(message.id==-1){
-		Main.getHandler(Minecraft.getMinecraft().player).addKnowledge(message.stknowledge);
-		}else if(EnumDataType.get(message.type)==EnumDataType.RING){
+		if (message.id == -1) {
+			Main.getHandler(Minecraft.getMinecraft().player).addKnowledge(message.stknowledge);
+		} else if (EnumDataType.get(message.type) == EnumDataType.RING) {
 			RingAction.match(message);
-		}else if(EnumDataType.get(message.type)==EnumDataType.SCROLL){
+		} else if (EnumDataType.get(message.type) == EnumDataType.SCROLL) {
 			ScrollAction.match(message);
 		}
 		return null;

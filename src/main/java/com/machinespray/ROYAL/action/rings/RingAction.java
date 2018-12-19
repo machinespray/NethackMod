@@ -1,8 +1,8 @@
 package com.machinespray.ROYAL.action.rings;
 
 import com.machinespray.ROYAL.Constants;
-import com.machinespray.ROYAL.action.Discovery;
 import com.machinespray.ROYAL.Main;
+import com.machinespray.ROYAL.action.Discovery;
 import com.machinespray.ROYAL.errors.UndefinedPotionError;
 import com.machinespray.ROYAL.sync.MessageSendKnowledge;
 import net.minecraft.entity.EntityLiving;
@@ -22,11 +22,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
- class SoundTypes{
- 	static SoundEvent combat = 	SoundEvents.BLOCK_GLASS_BREAK;
- 	static SoundEvent magic = SoundEvents.ENTITY_WITCH_AMBIENT;
- 	static SoundEvent arcane = SoundEvents.ENTITY_ENDERMEN_SCREAM;
- }
+
 public enum RingAction implements Constants, Discovery {
 	AGGRAVATE_MONSTER(SoundTypes.combat),
 	CONFLICT(SoundTypes.combat),
@@ -39,18 +35,15 @@ public enum RingAction implements Constants, Discovery {
 	STRENGTH(SoundTypes.combat),
 	PARANOIA(SoundTypes.magic);
 
-	public int id;
+	public static ArrayList<Integer> ids = new ArrayList<>();
+	private static RingAction[] potionRings = {PROTECTION, REGENERATION, FIRE_RESISTANCE, STRENGTH};
+	private static int[] potionIds = {11, 10, 12, 5};
+	private static Random random = new Random();
 	public final SoundEvent hint;
-
+	public int id;
 	RingAction(SoundEvent hint) {
 		this.hint = hint;
 	}
-
-	private static RingAction[] potionRings = {PROTECTION, REGENERATION, FIRE_RESISTANCE, STRENGTH};
-	private static int[] potionIds = {11, 10, 12, 5};
-
-	public static ArrayList<Integer> ids = new ArrayList<>();
-	private static Random random = new Random();
 
 	public static void match(long seed) {
 		ids.clear();
@@ -83,6 +76,13 @@ public enum RingAction implements Constants, Discovery {
 				return I;
 		}
 		return null;
+	}
+
+	@SideOnly(Side.CLIENT)
+	public static void match(MessageSendKnowledge message) {
+		ids.ensureCapacity(message.knowledge);
+		ids.set(message.knowledge, message.id);
+		values()[message.knowledge].id = message.id;
 	}
 
 	public String getKnowledgeName() {
@@ -153,12 +153,10 @@ public enum RingAction implements Constants, Discovery {
 
 	}
 
-
 	private void discover(EntityPlayer player) {
 		if (player instanceof EntityPlayerMP)
 			discover((EntityPlayerMP) player, getKnowledgeName(), true);
 	}
-
 
 	private List<EntityLiving> getLocalLiving(EntityLivingBase player) {
 		AxisAlignedBB box = new AxisAlignedBB(player.posX - 5,
@@ -174,13 +172,6 @@ public enum RingAction implements Constants, Discovery {
 			throw new UndefinedPotionError(Integer.toString(id));
 		if (entity.getActivePotionEffect(effect) == null)
 			entity.addPotionEffect(new PotionEffect(effect, 80, 0, false, false));
-	}
-
-	@SideOnly(Side.CLIENT)
-	public static void match(MessageSendKnowledge message) {
-		ids.ensureCapacity(message.knowledge);
-		ids.set(message.knowledge, message.id);
-		values()[message.knowledge].id = message.id;
 	}
 
 	public void clientAction(EntityLivingBase player) {
@@ -214,4 +205,10 @@ public enum RingAction implements Constants, Discovery {
 		speed = Math.max(speed, -0.5);
 		return speed;
 	}
+}
+
+class SoundTypes {
+	static SoundEvent combat = SoundEvents.BLOCK_GLASS_BREAK;
+	static SoundEvent magic = SoundEvents.ENTITY_WITCH_AMBIENT;
+	static SoundEvent arcane = SoundEvents.ENTITY_ENDERMEN_SCREAM;
 }

@@ -9,23 +9,23 @@ public class Storage implements Capability.IStorage<IKnowledgeHandler> {
 
 	@Override
 	public NBTBase writeNBT(Capability<IKnowledgeHandler> capability,
-			IKnowledgeHandler instance, EnumFacing side) {
+							IKnowledgeHandler instance, EnumFacing side) {
 		NBTTagCompound nbt = new NBTTagCompound();
 		nbt.setInteger("length", instance.getKnowledge().size());
-		for(int i=0;i<instance.getKnowledge().size();i++){
-		nbt.setString(String.valueOf(i), instance.getKnowledge().get(i));
+		for (int i = 0; i < instance.getKnowledge().size(); i++) {
+			nbt.setString(String.valueOf(i), instance.getKnowledge().get(i));
 		}
 		return nbt;
 	}
 
 	@Override
 	public void readNBT(Capability<IKnowledgeHandler> capability,
-			IKnowledgeHandler instance, EnumFacing side, NBTBase nbtB) {
+						IKnowledgeHandler instance, EnumFacing side, NBTBase nbtB) {
 		NBTTagCompound nbt = (NBTTagCompound) nbtB;
 		int length = nbt.getInteger("length");
-				for(int i=0;i<length;i++)
-					instance.addKnowledge(nbt.getString(String.valueOf(i)));
-		
+		for (int i = 0; i < length; i++)
+			instance.addKnowledge(nbt.getString(String.valueOf(i)));
+
 	}
 
 }

@@ -3,7 +3,6 @@ package com.machinespray.ROYAL.action.scrolls;
 import com.machinespray.ROYAL.Constants;
 import com.machinespray.ROYAL.Main;
 import com.machinespray.ROYAL.NetHackItem;
-import com.machinespray.ROYAL.RoyalItems;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
