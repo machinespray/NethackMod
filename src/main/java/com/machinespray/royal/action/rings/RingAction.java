@@ -208,7 +208,7 @@ public enum RingAction implements Constants, Discovery {
 }
 
 class SoundTypes {
-	static SoundEvent combat = SoundEvents.BLOCK_GLASS_BREAK;
-	static SoundEvent magic = SoundEvents.ENTITY_WITCH_AMBIENT;
-	static SoundEvent arcane = SoundEvents.ENTITY_ENDERMEN_SCREAM;
+	protected static SoundEvent combat = SoundEvents.BLOCK_GLASS_BREAK;
+	protected static SoundEvent magic = SoundEvents.ENTITY_WITCH_AMBIENT;
+	protected static SoundEvent arcane = SoundEvents.ENTITY_ENDERMEN_SCREAM;
 }

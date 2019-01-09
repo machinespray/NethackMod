@@ -40,8 +40,8 @@ public class Main {
 	}.setNoTitle();
 	@SidedProxy(modId = MODID, clientSide = "com.machinespray.royal.proxy.ClientProxy", serverSide = "com.machinespray.royal.proxy.CommonProxy")
 	public static CommonProxy proxy;
-	static RoyalConfig config;
-	static DefaultKnowledgeHandler clientKnowledge = null;
+	public static RoyalConfig config;
+	private static DefaultKnowledgeHandler clientKnowledge = null;
 	private static Events eventsInstance = new Events();
 
 	public static IKnowledgeHandler getHandler(Entity entity) throws UnknownKnowledgeError {
@@ -92,4 +92,7 @@ public class Main {
 		proxy.postinit();
 	}
 
+	public static void resetClientKnowledge() {
+		clientKnowledge = new DefaultKnowledgeHandler();
+	}
 }

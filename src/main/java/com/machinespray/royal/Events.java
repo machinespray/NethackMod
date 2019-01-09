@@ -237,7 +237,7 @@ public class Events implements Constants {
 		for (ScrollAction ignored : ScrollAction.values())
 			ScrollAction.ids.add(-1);
 
-		Main.clientKnowledge = new DefaultKnowledgeHandler();
+		Main.resetClientKnowledge();
 		System.out.println("Knowledge Request Sent!");
 		Main.INSTANCE.sendToServer(new MessageRequestKnowledge());
 	}
