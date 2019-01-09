@@ -7,10 +7,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import java.util.ArrayList;
 
 public class RandomizedItemGroup {
-	ItemGroupBuilder builder;
-	String[] names;
-	String suffix;
-	ArrayList<NetHackItem> items = new ArrayList<>();
+	private ItemGroupBuilder builder;
+	private String[] names;
+	private String suffix;
+	private ArrayList<NetHackItem> items = new ArrayList<>();
 
 
 	public RandomizedItemGroup(ItemGroupBuilder builder, String[] names) {
